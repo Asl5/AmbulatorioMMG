@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Ambulatorio MMG - Login</title>
+
+        <link rel="stylesheet" href="CSS/bootstrap-fallback.css">
+        <link rel="stylesheet" href="CSS/LOGIN.css">
+    </head>
+
+    <body>
+        <main class="login-page">
+            <section class="login-card">
+                <header class="login-header">
+                    <h1>Accedi a AmbMMG</h1>
+                    <p>Inserisci le tue credenziali per continuare</p>
+                </header>
+
+                <form class="login-form" autocomplete="on">
+                    <div id="login-error" class="alert alert-danger d-none" role="alert"></div>
+                    <div class="mb-3">
+                        <label for="login-user" class="form-label">Utente</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="login-user"
+                            name="username"
+                            placeholder="Nome utente"
+                            required
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="login-password" class="form-label">Password</label>
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="login-password"
+                            name="password"
+                            placeholder="Password"
+                            required
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="login-service" class="form-label">Servizio</label>
+                        <select
+                            class="form-select"
+                            id="login-service"
+                            name="serviceCode"
+                            required
+                        >
+                            <option value="" selected></option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary login-submit">Entra</button>
+                    </div>
+                </form>
+            </section>
+
+            <aside class="login-visual" aria-hidden="true">
+                <div class="login-visual-copy">
+                    <span class="login-visual-kicker">AmbMMG - accessi ambulatoriali</span>
+                    <h2>Gestione centralizzata accessi e consultazione operativa.</h2>
+                    <p>
+                        AmbMMG raccoglie l'ingresso ai flussi operativi in un ambiente unico,
+                        con autenticazione LDAP e una landing dedicata all'operativita quotidiana.
+                    </p>
+                    <div class="login-visual-tags">
+                        <span>Accessi</span>
+                        <span>Ricerca consultazioni</span>
+                        <span>Selezione servizio</span>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <div id="login-loader" class="login-loader" aria-hidden="true">
+            <div class="login-loader-card">
+                <span class="login-loader-spinner" aria-hidden="true"></span>
+                <span class="login-loader-text">Verifica credenziali in corso...</span>
+            </div>
+        </div>
+
+        <script src="js/LOGIN.js"></script>
+    </body>
+</html>

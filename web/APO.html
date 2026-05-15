@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Ambulatorio MMG</title>
+        <link rel="icon" type="image/png" href="img/APO_logo.png">
+
+        <link rel="stylesheet" href="CSS/bootstrap-fallback.css">
+        <link rel="stylesheet" href="CSS/APO.css">
+    </head>
+    <body>
+        <main class="gestfarm-page riepilogo-page app-shell">
+            <input type="hidden" id="cf_utente" name="cf_utente" value="">
+            <input type="hidden" id="servizio" name="servizio" value="">
+            <input type="hidden" id="cod_servizio_consulenza" name="cod_servizio_consulenza" value="">
+            <input type="hidden" id="gruppo_utente" name="gruppo_utente" value="">
+            <input type="hidden" id="qualifica" name="qualifica" value="">
+            <div class="space-particles" aria-hidden="true"></div>
+            <section class="gestfarm-shell">
+                <header class="gestfarm-topbar">
+                    <div class="gestfarm-brand">
+                        <img class="apo-brand-logo" src="img/APO_logo.png" alt="APO">
+                        <div class="gestfarm-brand-copy">
+                            <h1>Ambulatorio MMG</h1>
+                            <p id="gestfarm-service-label" class="gestfarm-subtitle">Servizio non disponibile</p>
+                        </div>
+                    </div>
+
+                    <div class="gestfarm-topbar-actions">
+                        <nav class="gestfarm-navbar-menu apo-navbar-menu" aria-label="Menu principale">
+                            <button id="nav-accessi-button" type="button" class="gestfarm-nav-button is-active" aria-current="page">Accessi</button>
+                            <button id="nav-paziente-button" type="button" class="gestfarm-nav-button">Paziente</button>
+                            <button id="nav-statistiche-button" type="button" class="gestfarm-nav-button">Statistiche</button>
+                            <button id="logout-button" type="button" class="gestfarm-nav-button gestfarm-nav-button-logout" disabled>Logout</button>
+                        </nav>
+                        <section id="gestfarm-user-card" class="gestfarm-user-card" aria-label="Utente loggato">
+                            <div id="gestfarm-user-avatar" class="gestfarm-user-avatar" aria-hidden="true">--</div>
+                            <div class="gestfarm-user-copy">
+                                <p id="gestfarm-user-name" class="gestfarm-user-name">Utente</p>
+                                <p id="gestfarm-user-code" class="gestfarm-user-code">--</p>
+                            </div>
+                        </section>
+                    </div>
+                </header>
+
+                <section id="apo-accessi-layout" class="riepilogo-stack">
+                    <article class="gestfarm-card riepilogo-filters-card">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Filtri</h2>
+                            </div>
+                        </div>
+
+                        <form id="apo-filter-form" class="riepilogo-filter-form" autocomplete="off">
+                            <div class="riepilogo-filter-grid">
+                                <div class="field-group riepilogo-filter-field">
+                                    <label for="apo-filter-sede" class="form-label">Sede</label>
+                                    <select id="apo-filter-sede" name="servizio" class="form-select form-control" aria-label="Sede">
+                                        <option value="">Caricamento sedi...</option>
+                                    </select>
+                                </div>
+
+                                <div class="field-group riepilogo-filter-field riepilogo-filter-field-date">
+                                    <label for="apo-filter-date" class="form-label">Data</label>
+                                    <div class="riepilogo-date-filter">
+                                        <input id="apo-filter-date" name="dataAccesso" type="date" class="form-control">
+                                        <select id="apo-filter-date-operator" class="form-select form-control">
+                                            <option value="=">=</option>
+                                            <option value=">">&gt;</option>
+                                            <option value="<">&lt;</option>
+                                            <option value=">=">&gt;=</option>
+                                            <option value="<=">&lt;=</option>
+                                            <option value="!=">!=</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="field-group riepilogo-filter-field">
+                                    <label for="apo-filter-paziente-cognome" class="form-label">Paziente</label>
+                                    <div class="riepilogo-patient-filter">
+                                        <input id="apo-filter-paziente-cognome" name="pazienteCognome" type="text" class="form-control" placeholder="Cognome">
+                                        <input id="apo-filter-paziente-nome" name="pazienteNome" type="text" class="form-control" placeholder="Nome">
+                                    </div>
+                                </div>
+
+                                <div class="field-group riepilogo-filter-field">
+                                    <label for="apo-filter-codice-fiscale" class="form-label">Codice fiscale</label>
+                                    <input id="apo-filter-codice-fiscale" name="codiceFiscale" type="text" class="form-control" placeholder="Codice fiscale">
+                                </div>
+                            </div>
+
+                            <div class="riepilogo-filter-actions">
+                                <button id="apo-clear-button" type="button" class="btn btn-outline-secondary">Pulisci</button>
+                                <button id="apo-search-button" type="submit" class="btn btn-success">Cerca</button>
+                            </div>
+                        </form>
+                    </article>
+
+                    <article class="gestfarm-card riepilogo-movements-card">
+                        <div class="section-heading">
+                            <div>
+                                <h2 id="apo-accessi-title">Accessi: 0</h2>
+                            </div>
+                            <div class="riepilogo-movement-actions" aria-label="Ordinamento accessi">
+                                <div class="riepilogo-movement-actions-group riepilogo-movement-actions-group-sort">
+                                    <span class="riepilogo-movement-actions-label">Ordina per</span>
+                                    <select id="apo-sort-field" class="form-select riepilogo-movement-actions-select" aria-label="Campo ordinamento">
+                                        <option value="data" selected>Data</option>
+                                        <option value="consulenza">Consulenza</option>
+                                        <option value="sede">Sede</option>
+                                        <option value="codiceFiscale">Codice fiscale</option>
+                                        <option value="paziente">Paziente</option>
+                                        <option value="dataNascita">Data nascita</option>
+                                        <option value="operatore">Operatore</option>
+                                    </select>
+                                    <select id="apo-sort-direction" class="form-select riepilogo-movement-actions-select riepilogo-movement-actions-select-direction" aria-label="Direzione ordinamento">
+                                        <option value="desc" selected>Decrescente</option>
+                                        <option value="asc">Crescente</option>
+                                    </select>
+                                </div>
+                                <button id="apo-new-accesso-button" type="button" class="btn btn-success">Nuovo accesso</button>
+                            </div>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table class="gestfarm-table riepilogo-movements-table apo-accessi-table">
+                                <colgroup>
+                                    <col class="apo-col-consulenza">
+                                    <col class="apo-col-sede">
+                                    <col class="apo-col-data">
+                                    <col class="apo-col-cf">
+                                    <col class="apo-col-paziente">
+                                    <col class="apo-col-data-nascita">
+                                    <col class="apo-col-operatore">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Consulenza</th>
+                                        <th>Sede</th>
+                                        <th>Data</th>
+                                        <th>Cod fiscale</th>
+                                        <th>Paziente</th>
+                                        <th>Data nascita</th>
+                                        <th>Operatore</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="apo-accessi-body"></tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <article id="apo-detail-card" class="gestfarm-card apo-detail-card" aria-hidden="true">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Dettaglio accesso</h2>
+                            </div>
+                            <button id="apo-detail-close-button" type="button" class="btn btn-outline-secondary">Chiudi</button>
+                        </div>
+                        <div id="apo-detail-body" class="apo-detail-body"></div>
+                        <div id="apo-detail-footer" class="apo-detail-footer">
+                            <div id="apo-detail-paziente-consenso" class="apo-paziente-consenso-box apo-detail-consenso-box">
+                                <button id="apo-detail-consenso-button" type="button" class="apo-paziente-menu-button">Cruscotto consenso</button>
+                                <div class="apo-paziente-consenso-html">Consenso non disponibile.</div>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section id="apo-paziente-layout" class="apo-secondary-panel apo-paziente-view is-hidden">
+                    <article class="gestfarm-card apo-paziente-selected-card">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Paziente selezionato</h2>
+                            </div>
+                        </div>
+                        <div id="apo-paziente-selected-body" class="apo-paziente-selected-body"></div>
+                    </article>
+
+                    <article class="gestfarm-card apo-paziente-history-card">
+                        <div id="apo-paziente-history-main-tabs" class="apo-paziente-storico-tabs apo-paziente-history-main-tabs" role="tablist" aria-label="Dati paziente">
+                            <button id="apo-history-main-tab-scheda" type="button" class="apo-paziente-storico-tab is-active" role="tab" aria-selected="true" aria-controls="apo-paziente-scheda-panel" data-paziente-history-tab="scheda">Scheda paziente</button>
+                            <button id="apo-history-main-tab-storico" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-storico-panel" data-paziente-history-tab="storico">Storico paziente</button>
+                        </div>
+                        <div id="apo-paziente-scheda-panel" class="apo-paziente-history-panel apo-paziente-scheda-panel" role="tabpanel" aria-labelledby="apo-history-main-tab-scheda">
+                            <div id="apo-paziente-scheda-tabs" class="apo-paziente-storico-tabs apo-paziente-scheda-actions" role="tablist" aria-label="Sezioni scheda paziente">
+                                <button id="apo-scheda-tab-diario" type="button" class="apo-paziente-storico-tab is-active" role="tab" aria-selected="true" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="diario">Diario</button>
+                                <button id="apo-scheda-tab-patologie-croniche" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="patologie-croniche">Patologie croniche</button>
+                                <button id="apo-scheda-tab-allergie" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="allergie">Allergie</button>
+                                <button id="apo-scheda-tab-terapie" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="terapie">Terapie in corso</button>
+                            </div>
+                            <div id="apo-paziente-scheda-body" class="apo-paziente-scheda-body" role="tabpanel" aria-labelledby="apo-scheda-tab-diario"></div>
+                        </div>
+                        <div id="apo-paziente-storico-panel" class="apo-paziente-history-panel apo-paziente-storico-panel is-hidden" role="tabpanel" aria-labelledby="apo-history-main-tab-storico" aria-hidden="true">
+                            <div id="apo-paziente-storico-tabs" class="apo-paziente-storico-tabs" role="tablist" aria-label="Sezioni storico paziente">
+                                <button id="apo-storico-tab-accessi" type="button" class="apo-paziente-storico-tab is-active" role="tab" aria-selected="true" aria-controls="apo-paziente-storico-body" data-storico-tab="accessi">Storico accessi</button>
+                                <button id="apo-storico-tab-prestazioni-inf" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-storico-body" data-storico-tab="prestazioni-inf">Prestazioni Infermieristiche</button>
+                                <button id="apo-storico-tab-ricette-dem" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-storico-body" data-storico-tab="ricette-dem">Ricette dematerializzate</button>
+                                <button id="apo-storico-tab-ricette-farm" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-storico-body" data-storico-tab="ricette-farm">Ricette farmaci</button>
+                            </div>
+                            <div id="apo-paziente-storico-body" class="apo-paziente-storico-body" role="tabpanel" aria-labelledby="apo-storico-tab-accessi"></div>
+                        </div>
+                    </article>
+
+                    <div class="apo-paziente-content-column">
+                        <div id="apo-paziente-title-main" class="apo-paziente-title-main"></div>
+                        <article class="gestfarm-card apo-paziente-content-card">
+                            <div class="section-heading">
+                                <div>
+                                    <h2 id="apo-paziente-title">Diagnosi</h2>
+                                </div>
+                            </div>
+                            <div id="apo-paziente-body" class="apo-paziente-body"></div>
+                        </article>
+                    </div>
+
+                    <article class="gestfarm-card apo-paziente-menu-card">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Azioni per paziente</h2>
+                            </div>
+                        </div>
+                        <nav id="apo-paziente-menu" class="apo-paziente-menu" aria-label="Menu paziente">
+                            <button type="button" class="apo-paziente-menu-button is-active" data-paziente-section="diagnosi">Diagnosi</button>
+                            <button type="button" class="apo-paziente-menu-button" data-paziente-section="prestazioni-infermieristiche">Prestazioni infermieristiche</button>
+                            <button type="button" class="apo-paziente-menu-button" data-paziente-section="allegato-m">Allegato M</button>
+                            <button type="button" class="apo-paziente-menu-button" data-paziente-section="ricetta-specialistica">Ricetta dematerializzata</button>
+                            <button type="button" class="apo-paziente-menu-button" data-paziente-section="ricetta-farmaci">Ricetta farmaci</button>
+                            <button type="button" class="apo-paziente-menu-button" data-paziente-section="certificato-malattia">Certificato malattia</button>
+                            <button type="button" class="apo-paziente-menu-button" data-paziente-section="repository-referti">Repository referti</button>
+                            <button type="button" class="apo-paziente-menu-button" data-paziente-section="piani-terapeutici">Piani terapeutici</button>
+                            <button type="button" class="apo-paziente-menu-button" data-paziente-section="richiesta-prestazioni">Richiesta prestazioni</button>
+                            <button type="button" class="apo-paziente-menu-button apo-paziente-menu-button-danger" data-paziente-section="elimina-consulenza">Elimina consulenza</button>
+                            <div class="apo-paziente-navigation-row" aria-label="Navigazione pazienti">
+                                <button type="button" class="apo-paziente-nav-button" data-paziente-navigation="previous">&larr; Precedente</button>
+                                <button type="button" class="apo-paziente-nav-button" data-paziente-navigation="next">Successivo &rarr;</button>
+                            </div>
+                            <div class="apo-paziente-consenso-box">
+                                <button type="button" class="apo-paziente-menu-button" data-paziente-section="cruscotto-consenso">Cruscotto consenso</button>
+                                <div id="apo-paziente-consenso-html" class="apo-paziente-consenso-html">Consenso non disponibile.</div>
+                            </div>
+                        </nav>
+                    </article>
+                </section>
+
+                <section id="apo-statistiche-layout" class="apo-secondary-panel apo-statistiche-view is-hidden">
+                    <article class="gestfarm-card apo-statistiche-card">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Statistiche</h2>
+                            </div>
+                        </div>
+                        <div class="empty-state">Nessuna statistica disponibile.</div>
+                    </article>
+                </section>
+
+                <div id="session-message" class="alert alert-danger d-none" role="alert"></div>
+            </section>
+
+            <div id="apo-page-toast" class="apo-page-toast apo-page-toast-hidden" role="status" aria-live="polite"></div>
+
+            <div id="apo-storico-confirm-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-storico-confirm-title" aria-describedby="apo-storico-confirm-text">
+                <div class="apo-modal-panel">
+                    <h2 id="apo-storico-confirm-title">Conferma cambio consulenza</h2>
+                    <p id="apo-storico-confirm-text">Vuoi cambiare la consulenza selezionata?</p>
+                    <div class="apo-modal-actions">
+                        <button id="apo-storico-confirm-cancel" type="button" class="btn btn-outline-secondary">Annulla</button>
+                        <button id="apo-storico-confirm-ok" type="button" class="btn btn-success">Conferma</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-delete-confirm-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-delete-confirm-title" aria-describedby="apo-delete-confirm-text">
+                <div class="apo-modal-panel">
+                    <h2 id="apo-delete-confirm-title">Elimina consulenza</h2>
+                    <p id="apo-delete-confirm-text">Vuoi eliminare la consulenza selezionata?</p>
+                    <div id="apo-delete-confirm-message" class="alert d-none" role="alert"></div>
+                    <div class="apo-modal-actions">
+                        <button id="apo-delete-confirm-cancel" type="button" class="btn btn-outline-secondary">Annulla</button>
+                        <button id="apo-delete-confirm-ok" type="button" class="btn apo-delete-confirm-button">Conferma</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-new-accesso-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-new-accesso-title">
+                <div class="apo-modal-panel apo-new-accesso-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-new-accesso-title">Nuovo accesso</h2>
+                        <span id="apo-new-accesso-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                    </div>
+                    <form id="apo-new-accesso-form" class="apo-new-accesso-form" autocomplete="off">
+                        <div class="field-group">
+                            <label for="apo-new-accesso-cf" class="form-label">Codice fiscale</label>
+                            <input id="apo-new-accesso-cf" type="text" class="form-control">
+                        </div>
+                        <div class="field-group">
+                            <label for="apo-new-accesso-cognome" class="form-label">Cognome</label>
+                            <input id="apo-new-accesso-cognome" type="text" class="form-control">
+                        </div>
+                        <div class="field-group">
+                            <label for="apo-new-accesso-nome" class="form-label">Nome</label>
+                            <input id="apo-new-accesso-nome" type="text" class="form-control">
+                        </div>
+                        <button id="apo-new-accesso-search" type="submit" class="btn btn-success">Cerca</button>
+                    </form>
+                    <div id="apo-new-accesso-message" class="alert d-none" role="alert"></div>
+                    <div class="apo-new-accesso-results-wrap">
+                        <table class="gestfarm-table apo-new-accesso-table">
+                            <colgroup>
+                                <col class="apo-new-accesso-col-cf">
+                                <col class="apo-new-accesso-col-cognome">
+                                <col class="apo-new-accesso-col-nome">
+                                <col class="apo-new-accesso-col-data">
+                                <col class="apo-new-accesso-col-sesso">
+                                <col class="apo-new-accesso-col-eta">
+                                <col class="apo-new-accesso-col-pin">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Codice fiscale</th>
+                                    <th>Cognome</th>
+                                    <th>Nome</th>
+                                    <th>Data nascita</th>
+                                    <th>Sesso</th>
+                                    <th>Età</th>
+                                    <th>Pin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="apo-new-accesso-results-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="apo-new-accesso-actions">
+                        <button id="apo-new-accesso-select-patient" type="button" class="btn btn-success" disabled>Seleziona paziente</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-new-accesso-detail-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-new-accesso-detail-title">
+                <div class="apo-modal-panel apo-new-accesso-detail-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-new-accesso-detail-title">Nuovo accesso</h2>
+                        <div class="apo-modal-heading-actions">
+                            <button id="apo-new-accesso-detail-back" type="button" class="btn btn-outline-secondary apo-new-accesso-back-button">Torna a selezione paziente</button>
+                            <span id="apo-new-accesso-detail-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                        </div>
+                    </div>
+                    <form id="apo-new-accesso-detail-form" class="apo-new-accesso-detail-form" autocomplete="off">
+                        <div id="apo-new-accesso-selected-patient" class="apo-new-accesso-selected-patient" aria-live="polite"></div>
+                        <input id="apo-new-accesso-tipo-codice" type="hidden" value="VMED_AM2">
+                        <div class="field-group">
+                            <label for="apo-new-accesso-data-ora" class="form-label">Data e ora</label>
+                            <input id="apo-new-accesso-data-ora" type="datetime-local" class="form-control">
+                        </div>
+                        <div class="field-group">
+                            <span class="form-label">Tipo accesso</span>
+                            <div class="apo-new-accesso-type-toggle" role="group" aria-label="Tipo accesso">
+                                <button type="button" class="apo-new-accesso-type-button is-active" data-new-accesso-type="visita-medica" data-new-accesso-value="VMED_AM2" aria-pressed="true">Visita medica</button>
+                                <button type="button" class="apo-new-accesso-type-button" data-new-accesso-type="certificazioni" data-new-accesso-value="CERT_AM2" aria-pressed="false">Certificazioni</button>
+                            </div>
+                        </div>
+                        <div class="field-group apo-new-accesso-detail-diagnosi">
+                            <label for="apo-new-accesso-diagnosi" class="form-label">Diagnosi di accesso</label>
+                            <textarea id="apo-new-accesso-diagnosi" class="form-control"></textarea>
+                        </div>
+                        <div id="apo-new-accesso-detail-message" class="alert d-none" role="alert"></div>
+                        <div class="apo-new-accesso-actions">
+                            <button id="apo-new-accesso-confirm-add" type="submit" class="btn btn-success">Aggiungi nuovo accesso</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="apo-scheda-paziente-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-scheda-paziente-title">
+                <div class="apo-modal-panel apo-scheda-paziente-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-scheda-paziente-title">Scheda paziente</h2>
+                    </div>
+                    <div id="apo-scheda-paziente-body" class="apo-scheda-paziente-body" aria-live="polite"></div>
+                    <div class="apo-modal-actions">
+                        <button id="apo-scheda-paziente-ok" type="button" class="btn btn-success">Salva scheda</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-diario-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-diario-title">
+                <div class="apo-modal-panel apo-diario-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-diario-title">Aggiungi nuovo diario</h2>
+                        <span id="apo-diario-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                    </div>
+                    <form id="apo-diario-form" class="apo-diario-form" autocomplete="off">
+                        <div class="apo-diario-date-time">
+                            <div class="field-group">
+                                <label for="apo-diario-data" class="form-label">Data</label>
+                                <input id="apo-diario-data" type="date" class="form-control">
+                            </div>
+                            <div class="field-group">
+                                <label for="apo-diario-ora" class="form-label">Ora</label>
+                                <input id="apo-diario-ora" type="time" class="form-control">
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label for="apo-diario-descrizione" class="form-label">Descrizione</label>
+                            <textarea id="apo-diario-descrizione" class="form-control apo-diario-descrizione"></textarea>
+                        </div>
+                        <div class="apo-modal-actions">
+                            <button id="apo-diario-save" type="submit" class="btn btn-success">Salva diario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="apo-censimento-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-censimento-title">
+                <div class="apo-modal-panel apo-censimento-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-censimento-title">Censimento nuovo assistito</h2>
+                        <span id="apo-censimento-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                    </div>
+                    <form id="apo-censimento-form" class="apo-censimento-form" autocomplete="off">
+                        <div class="apo-censimento-grid">
+                            <div class="field-group apo-censimento-field apo-censimento-field-cf">
+                                <label for="apo-censimento-codice-fiscale" class="form-label">Codice fiscale <span class="apo-required-marker">*</span></label>
+                                <div class="apo-censimento-inline">
+                                    <input id="apo-censimento-codice-fiscale" name="codiceFiscale" type="text" class="form-control" maxlength="16" required>
+                                    <button id="apo-censimento-calcola-cf" type="button" class="btn btn-outline-secondary">Calcola</button>
+                                </div>
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-cognome" class="form-label">Cognome <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-cognome" name="cognome" type="text" class="form-control" required>
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-nome" class="form-label">Nome <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-nome" name="nome" type="text" class="form-control" required>
+                            </div>
+                            <div class="field-group apo-censimento-field">
+                                <label for="apo-censimento-data-nascita" class="form-label">Data nascita <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-data-nascita" name="dataNascita" type="date" class="form-control" required>
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-sesso">
+                                <span class="form-label">Sesso <span class="apo-required-marker">*</span></span>
+                                <div class="apo-censimento-sesso-toggle" role="radiogroup" aria-label="Sesso">
+                                    <label><input type="radio" name="sesso" value="M" required> M</label>
+                                    <label><input type="radio" name="sesso" value="F" required> F</label>
+                                </div>
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-comune-nascita" class="form-label">Comune nascita <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-comune-nascita" name="comuneNascita" type="text" class="form-control" list="apo-censimento-comuni-list" autocomplete="off" required>
+                                <input id="apo-censimento-cod-comune-nascita" name="codComuneNascita" type="hidden">
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-indirizzo-residenza" class="form-label">Indirizzo residenza <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-indirizzo-residenza" name="indirizzoResidenza" type="text" class="form-control" required>
+                            </div>
+                            <div class="field-group apo-censimento-field">
+                                <label for="apo-censimento-comune-residenza" class="form-label">Comune residenza <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-comune-residenza" name="comuneResidenza" type="text" class="form-control" list="apo-censimento-comuni-list" autocomplete="off" required>
+                                <input id="apo-censimento-cod-comune-residenza" name="codComuneResidenza" type="hidden">
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-cap">
+                                <label for="apo-censimento-cap-residenza" class="form-label">Cap residenza <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-cap-residenza" name="capResidenza" type="text" class="form-control" maxlength="5" required>
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-asl-residenza" class="form-label">Asl residenza <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-asl-residenza" name="aslResidenza" type="text" class="form-control" list="apo-censimento-asl-list" autocomplete="off" required>
+                                <input id="apo-censimento-cod-asl-residenza" name="codAslResidenza" type="hidden">
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-tel-residenza" class="form-label">Tel. residenza</label>
+                                <input id="apo-censimento-tel-residenza" name="telResidenza" type="tel" class="form-control">
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-indirizzo-domicilio" class="form-label">Indirizzo domicilio</label>
+                                <input id="apo-censimento-indirizzo-domicilio" name="indirizzoDomicilio" type="text" class="form-control">
+                            </div>
+                            <div class="field-group apo-censimento-field">
+                                <label for="apo-censimento-comune-domicilio" class="form-label">Comune domicilio</label>
+                                <input id="apo-censimento-comune-domicilio" name="comuneDomicilio" type="text" class="form-control" list="apo-censimento-comuni-list" autocomplete="off">
+                                <input id="apo-censimento-cod-comune-domicilio" name="codComuneDomicilio" type="hidden">
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-cap">
+                                <label for="apo-censimento-cap-domicilio" class="form-label">Cap domicilio</label>
+                                <input id="apo-censimento-cap-domicilio" name="capDomicilio" type="text" class="form-control" maxlength="5">
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-asl-iscrizione" class="form-label">Asl iscrizione <span class="apo-required-marker">*</span></label>
+                                <input id="apo-censimento-asl-iscrizione" name="aslIscrizione" type="text" class="form-control" list="apo-censimento-asl-list" autocomplete="off" required>
+                                <input id="apo-censimento-cod-asl-iscrizione" name="codAslIscrizione" type="hidden">
+                            </div>
+                            <div class="field-group apo-censimento-field apo-censimento-field-wide">
+                                <label for="apo-censimento-tel-domicilio" class="form-label">Tel. domicilio</label>
+                                <input id="apo-censimento-tel-domicilio" name="telDomicilio" type="tel" class="form-control">
+                            </div>
+                        </div>
+                        <datalist id="apo-censimento-comuni-list"></datalist>
+                        <datalist id="apo-censimento-asl-list"></datalist>
+                        <div id="apo-censimento-message" class="alert d-none" role="alert"></div>
+                        <div class="apo-censimento-actions">
+                            <button id="apo-censimento-save" type="submit" class="btn btn-success">Salva</button>
+                            <button id="apo-censimento-cancel" type="button" class="btn btn-outline-secondary">Annulla</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <script src="js/APO.js"></script>
+    </body>
+</html>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+            http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <display-name>APO</display-name>
+
+    <context-param>
+        <param-name>dbDriver</param-name>
+        <param-value>oracle.jdbc.driver.OracleDriver</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbUrl</param-name>
+        <param-value>jdbc:oracle:thin:@topgate1_sfe:1534/TOPGATE1</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbUser</param-name>
+        <param-value>TESTFISIATRIAWEB</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbPassword</param-name>
+        <param-value>caponord</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>com.example.servlet.AuthServlet</servlet-class>
+        <init-param>
+            <param-name>ldapUrl</param-name>
+            <param-value>ldap://PVDC1.asl5sp.int</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ldapUserDnPattern</param-name>
+            <param-value>{username}@asl5sp.int</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ldapBaseDn</param-name>
+            <param-value>DC=asl5sp,DC=int</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ldapSearchFilter</param-name>
+            <param-value>(|(sAMAccountName={username})(userPrincipalName={username})(userPrincipalName={username}@asl5sp.int))</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ldapAttributes</param-name>
+            <param-value>distinguishedName,cn,displayName,givenName,sn,mail,userPrincipalName,sAMAccountName,employeeID,title,department,company,telephoneNumber,mobile,physicalDeliveryOfficeName,streetAddress,postalCode,l,st,c,memberOf,description</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/api/auth/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AccessiServlet</servlet-name>
+        <servlet-class>com.example.servlet.AccessiServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AccessiServlet</servlet-name>
+        <url-pattern>/api/accessi/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PazienteServlet</servlet-name>
+        <servlet-class>com.example.servlet.PazienteServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PazienteServlet</servlet-name>
+        <url-pattern>/api/paziente/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StampaReport</servlet-name>
+        <servlet-class>com.example.servlet.StampaReport</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>StampaReport</servlet-name>
+        <url-pattern>/StampaReport</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>SecurityHeadersFilter</filter-name>
+        <filter-class>com.example.filter.SecurityHeadersFilter</filter-class>
+    </filter>
+    
+    <filter>
+        <filter-name>AuthRedirectFilter</filter-name>
+        <filter-class>com.example.filter.AuthRedirectFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SecurityHeadersFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>AuthRedirectFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <welcome-file-list>
+        <welcome-file>LOGIN.html</welcome-file>
+    </welcome-file-list>
+
+    <session-config>
+        <session-timeout>60</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <same-site>Lax</same-site>
+        </cookie-config>
+    </session-config>
+
+</web-app>

@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.sf.jasperreports</groupId>
+		<artifactId>jasperreports-samples-common</artifactId>
+		<version>${revision}</version>
+		<relativePath>../pom-common.xml</relativePath>
+	</parent>
+	<artifactId>jasperreports-samples-subreport-javaflow</artifactId>
+	<packaging>jar</packaging>
+	<properties>
+		<sample.base.name>Subreport</sample.base.name>
+		<sample.report.name>MasterReport</sample.report.name>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-javaflow</artifactId>
+			<version>${revision}</version>
+			<scope>compile</scope>
+			<optional>false</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>${hsqldb.version}</version>
+			<scope>runtime</scope>
+			<optional>false</optional>
+		</dependency>
+		<!-- 
+			This is here just so that the sample is not run twice
+			simultaneously on two threads, when all samples are run.
+			The build directory below did not solve the problem
+			of the sample app creating files in target folder.
+		-->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-samples-subreport</artifactId>
+			<version>${revision}</version>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+	<build>
+		<directory>target-javaflow</directory>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>${flatten-maven-plugin.version}</version>
+				<configuration>
+					<flattenedPomFilename>.flattened-pom-javaflow.xml</flattenedPomFilename>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

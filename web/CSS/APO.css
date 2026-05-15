@@ -1,0 +1,3458 @@
+:root {
+    --gf-bg: #eef5ff;
+    --gf-surface: #ffffff;
+    --gf-surface-soft: #f4f8ff;
+    --gf-border: #d7e2f0;
+    --gf-border-strong: #c3d3e6;
+    --gf-text: #1c2f4a;
+    --gf-text-soft: #60728b;
+    --gf-blue-700: #1f5fb8;
+    --gf-blue-600: #2f79d7;
+    --gf-blue-100: #e4efff;
+    --gf-blue-050: #f3f8ff;
+    --gf-shadow: 0 16px 32px rgba(17, 45, 89, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+    scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+body,
+body button,
+body input,
+body select,
+body textarea,
+body table {
+    font-family: sans-serif !important;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: sans-serif;
+    color: var(--gf-text);
+    background: url("../img/sfondi/sfondo2.jpg") center center / cover no-repeat fixed;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 172vmax;
+    height: 172vmax;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.94;
+    transform: translate(-50%, -50%) rotate(0deg);
+    transform-origin: center center;
+    background:
+        radial-gradient(circle at 50% 14%, rgba(230, 243, 255, 0.18) 0%, rgba(230, 243, 255, 0.08) 10%, transparent 24%),
+        radial-gradient(circle at 84% 54%, rgba(255, 255, 255, 0.16) 0%, transparent 20%),
+        radial-gradient(circle at 20% 78%, rgba(190, 225, 255, 0.14) 0%, transparent 22%),
+        conic-gradient(
+            from 0deg,
+            rgba(255, 255, 255, 0) 0deg,
+            rgba(210, 233, 255, 0.12) 72deg,
+            rgba(255, 255, 255, 0.04) 136deg,
+            rgba(124, 201, 255, 0.15) 218deg,
+            rgba(12, 74, 154, 0.08) 304deg,
+            rgba(255, 255, 255, 0) 360deg
+        );
+    filter: blur(8px) saturate(1.04);
+    animation: gestfarm-orbital-bg 48s linear infinite;
+}
+
+.gestfarm-page {
+    min-height: 100vh;
+    padding: 18px;
+    position: relative;
+    z-index: 2;
+}
+
+.gestfarm-shell {
+    width: 98%;
+    height: 90vh;
+    margin: 0 auto;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 16px;
+    min-height: calc(100vh - 36px);
+    position: relative;
+    z-index: 2;
+}
+
+.space-particles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.space-particles .space-particle {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: var(--star-color, rgba(255, 255, 255, 1));
+    opacity: var(--alpha, 0.75);
+    box-shadow: 0 0 calc(var(--size) * 2.4) rgba(171, 211, 255, 0.46);
+    transform: translate3d(0, 0, 0);
+    animation:
+        gestfarm-space-star-drift calc(var(--dur, 10s) * 0.38) ease-in-out infinite alternate,
+        gestfarm-space-star-twinkle calc(var(--twinkle, 2.5s) * 0.58) ease-in-out infinite;
+    animation-delay: var(--delay, 0s), var(--twinkle-delay, 0s);
+    will-change: transform, opacity;
+}
+
+.space-particles .space-particle.is-planet {
+    background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.98), var(--planet-a, #b8dcff) 44%, var(--planet-b, #0f56ad) 100%);
+    box-shadow: 0 0 calc(var(--size) * 2.7) rgba(152, 195, 255, 0.48);
+    filter: saturate(1.05);
+    animation-duration: calc(var(--dur, 10s) * 0.3), calc(var(--twinkle, 2.5s) * 0.7);
+}
+
+.gestfarm-topbar,
+.gestfarm-card {
+    background: var(--gf-surface);
+    border: 1px solid var(--gf-border);
+    border-radius: 20px;
+    box-shadow: var(--gf-shadow);
+}
+
+.gestfarm-topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: center;
+    padding: 14px 22px;
+}
+
+.gestfarm-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.gestfarm-brand-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    align-items: flex-start;
+}
+
+.gestfarm-topbar h1 {
+    margin: 0;
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    font-weight: 800;
+    color: var(--gf-text);
+    line-height: 1;
+}
+
+.gestfarm-subtitle {
+    margin: 0;
+    color: var(--gf-text-soft);
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.gestfarm-topbar-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.gestfarm-user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 230px;
+    max-width: 300px;
+    padding: 8px 12px 8px 8px;
+    border: 1px solid var(--gf-border);
+    border-radius: 18px;
+    background: #f3f8ff;
+    box-shadow: 0 10px 22px rgba(17, 45, 89, 0.08);
+}
+
+.gestfarm-user-avatar {
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--gf-blue-700);
+    color: #ffffff;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.gestfarm-user-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.gestfarm-user-name,
+.gestfarm-user-code {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gestfarm-user-name {
+    color: var(--gf-text);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.gestfarm-user-code {
+    color: var(--gf-text-soft);
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.gestfarm-navbar-menu {
+    width: auto;
+    max-width: none;
+    padding: 6px;
+    border-radius: 18px;
+    display: grid;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.apo-navbar-menu {
+    grid-template-columns: repeat(4, 115px);
+}
+
+.gestfarm-nav-button {
+    width: 115px;
+    min-width: 115px;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--gf-text-soft);
+    font-size: 0.84rem;
+    font-weight: 700;
+    transition: background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.gestfarm-nav-button:hover,
+.gestfarm-nav-button:focus-visible {
+    background: var(--gf-surface-soft);
+    color: var(--gf-text);
+    box-shadow: none;
+    outline: none;
+}
+
+.gestfarm-nav-button.is-active {
+    background: var(--gf-blue-700);
+    color: #ffffff;
+    box-shadow: 0 10px 18px rgba(31, 95, 184, 0.22);
+}
+
+.gestfarm-nav-button.gestfarm-nav-button-logout {
+    color: #9a4e4e;
+}
+
+.gestfarm-nav-button.gestfarm-nav-button-logout:hover,
+.gestfarm-nav-button.gestfarm-nav-button-logout:focus-visible {
+    background: #fff3f3;
+    color: #843c3c;
+}
+
+.gestfarm-nav-button:disabled {
+    opacity: 0.58;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.gestfarm-card {
+    padding: 20px 22px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: var(--gf-text);
+}
+
+.form-label {
+    margin-bottom: 6px;
+    color: var(--gf-text-soft);
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.riepilogo-page input.form-control {
+    text-transform: uppercase;
+}
+
+.riepilogo-stack {
+    --apo-detail-width: 0px;
+    display: grid;
+    grid-template-columns: minmax(260px, 18%) minmax(0, 1fr) var(--apo-detail-width);
+    grid-template-areas: "filters movements detail";
+    gap: 16px;
+    align-items: stretch;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    transition: grid-template-columns 0.28s ease;
+}
+
+.riepilogo-stack.is-detail-open {
+    --apo-detail-width: minmax(280px, 20%);
+}
+
+.riepilogo-filters-card,
+.riepilogo-movements-card,
+.apo-detail-card {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+}
+
+.riepilogo-filters-card {
+    grid-area: filters;
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+}
+
+.riepilogo-movements-card {
+    grid-area: movements;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+    max-height: none;
+    overflow: hidden;
+}
+
+.apo-detail-card {
+    grid-area: detail;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(28px);
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.28s ease;
+}
+
+.riepilogo-stack.is-detail-open .apo-detail-card {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.apo-detail-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+
+.apo-detail-footer {
+    flex: 0 0 auto;
+    padding-top: 12px;
+}
+
+.apo-detail-consenso-box {
+    margin-top: 0;
+}
+
+.apo-detail-consenso-box .apo-paziente-consenso-html {
+    font-size: 0.8rem;
+}
+
+.apo-detail-content {
+    min-height: 100%;
+}
+
+.apo-detail-sheet {
+    display: grid;
+    gap: 36px;
+    min-height: 100%;
+}
+
+.apo-detail-section {
+    display: grid;
+    gap: 12px;
+}
+
+.apo-detail-section-title {
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e3eaf2;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4f6789;
+}
+
+.apo-detail-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.apo-detail-field {
+    display: grid;
+    gap: 6px;
+}
+
+.apo-detail-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #60728b;
+}
+
+.apo-detail-value {
+    min-height: 38px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #dfe7f0;
+    border-radius: 0px;
+    background: #ffffff;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--gf-text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-weight: 600;
+}
+
+/*
+.apo-detail-field-notes .apo-detail-value {
+    min-height: 120px;
+}
+*/
+.riepilogo-filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1 1 auto;
+}
+
+.riepilogo-filter-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    align-items: stretch;
+    align-content: start;
+    flex: 1 1 auto;
+}
+
+.riepilogo-filter-field {
+    min-width: 0;
+}
+
+.riepilogo-date-filter {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 56px;
+    gap: 0;
+}
+
+.riepilogo-patient-filter {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+}
+
+.riepilogo-filter-grid .form-control,
+.riepilogo-filter-grid .form-select,
+.apo-new-accesso-form .form-control,
+.apo-new-accesso-detail-form .form-control,
+.riepilogo-movement-actions-select {
+    min-height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--gf-border);
+    background: #ffffff;
+    color: var(--gf-text);
+    padding: 0 12px;
+    font-size: 0.8rem;
+    box-shadow: none;
+}
+
+#apo-filter-sede
+{
+    color: white;
+    background: var(--gf-blue-700);
+    font-weight: 700;
+}
+
+#apo-filter-sede option
+{
+    background: white;
+    color: var(--gf-text);
+}
+
+#apo-filter-date {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: 0;
+}
+
+#apo-filter-date-operator {
+    text-align: center;
+    text-align-last: center;
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+#apo-filter-paziente-cognome {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: 0;
+}
+
+#apo-filter-paziente-nome {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.riepilogo-filter-grid .form-control:focus,
+.riepilogo-filter-grid .form-select:focus,
+.apo-new-accesso-form .form-control:focus,
+.apo-new-accesso-detail-form .form-control:focus,
+.riepilogo-movement-actions-select:focus {
+    border-color: #79a9e5;
+    box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.14);
+    outline: none;
+}
+
+.riepilogo-filter-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    min-width: 0;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+.riepilogo-filter-actions .btn {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 118px;
+}
+
+.riepilogo-page .btn {
+    min-height: 38px;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+/*.riepilogo-page .btn-success {
+    border: 1px solid #137b4b;
+    background: #198754;
+    box-shadow: none;
+}
+
+.riepilogo-page .btn-success:hover,
+.riepilogo-page .btn-success:focus {
+    border-color: #137b4b;
+    background: #137b4b;
+}*/
+
+.riepilogo-page .btn-outline-secondary {
+    color: var(--gf-text);
+    border: 1px solid var(--gf-border-strong);
+    background: #ffffff;
+}
+
+.riepilogo-page .btn-outline-secondary:hover,
+.riepilogo-page .btn-outline-secondary:focus {
+    color: var(--gf-blue-700);
+    border-color: #abc4e8;
+    background: var(--gf-blue-050);
+}
+
+.riepilogo-movement-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 24px;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+
+.riepilogo-movement-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.riepilogo-movement-actions-group-sort {
+    flex-wrap: nowrap;
+}
+
+.riepilogo-movement-actions-label {
+    color: #21343a;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.riepilogo-movement-actions-select {
+    min-width: fit-content;
+}
+
+#apo-new-accesso-button {
+    white-space: nowrap;
+}
+
+.table-wrap {
+    min-height: 0;
+    height: 100%;
+    overflow: auto;
+    scrollbar-width: thin;
+    border-radius: 16px;
+    border: 1px solid var(--gf-border);
+    background: var(--gf-surface);
+}
+
+.gestfarm-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.gestfarm-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 12px 12px;
+    text-align: left;
+    font-size: 0.73rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: white;
+    background: var(--gf-blue-700);
+    border-bottom: 1px solid black;
+}
+
+.gestfarm-table tbody td {
+    padding: 12px 12px;
+    height: 60px;
+    font-size: 0.8rem;
+    color: var(--gf-text);
+    border-bottom: 1px solid #e6edf2;
+    vertical-align: middle;
+}
+
+.riepilogo-movement-row {
+    cursor: pointer;
+    transition: background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.riepilogo-movement-row:hover {
+    background: #f6faff;
+}
+
+.riepilogo-movement-row.is-selected {
+    background: rgba(120, 184, 255, 0.32);
+    box-shadow: inset 0 0 0 1px #c7dbf3;
+}
+
+.riepilogo-empty-row td {
+    text-align: center;
+    color: var(--gf-text-soft);
+}
+
+.apo-col-consulenza {
+    width: 120px;
+}
+
+.apo-col-sede {
+    width: 300px;
+}
+
+.apo-col-data {
+    width: 120px;
+}
+
+.apo-col-cf {
+    width: 180px;
+}
+
+.apo-col-paziente {
+    width: 260px;
+}
+
+.apo-col-data-nascita {
+    width: 140px;
+}
+
+.apo-col-operatore {
+    width: 180px;
+}
+
+.apo-secondary-panel.is-hidden,
+.is-hidden {
+    display: none !important;
+}
+
+.apo-secondary-panel,
+.apo-placeholder-card {
+    min-height: 0;
+}
+
+.apo-paziente-view {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 5fr) minmax(0, 2fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+        "selected content actions"
+        "history content actions";
+    gap: 16px;
+    height: 100%;
+    min-height: 0;
+    align-items: stretch;
+}
+
+.apo-paziente-selected-card {
+    grid-area: selected;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+}
+
+.apo-paziente-selected-card .section-heading {
+    margin-bottom: 8px;
+}
+
+.apo-paziente-selected-card .section-heading h2 {
+    font-size: 1rem;
+}
+
+.apo-paziente-history-card {
+    grid-area: history;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    border-color: var(--gf-border);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: var(--gf-shadow);
+}
+
+.gestfarm-card.apo-paziente-history-card {
+    padding: 0;
+}
+
+.apo-paziente-history-corner-code
+{
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    color: var(--gf-blue-700);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.apo-paziente-selected-body {
+    min-height: 0;
+    padding-top: 0;
+}
+
+.apo-paziente-selected-sheet {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid rgb(215, 226, 240);
+    border-radius: 12px;
+    background: #f3f8ff;
+}
+
+.apo-paziente-selected-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(92px, 0.75fr);
+    gap: 8px;
+}
+
+.apo-paziente-selected-item {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.apo-paziente-selected-item-wide {
+    grid-column: 1 / -1;
+}
+
+.apo-paziente-selected-label {
+    color: var(--gf-text-soft);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.apo-paziente-selected-value {
+    min-height: 26px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--gf-border);
+    color: var(--gf-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.apo-paziente-menu-card,
+.apo-paziente-content-column,
+.apo-paziente-content-card,
+.apo-paziente-history-card {
+    min-height: 0;
+}
+
+.apo-paziente-menu-card,
+.apo-paziente-content-column,
+.apo-paziente-content-card {
+    height: 100%;
+}
+
+.apo-paziente-storico-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+    margin-bottom: 8px;
+    min-width: 0;
+}
+
+.apo-paziente-storico-tab {
+    min-width: 0;
+    min-height: 34px;
+    padding: 7px 8px;
+    border: 1px solid var(--gf-border);
+    border-radius: 10px;
+    background: #ffffff;
+    color: var(--gf-text);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    white-space: normal;
+    cursor: pointer;
+    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-paziente-storico-tab:hover,
+.apo-paziente-storico-tab:focus-visible {
+    border-color: #abc4e8;
+    background: var(--gf-blue-050);
+    color: var(--gf-blue-700);
+    outline: none;
+}
+
+.apo-paziente-storico-tab.is-active {
+    border-color: var(--gf-blue-700);
+    background: var(--gf-blue-700);
+    color: #ffffff;
+    box-shadow: 0 8px 16px rgba(31, 95, 184, 0.16);
+}
+
+.apo-paziente-history-main-tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    min-height: 46px;
+    margin: 0;
+    padding: 8px 12px 0;
+    border-bottom: 0px solid var(--gf-border);
+    background: white;
+    position: relative;
+    z-index: 2;
+}
+
+.apo-paziente-history-main-tabs .apo-paziente-storico-tab {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 38px;
+    padding: 9px 12px;
+    border: 1px solid var(--gf-border);
+    border-bottom: 0;
+    border-radius: 14px 14px 0 0;
+    background: #f3f8ff;
+    color: var(--gf-text);
+    box-shadow: inset 0 -8px 12px rgba(31, 95, 184, 0.06);
+    transform: translateY(1px);
+}
+
+.apo-paziente-history-main-tabs .apo-paziente-storico-tab:hover,
+.apo-paziente-history-main-tabs .apo-paziente-storico-tab:focus-visible {
+    border-color: var(--gf-border-strong);
+    background: #f8fbff;
+}
+
+.apo-paziente-history-main-tabs .apo-paziente-storico-tab.is-active {
+    z-index: 3;
+    min-height: 42px;
+    border-color: var(--gf-border-strong);
+    border-bottom-color: #ffffff;
+    background: #ffffff;
+    color: var(--gf-blue-700);
+    box-shadow: 0 -6px 14px rgba(31, 95, 184, 0.08);
+    transform: translateY(1px);
+}
+
+.apo-paziente-history-main-tabs .apo-paziente-storico-tab.is-active::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: #ffffff;
+}
+
+.apo-paziente-history-panel {
+    min-height: 0;
+    margin: 0;
+    padding: 12px 14px 14px;
+    border-top: 0;
+    background: #ffffff;
+    box-shadow: inset 0 1px 0 #ffffff;
+}
+
+.apo-paziente-storico-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+.apo-paziente-scheda-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: start;
+}
+
+.apo-paziente-scheda-actions {
+    margin-bottom: 8px;
+}
+
+.apo-paziente-scheda-body {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: 4px;
+}
+
+.apo-paziente-patologie-add {
+    position: sticky;
+    top: 0;
+    z-index: 12;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: start;
+    padding: 4px 0 10px;
+    margin-bottom: 10px;
+    background: #ffffff;
+}
+
+.apo-paziente-diario-add {
+    position: sticky;
+    top: 0;
+    z-index: 12;
+    display: flex;
+    gap: 8px;
+    align-items: start;
+    padding: 4px 0 10px;
+    margin-bottom: 10px;
+    background: #ffffff;
+}
+
+.apo-paziente-diario-add .btn {
+    width: 100%;
+    white-space: nowrap;
+}
+
+.apo-paziente-patologie-add-field {
+    position: relative;
+    min-width: 0;
+}
+
+.apo-paziente-patologie-add-input {
+    width: 100%;
+    min-height: 38px;
+    border: 1px solid var(--gf-border);
+    border-radius: 10px;
+    color: var(--gf-text);
+    font-size: 0.86rem;
+    font-weight: 600;
+    padding: 0px 8px;
+}
+
+.apo-paziente-patologie-suggestions {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 4px);
+    right: 0;
+    left: 0;
+    max-height: 220px;
+    overflow: auto;
+    padding: 6px;
+    border: 1px solid var(--gf-border-strong);
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 14px 26px rgba(17, 45, 89, 0.16);
+}
+
+.apo-paziente-patologie-suggestion,
+.apo-paziente-patologie-suggestion-empty {
+    width: 100%;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--gf-text);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: left;
+}
+
+.apo-paziente-patologie-suggestion:hover,
+.apo-paziente-patologie-suggestion:focus-visible {
+    background: var(--gf-blue-050);
+    color: var(--gf-blue-700);
+    outline: none;
+}
+
+.apo-paziente-patologie-suggestion-empty {
+    color: var(--gf-text-soft);
+    font-weight: 600;
+}
+
+.apo-paziente-patologia-row {
+    padding-right: 40px;
+}
+
+.apo-paziente-patologia-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+}
+
+.apo-paziente-patologia-delete-button {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ffffff00;
+    color: #dc2626;
+    font-weight: 800;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+}
+
+.apo-paziente-patologia-delete-button:hover,
+.apo-paziente-patologia-delete-button:focus-visible {
+    outline: none;
+}
+
+.apo-paziente-patologia-delete-button:disabled {
+    cursor: wait;
+    opacity: 0.68;
+}
+
+.apo-paziente-menu-card {
+    grid-area: actions;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+.apo-paziente-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    overflow: auto;
+    position: relative;
+}
+
+.apo-spinner-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 54px;
+    background: var(--gf-blue-050);
+    color: var(--gf-blue-700);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.apo-spinner-loader-icon {
+    width: 22px;
+    height: 22px;
+    border: 3px solid rgba(31, 95, 184, 0.2);
+    border-top-color: var(--gf-blue-700);
+    border-radius: 50%;
+    animation: apo-spinner-rotate 0.72s linear infinite;
+}
+
+.apo-paziente-menu-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    min-height: 100%;
+    padding: 18px;
+    border-color: rgba(31, 95, 184, 0.22);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.68), 0 18px 42px rgba(15, 34, 62, 0.18);
+    backdrop-filter: blur(2px);
+    pointer-events: auto;
+}
+
+.apo-paziente-menu-loader[hidden] {
+    display: none;
+}
+
+.apo-paziente-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 14px;
+    border: 1px solid var(--gf-border);
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--gf-text);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: left;
+    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-paziente-menu-button.has-status-check::after {
+    content: "\2713";
+    flex: 0 0 auto;
+    margin-left: auto;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #1f8f4d;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    display: inline-grid;
+    place-items: center;
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.apo-paziente-menu-button.is-active.has-status-check::after {
+    border-color: #ffffff;
+    background: #bbf7d0;
+    color: #14532d;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.42);
+}
+
+.apo-paziente-menu-button:hover,
+.apo-paziente-menu-button:focus-visible {
+    border-color: #abc4e8;
+    background: var(--gf-blue-050);
+    color: var(--gf-blue-700);
+    outline: none;
+}
+
+.apo-paziente-menu-button:disabled,
+.apo-paziente-menu-button:disabled:hover,
+.apo-paziente-menu-button:disabled:focus-visible {
+    border-color: #d5dce8;
+    background: #eef2f7;
+    color: #7a8798;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.72;
+}
+
+.apo-paziente-menu-button.is-active {
+    border-color: var(--gf-blue-700);
+    background: var(--gf-blue-700);
+    color: #ffffff;
+    box-shadow: 0 10px 18px rgba(31, 95, 184, 0.18);
+}
+
+.apo-paziente-menu-button-danger {
+    border-color: #b91c1c;
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.apo-paziente-menu-button-danger:hover,
+.apo-paziente-menu-button-danger:focus-visible,
+.apo-paziente-menu-button-danger.is-active {
+    border-color: #991b1b;
+    background: #b91c1c;
+    color: #ffffff;
+    box-shadow: 0 10px 18px rgba(185, 28, 28, 0.2);
+}
+
+.apo-paziente-navigation-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.apo-paziente-nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 1px solid var(--gf-border);
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--gf-text);
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-paziente-nav-button:hover,
+.apo-paziente-nav-button:focus-visible {
+    border-color: #abc4e8;
+    background: var(--gf-blue-050);
+    color: var(--gf-blue-700);
+    box-shadow: 0 8px 16px rgba(31, 95, 184, 0.12);
+    outline: none;
+}
+
+.apo-paziente-consenso-box {
+    display: grid;
+    gap: 10px;
+    margin-top: auto;
+    padding: 12px;
+    border: 1px solid #9ca3af;
+    border-radius: 16px;
+    background: #f3f4f6;
+    transition: background-color 0.16s ease, border-color 0.16s ease;
+}
+
+.apo-paziente-consenso-box.is-consenso-inespresso {
+    border-color: #9ca3af;
+    background: #f3f4f6;
+}
+
+.apo-paziente-consenso-box.is-consenso-presente {
+    border-color: #22c55e;
+    background: #dcfce7;
+}
+
+.apo-paziente-consenso-box.is-consenso-negato {
+    border-color: #ef4444;
+    background: #fee2e2;
+}
+
+.apo-paziente-consenso-box.is-consenso-loading {
+    border-color: #9ca3af;
+    background: #f3f4f6;
+}
+
+.apo-paziente-consenso-html {
+    margin: 0;
+    color: var(--gf-text-soft);
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.apo-paziente-consenso-html .descrizioneConsenso {
+    display: inline-block;
+}
+
+.apo-paziente-content-column {
+    grid-area: content;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 8px;
+    min-width: 0;
+}
+
+.apo-paziente-content-card {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+.apo-paziente-content-card .section-heading > div {
+    width: 100%;
+    min-width: 0;
+}
+
+#apo-paziente-title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+}
+
+.apo-paziente-title-main {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid var(--gf-border);
+    border-radius: 14px;
+    background: #ffffff;
+    box-sizing: border-box;
+    min-width: 0;
+    color: var(--gf-text);
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.55;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.apo-paziente-title-consulenza {
+    font-weight: 700;
+}
+
+.apo-paziente-title-main.is-main-consulenza {
+    border-color: #28a745;
+    background: rgb(220, 252, 231);;
+    color: #28a745;
+    box-shadow: 0 10px 18px rgba(40, 167, 69, 0.18);
+}
+
+.apo-paziente-title-main.is-storico-consulenza {
+    border-color: var(--gf-blue-700);
+    background: #f3f8ff;
+    color: var(--gf-blue-700);;
+    box-shadow: 0 10px 18px rgba(31, 95, 184, 0.18);
+}
+
+.apo-paziente-title-action {
+    flex: 0 0 auto;
+    /* padding: 8px 18px; */
+    border-radius: 12px;
+    /* background: var(--gf-blue-700); */
+    color: #000000;
+    /* font-size: 0.82rem; */
+    font-weight: 700;
+    /* box-shadow: 0 10px 18px rgba(31, 95, 184, 0.18); */
+}
+
+.apo-paziente-storico-body {
+    min-height: 0;
+    padding-top: 4px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.apo-storico-loader {
+    min-height: 160px;
+    margin: 4px 0;
+    background: #ffffff;
+}
+
+.apo-paziente-history-list {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.apo-paziente-history-item {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 10px 12px;
+    position: relative;
+    padding-right: 40px; /* Make space for the icon */
+    border: 1px solid transparent;
+    border-bottom-color: var(--gf-border);
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+/* Evidenziazione in verde per la consulenza proveniente da Accessi */
+.apo-paziente-history-item.is-main-selection {
+    background-color: #dcfce7 !important; /* Verde chiaro */
+    border-left: 4px solid #28a745;      /* Bordo verde scuro */
+}
+
+/* Evidenziazione in blu per l'elemento selezionato nello storico */
+.apo-paziente-history-item.is-selected {
+    background-color: #f3f8ff !important; /* Blu chiaro */
+    border-left: 4px solid #007bff;      /* Bordo blu */
+}
+
+/* Caso in cui l'elemento sia sia quello principale che quello selezionato */
+.apo-paziente-history-item.is-main-selection.is-selected {
+    background-color: #f3f8ff !important; /* Un mix o preferenza blu */
+    border-left: 4px solid #28a745;
+}
+
+.apo-allegato-m-icon {
+    position: absolute;
+    right: 8px; /* Adjust as needed */
+    top: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--gf-blue-700); /* Blue background */
+    color: #ffffff; /* White text */
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-paziente-history-item:hover,
+.apo-paziente-history-item:focus-visible {
+    border-color: #abc4e8;
+    background: var(--gf-blue-050);
+    outline: none;
+}
+
+.apo-allegato-m-icon:hover,
+.apo-allegato-m-icon:focus-visible {
+    background-color: #17498f; /* Darker blue on hover */
+    box-shadow: 0 4px 8px rgba(31, 95, 184, 0.3);
+    outline: none;
+}
+
+.apo-paziente-history-item-static {
+    cursor: default;
+}
+
+.apo-paziente-history-item-static:hover {
+    border-color: transparent;
+    border-bottom-color: var(--gf-border);
+    background: #ffffff;
+}
+
+.apo-paziente-history-item.is-current {
+    border-color: var(--gf-blue-700);
+    background: var(--gf-blue-050);
+    box-shadow: 0 12px 22px rgba(31, 95, 184, 0.18);
+}
+
+.apo-paziente-history-date {
+    color: var(--gf-blue-700);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.apo-paziente-history-title {
+    color: var(--gf-text);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.apo-paziente-history-meta {
+    color: var(--gf-text-soft);
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+.apo-prestazioni-inf-group {
+    gap: 7px;
+    padding-right: 12px;
+}
+
+.apo-prestazioni-inf-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+}
+
+.apo-prestazioni-inf-consulenza {
+    flex: 0 0 auto;
+    max-width: 45%;
+    color: var(--gf-blue-700);
+    font-size: 0.82rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.apo-prestazioni-inf-items {
+    display: grid;
+    gap: 9px;
+    margin: 4px 0 0;
+    padding: 8px 0 0;
+    border-top: 1px solid var(--gf-border);
+    color: var(--gf-text);
+    font-size: 0.84rem;
+    line-height: 1.4;
+}
+
+.apo-prestazioni-inf-category {
+    display: grid;
+    gap: 5px;
+}
+
+.apo-prestazioni-inf-category-title {
+    color: var(--gf-blue-700);
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.apo-prestazioni-inf-subitems {
+    display: grid;
+    gap: 3px;
+}
+
+.apo-prestazioni-inf-subitem {
+    color: var(--gf-text);
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.apo-ricette-farmaci-list {
+    display: grid;
+    gap: 4px;
+    margin: 4px 0 0;
+    padding-left: 18px;
+    color: var(--gf-text);
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+.apo-ricette-farmaci-list li {
+    overflow-wrap: anywhere;
+}
+
+.apo-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    background: rgba(15, 34, 62, 0.46);
+}
+
+.apo-modal-panel {
+    display: grid;
+    gap: 14px;
+    width: min(460px, 100%);
+    padding: 22px;
+    border: 1px solid var(--gf-border-strong);
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--gf-text);
+    box-shadow: 0 24px 60px rgba(15, 34, 62, 0.28);
+}
+
+.apo-modal-panel h2 {
+    margin: 0;
+    color: var(--gf-text);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.apo-modal-panel p {
+    margin: 0;
+    color: var(--gf-text-soft);
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.apo-modal-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.apo-modal-heading-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.apo-modal-close-button {
+    display: inline-block;
+    padding: 2px 4px;
+    border: 0;
+    background: transparent;
+    color: var(--gf-text);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.apo-modal-close-button:hover,
+.apo-modal-close-button:focus-visible {
+    color: var(--gf-blue-700);
+    outline: none;
+}
+
+.apo-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+    flex-wrap: wrap;
+}
+
+.apo-delete-confirm-button {
+    border: 1px solid #b42318;
+    background: #b42318;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.apo-delete-confirm-button:hover,
+.apo-delete-confirm-button:focus-visible {
+    border-color: #8f1d15;
+    background: #8f1d15;
+    color: #ffffff;
+    outline: none;
+}
+
+.apo-diario-panel {
+    width: min(750px, 100%);
+}
+
+.apo-diario-form {
+    display: grid;
+    gap: 14px;
+}
+
+.apo-diario-date-time {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.apo-diario-form .form-control {
+    min-height: 40px;
+    border: 1px solid var(--gf-border);
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--gf-text);
+    padding: 0 12px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    box-shadow: none;
+}
+
+.apo-diario-form .form-control:focus {
+    border-color: #79a9e5;
+    box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.14);
+    outline: none;
+}
+
+.apo-diario-descrizione {
+    min-height: 350px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    line-height: 1.45;
+    resize: vertical;
+}
+
+.apo-new-accesso-panel {
+    display: flex;
+    flex-direction: column;
+    width: min(1120px, 100%);
+    height: min(760px, calc(100vh - 48px));
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
+}
+
+.apo-new-accesso-form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(150px, 1fr)) auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.apo-new-accesso-results-wrap {
+    flex: 0 0 430px;
+    height: 430px;
+    min-height: 430px;
+    max-height: 430px;
+    overflow: auto;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.apo-new-accesso-table {
+    min-width: 980px;
+}
+
+.apo-new-accesso-col-cf {
+    width: 220px;
+}
+
+.apo-new-accesso-col-cognome {
+    width: 210px;
+}
+
+.apo-new-accesso-col-nome {
+    width: 200px;
+}
+
+.apo-new-accesso-col-data {
+    width: 130px;
+}
+
+.apo-new-accesso-col-sesso {
+    width: 70px;
+}
+
+.apo-new-accesso-col-eta {
+    width: 70px;
+}
+
+.apo-new-accesso-col-pin {
+    width: 120px;
+}
+
+.apo-new-accesso-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-new-accesso-table tbody tr:hover {
+    background: #f6faff;
+}
+
+.apo-new-accesso-table tbody tr.is-selected {
+    background: rgba(120, 184, 255, 0.32);
+    box-shadow: inset 0 0 0 1px #c7dbf3;
+}
+
+.apo-new-accesso-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 0 10px;
+}
+
+.apo-censimento-panel {
+    width: min(1120px, 100%);
+    height: min(760px, calc(100vh - 48px));
+    max-height: calc(100vh - 48px);
+    gap: 10px;
+    padding: 18px;
+    overflow: hidden;
+    align-content: start;
+}
+
+.apo-censimento-panel .apo-modal-heading {
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.apo-censimento-panel .apo-modal-heading h2 {
+    color: var(--gf-text);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.apo-censimento-panel .apo-modal-close-button {
+    color: var(--gf-text);
+}
+
+.apo-censimento-form {
+    display: grid;
+    gap: 8px;
+    width: min(660px, 100%);
+    padding: 0;
+}
+
+.apo-censimento-grid {
+    display: grid;
+    grid-template-columns: 154px minmax(0, 1fr) 114px 60px;
+    gap: 6px 6px;
+    align-items: center;
+}
+
+.apo-censimento-field {
+    display: contents;
+    min-width: 0;
+}
+
+.apo-censimento-form .form-label {
+    margin: 0;
+    color: var(--gf-blue-700);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.apo-required-marker {
+    color: #b42318;
+    font-weight: 800;
+}
+
+.apo-censimento-form .form-control {
+    min-height: 28px;
+    height: 28px;
+    width: 100%;
+    border: 1px solid var(--gf-border-strong);
+    border-radius: 7px;
+    background: #ffffff;
+    color: var(--gf-text);
+    padding: 0 8px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    box-shadow: none;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+
+.apo-censimento-form .form-control:focus {
+    border-color: #79a9e5;
+    background: #fbfdff;
+    box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.14);
+    outline: none;
+}
+
+.apo-censimento-form .form-control:disabled {
+    background: #f3f6fb;
+    color: #7b8ca3;
+}
+
+.apo-censimento-field-wide,
+.apo-censimento-field-cf {
+    grid-column: 1 / -1;
+}
+
+.apo-censimento-field-wide > .form-label,
+.apo-censimento-field-cf > .form-label {
+    grid-column: 1;
+}
+
+.apo-censimento-field-wide > .form-control,
+.apo-censimento-field-cf > .apo-censimento-inline {
+    grid-column: 2 / -1;
+}
+
+.apo-censimento-inline {
+    display: grid;
+    grid-template-columns: minmax(0, 235px) auto;
+    gap: 4px;
+    align-items: stretch;
+    justify-content: start;
+}
+
+.apo-censimento-inline .btn {
+    min-width: 64px;
+    min-height: 28px;
+    padding: 0 8px;
+    border-radius: 7px;
+    font-size: 0.82rem;
+}
+
+.apo-censimento-field-cap {
+    min-width: 84px;
+}
+
+.apo-censimento-field-cap .form-label {
+    grid-column: 3;
+}
+
+.apo-censimento-field-cap .form-control {
+    grid-column: 4;
+}
+
+#apo-censimento-data-nascita {
+    max-width: 122px;
+}
+
+.apo-censimento-field-sesso {
+    align-self: stretch;
+}
+
+.apo-censimento-sesso-toggle {
+    display: flex;
+    align-items: stretch;
+    gap: 3px;
+    min-height: 28px;
+}
+
+.apo-censimento-sesso-toggle label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 28px;
+    margin: 0;
+    border: 1px solid #9db9e8;
+    border-radius: 5px;
+    background: #eaf2ff;
+    color: #11479a;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-censimento-sesso-toggle input {
+    margin: 0 3px 0 0;
+    accent-color: var(--gf-blue-700);
+}
+
+.apo-censimento-sesso-toggle label:hover,
+.apo-censimento-sesso-toggle label:focus-within {
+    border-color: var(--gf-blue-600);
+    background: #dcebff;
+    box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.12);
+}
+
+.apo-censimento-sesso-toggle label:has(input:checked) {
+    border-color: var(--gf-blue-700);
+    background: var(--gf-blue-700);
+    color: #ffffff;
+}
+
+.apo-censimento-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-left: 154px;
+    padding-top: 4px;
+}
+
+.apo-censimento-actions .btn {
+    min-width: 132px;
+    min-height: 34px;
+    border-radius: 7px;
+}
+
+#apo-censimento-message {
+    margin: 0 0 0 154px;
+    padding: 0.55rem 0.7rem;
+    border-radius: 7px;
+    font-size: 0.86rem;
+}
+
+.apo-new-accesso-censimento-link {
+    color: #7c2d12;
+    font-weight: 800;
+    text-decoration: underline;
+}
+
+.apo-new-accesso-censimento-link:hover,
+.apo-new-accesso-censimento-link:focus-visible {
+    color: #9a3412;
+    outline: none;
+}
+
+@media (max-width: 760px) {
+    .apo-censimento-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .apo-censimento-field-wide,
+    .apo-censimento-field-cf {
+        grid-column: auto;
+    }
+
+    .apo-censimento-field-wide > .form-label,
+    .apo-censimento-field-cf > .form-label,
+    .apo-censimento-field-wide > .form-control,
+    .apo-censimento-field-cf > .apo-censimento-inline,
+    .apo-censimento-field-cap .form-label,
+    .apo-censimento-field-cap .form-control {
+        grid-column: auto;
+    }
+
+    .apo-censimento-inline {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .apo-censimento-actions,
+    #apo-censimento-message {
+        margin-left: 0;
+    }
+
+    .apo-censimento-actions {
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+}
+
+.apo-new-accesso-panel > .apo-new-accesso-actions {
+    margin-top: auto;
+    padding: 12px 0 0;
+    background: #ffffff;
+}
+
+@media (max-height: 820px) {
+    .apo-new-accesso-results-wrap {
+        flex-basis: 360px;
+        height: 360px;
+        min-height: 360px;
+        max-height: 360px;
+    }
+}
+
+@media (max-height: 700px) {
+    .apo-new-accesso-results-wrap {
+        flex-basis: 300px;
+        height: 300px;
+        min-height: 300px;
+        max-height: 300px;
+    }
+}
+
+.apo-new-accesso-detail-panel {
+    width: min(720px, 100%);
+}
+
+.apo-new-accesso-back-button {
+    min-height: 34px;
+    padding: 0 12px;
+    white-space: nowrap;
+}
+
+.apo-new-accesso-detail-form {
+    display: grid;
+    gap: 14px;
+}
+
+.apo-new-accesso-selected-patient {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+    padding: 12px;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: var(--gf-surface-soft);
+}
+
+.apo-new-accesso-selected-patient-item {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.apo-new-accesso-selected-patient-label {
+    color: var(--gf-text-soft);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.apo-new-accesso-selected-patient-item strong {
+    min-width: 0;
+    color: var(--gf-text);
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+    .apo-new-accesso-selected-patient {
+        grid-template-columns: 1fr;
+    }
+}
+
+.apo-new-accesso-detail-form textarea.form-control {
+    min-height: 150px;
+    padding: 10px 12px;
+    resize: vertical;
+    line-height: 1.45;
+}
+
+.apo-scheda-paziente-panel {
+    width: min(96vw, calc(100vw - 48px));
+    height: calc(100vh - 28px);
+    max-height: calc(100vh - 28px);
+    overflow: hidden;
+}
+
+.apo-scheda-paziente-body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        "anagrafici rischio"
+        "caregiver rischio"
+        "diario rischio";
+    gap: 18px;
+    align-items: start;
+    min-height: 0;
+    max-height: none;
+    overflow: auto;
+    padding: 14px;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: var(--gf-surface-soft);
+}
+
+.apo-scheda-paziente-section {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+}
+
+.apo-scheda-paziente-section-title {
+    margin: 0;
+    color: var(--gf-text);
+    font-size: 0.94rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.apo-scheda-paziente-section-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+}
+
+.apo-scheda-paziente-item {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.apo-scheda-paziente-item-wide {
+    grid-column: 1 / -1;
+}
+
+.apo-scheda-paziente-body > .apo-scheda-paziente-item-wide {
+    grid-column: auto;
+}
+
+.apo-scheda-paziente-anagrafici-section {
+    grid-area: anagrafici;
+}
+
+.apo-scheda-paziente-rischio-section {
+    grid-area: rischio;
+}
+
+.apo-scheda-paziente-caregiver-item {
+    grid-area: caregiver;
+}
+
+.apo-scheda-paziente-diario-item {
+    grid-area: diario;
+}
+
+.apo-scheda-paziente-diario-item .apo-scheda-paziente-textarea {
+    min-height: 180px;
+}
+
+.apo-scheda-paziente-diario-storico {
+    display: grid;
+    gap: 6px;
+    max-height: 220px;
+    overflow: auto;
+}
+
+.apo-scheda-paziente-diario-storico-item {
+    display: grid;
+    gap: 3px;
+    padding: 8px 10px;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: var(--gf-surface-soft);
+}
+
+.apo-scheda-paziente-diario-storico-date {
+    color: var(--gf-blue-700);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.apo-scheda-paziente-diario-storico-text {
+    color: var(--gf-text);
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.apo-scheda-paziente-label {
+    color: var(--gf-text-soft);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.apo-scheda-paziente-value {
+    color: var(--gf-text);
+    font-size: 0.92rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.apo-scheda-paziente-textarea {
+    width: 100%;
+    min-height: 96px;
+    padding: 10px 12px;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--gf-text);
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.45;
+    resize: vertical;
+}
+
+.apo-scheda-paziente-input,
+.apo-scheda-paziente-select {
+    min-height: 40px;
+    border: 1px solid var(--gf-border);
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--gf-text);
+    padding: 0 12px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    box-shadow: none;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.apo-scheda-paziente-mass-grid {
+    display: grid;
+    grid-template-columns: minmax(64px, 0.9fr) auto minmax(74px, 1fr) auto minmax(58px, 0.8fr);
+    gap: 6px;
+    align-items: center;
+}
+
+.apo-scheda-paziente-mass-item {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.apo-scheda-paziente-unit-box,
+.apo-scheda-paziente-height-box {
+    position: relative;
+    min-width: 0;
+}
+
+.apo-scheda-paziente-unit-box .apo-scheda-paziente-input {
+    padding-right: 38px;
+}
+
+.apo-scheda-paziente-height-box .apo-scheda-paziente-input {
+    padding-right: 52px;
+}
+
+.apo-scheda-paziente-unit {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    color: var(--gf-text-soft);
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.apo-scheda-paziente-height-unit {
+    right: 24px;
+}
+
+.apo-scheda-paziente-exponent {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: var(--gf-text-soft);
+    font-size: 0.66rem;
+    font-weight: 800;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.apo-scheda-paziente-formula-sign {
+    color: var(--gf-text);
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1;
+    text-align: center;
+}
+
+.apo-scheda-paziente-mass-result {
+    background: var(--gf-blue-050);
+    color: var(--gf-text);
+}
+
+.apo-scheda-paziente-table-filter {
+    width: 100%;
+}
+
+.apo-scheda-paziente-patologie-search {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.apo-scheda-paziente-patologie-search .btn {
+    min-height: 40px;
+    white-space: nowrap;
+}
+
+.apo-scheda-paziente-table-wrap {
+    max-height: 190px;
+    overflow: auto;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.apo-scheda-paziente-table {
+    width: 100%;
+    min-width: 520px;
+    margin: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 0.84rem;
+}
+
+.apo-scheda-paziente-patologie-table {
+    min-width: 680px;
+}
+
+.apo-scheda-paziente-patologie-col-codice {
+    width: 10%;
+}
+
+.apo-scheda-paziente-patologie-col-descrizione {
+    width: 55%;
+}
+
+.apo-scheda-paziente-patologie-col-categoria {
+    width: 35%;
+}
+
+.apo-scheda-paziente-table th,
+.apo-scheda-paziente-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--gf-border);
+    color: var(--gf-text);
+    vertical-align: middle;
+    overflow-wrap: anywhere;
+}
+
+.apo-scheda-paziente-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--gf-surface-soft);
+    color: var(--gf-text-soft);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-align-last: left;
+}
+
+.apo-scheda-paziente-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.apo-scheda-paziente-caregiver-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.apo-scheda-paziente-caregiver-grid .btn {
+    min-height: 40px;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.apo-scheda-paziente-caregiver-results {
+    max-height: 210px;
+}
+
+.apo-scheda-paziente-patologia-row,
+.apo-scheda-paziente-caregiver-row {
+    cursor: pointer;
+    transition: background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-scheda-paziente-patologia-row:hover,
+.apo-scheda-paziente-patologia-row:focus-visible,
+.apo-scheda-paziente-caregiver-row:hover,
+.apo-scheda-paziente-caregiver-row:focus-visible {
+    background: #f6faff;
+    outline: none;
+}
+
+.apo-scheda-paziente-patologia-row.is-selected {
+    background: rgba(120, 184, 255, 0.24);
+    box-shadow: inset 0 0 0 1px #c7dbf3;
+}
+
+.apo-scheda-paziente-selected-list {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.apo-scheda-paziente-selected-list li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: var(--gf-surface-soft);
+    color: var(--gf-text);
+    font-size: 0.86rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.apo-scheda-paziente-selected-text {
+    min-width: 0;
+}
+
+.apo-scheda-paziente-selected-remove {
+    width: 26px;
+    height: 26px;
+    border: 0px solid #c9d7e8;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--gf-text-soft);
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.apo-scheda-paziente-selected-remove:hover,
+.apo-scheda-paziente-selected-remove:focus-visible {
+    border-color: #9fb6d3;
+    color: var(--gf-text);
+    outline: none;
+}
+
+.apo-scheda-paziente-selected-list .apo-scheda-paziente-selected-empty {
+    grid-template-columns: 1fr;
+    color: var(--gf-text-soft);
+    font-weight: 600;
+}
+
+.apo-scheda-paziente-textarea:focus,
+.apo-scheda-paziente-input:focus,
+.apo-scheda-paziente-select:focus {
+    border-color: #79a9e5;
+    box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.14);
+    outline: none;
+}
+
+@media (max-width: 980px) {
+    .apo-scheda-paziente-body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "anagrafici"
+            "caregiver"
+            "diario"
+            "rischio";
+    }
+
+    .apo-scheda-paziente-body > .apo-scheda-paziente-item-wide {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 760px) {
+    .apo-scheda-paziente-panel {
+        width: min(100%, calc(100vw - 18px));
+    }
+
+    .apo-scheda-paziente-body {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 10px;
+    }
+
+    .apo-scheda-paziente-body > .apo-scheda-paziente-item-wide {
+        grid-column: 1 / -1;
+    }
+
+    .apo-scheda-paziente-section-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .apo-scheda-paziente-mass-grid {
+        grid-template-columns: minmax(110px, 1fr) auto minmax(110px, 1fr) auto minmax(110px, 1fr);
+        overflow-x: auto;
+    }
+
+    .apo-scheda-paziente-caregiver-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.apo-new-accesso-type-toggle {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.apo-new-accesso-type-button {
+    min-height: 42px;
+    border-radius: 12px;
+    border: 1px solid var(--gf-border);
+    background: #ffffff;
+    color: var(--gf-text);
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-new-accesso-type-button:hover,
+.apo-new-accesso-type-button:focus-visible {
+    border-color: #79a9e5;
+    box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.14);
+    outline: none;
+}
+
+.apo-new-accesso-type-button.is-active {
+    border-color: #2f79d7;
+    background: #eaf4ff;
+    color: #194f96;
+    box-shadow: inset 0 0 0 1px rgba(47, 121, 215, 0.18);
+}
+
+.apo-paziente-body {
+    min-height: 0;
+    height: 100%;
+    padding: 4px 0 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.apo-paziente-stage {
+    display: grid;
+    gap: 14px;
+    min-height: 100%;
+}
+
+.apo-statistiche-view {
+    min-height: 0;
+}
+
+.apo-statistiche-card {
+    min-height: 320px;
+}
+
+.apo-paziente-sheet {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+    min-height: 100%;
+    /*padding: 18px;
+    border-radius: 16px;
+    border: 1px solid var(--gf-border);
+    background: var(--gf-surface-soft);*/
+}
+
+.apo-paziente-sheet-field {
+    display: grid;
+    gap: 8px;
+}
+
+.apo-paziente-sheet-label {
+    color: var(--gf-blue-700);
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.apo-paziente-sheet-value {
+    min-height: 42px;
+    padding: 12px 14px;
+    border: 1px solid var(--gf-border);
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--gf-text);
+    font-size: 0.96rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.apo-diagnosi-sheet .apo-paziente-sheet-label,
+.apo-diagnosi-sheet .apo-paziente-sheet-value {
+    font-size: 0.8rem;
+}
+
+.apo-diagnosi-esame-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.apo-diagnosi-add-visita-button {
+    min-height: 42px;
+    white-space: nowrap;
+}
+
+.apo-diagnosi-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+}
+
+.apo-diagnosi-save-button {
+    min-width: 118px;
+}
+
+.apo-paziente-sheet-field-notes .apo-paziente-sheet-value {
+    min-height: 150px;
+}
+
+.apo-prestazioni-inf-sheet {
+    gap: 12px;
+}
+
+.apo-prestazioni-inf-form {
+    display: grid;
+    gap: 18px;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    min-height: 100%;
+}
+
+.apo-prestazioni-inf-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+}
+
+.apo-prestazioni-inf-field {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+}
+
+.apo-prestazioni-inf-label {
+    color: var(--gf-blue-700);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.apo-prestazioni-inf-field .form-control,
+.apo-prestazioni-inf-field .form-select {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--gf-border);
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--gf-text);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    padding: 12px 14px;
+}
+
+.apo-prestazioni-inf-multiselect {
+    display: grid;
+    gap: 6px;
+    min-height: 112px;
+    max-height: 500px;
+    padding: 0px 16px 0px 0px;
+    border: 0px solid var(--gf-border);
+    border-radius: 14px;
+    background: #ffffff;
+    overflow-y: auto;
+    align-content: start;
+}
+
+.apo-prestazioni-inf-multiselect-placeholder {
+    display: flex;
+    align-items: center;
+    min-height: 36px;
+    color: var(--gf-text-soft);
+    font-size: 0.82rem;
+}
+
+.apo-prestazioni-inf-choice {
+    width: 100%;
+    min-height: 42px;
+    padding: 12px 14px;
+    border: 1px solid var(--gf-border);
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--gf-text);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.55;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.apo-prestazioni-inf-choice:hover,
+.apo-prestazioni-inf-choice:focus-visible {
+    border-color: #abc4e8;
+    background: var(--gf-blue-050);
+    outline: none;
+}
+
+.apo-prestazioni-inf-choice:disabled {
+    cursor: not-allowed;
+    opacity: 0.68;
+}
+
+.apo-prestazioni-inf-choice.is-selected {
+    border-color: var(--gf-blue-700);
+    background: var(--gf-blue-700);
+    color: #ffffff;
+}
+
+.apo-prestazioni-inf-note {
+    height: 150px;
+    min-height: 150px;
+    max-height: 150px;
+    resize: none;
+    line-height: 1.55;
+}
+
+.apo-prestazioni-inf-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-self: end;
+    padding-top: 8px;
+}
+
+.apo-prestazioni-inf-actions .btn {
+    min-width: 120px;
+}
+
+.apo-piani-terapeutici-sheet {
+    min-height: 0;
+}
+
+.apo-piani-terapeutici-list {
+    display: grid;
+    gap: 12px;
+}
+
+.apo-piano-terapeutico-card {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 10px 22px rgba(17, 45, 89, 0.06);
+}
+
+.apo-piano-terapeutico-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--gf-border);
+}
+
+.apo-piano-terapeutico-header h3 {
+    margin: 0;
+    color: var(--gf-blue-700);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.apo-piano-terapeutico-dates {
+    color: var(--gf-text-soft);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.apo-piano-terapeutico-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+}
+
+.apo-piano-terapeutico-field {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.apo-piano-terapeutico-field-wide {
+    grid-column: 1 / -1;
+}
+
+.apo-piano-terapeutico-label {
+    color: var(--gf-text-soft);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.apo-piano-terapeutico-value {
+    min-width: 0;
+    color: var(--gf-text);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.apo-ricetta-sheet {
+    min-height: 0;
+}
+
+.apo-ricetta-link-text {
+    margin: 0;
+    padding: 18px 20px;
+    border: 1px solid var(--gf-border);
+    border-radius: 16px;
+    background: #ffffff;
+    color: var(--gf-text);
+    font-size: 0.96rem;
+    line-height: 1.6;
+}
+
+.apo-ricetta-link {
+    color: var(--gf-blue-700);
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.apo-ricetta-link:hover,
+.apo-ricetta-link:focus-visible {
+    color: var(--gf-blue-600);
+    outline: none;
+}
+
+.apo-allegato-sheet {
+    min-height: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    overflow: visible;
+    background: transparent;
+}
+
+.apo-allegato-m-form {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+    padding-right: 8px;
+    color: var(--gf-text);
+    font-family: sans-serif;
+    font-size: 0.88rem;
+}
+
+.apo-allegato-form-message {
+    padding: 10px 12px;
+    border: 1px solid var(--gf-border);
+    border-radius: 12px;
+    background: var(--gf-blue-050);
+    color: var(--gf-text);
+    font-weight: 700;
+}
+
+.apo-allegato-form-message.is-success {
+    border-color: #b6dfc3;
+    background: #effaf2;
+    color: #176f3b;
+}
+
+.apo-allegato-form-message.is-danger {
+    border-color: #f0b8b8;
+    background: #fff3f3;
+    color: #9f1f1f;
+}
+
+.apo-allegato-contact-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.apo-allegato-inline-field {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    margin: 0;
+    color: var(--gf-blue-700);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.apo-allegato-inline-field input {
+    width: 100%;
+    height: 42px;
+    padding: 9px 12px;
+    border: 1px solid var(--gf-border);
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--gf-text);
+}
+
+.apo-allegato-textarea-field {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+    margin: 0;
+    color: var(--gf-blue-700);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.apo-allegato-textarea-field textarea {
+    width: 100%;
+    min-height: 92px;
+    padding: 12px 14px;
+    resize: none;
+    border: 1px solid var(--gf-border);
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--gf-text);
+    line-height: 1.45;
+}
+
+.apo-allegato-textarea-medium textarea {
+    min-height: 86px;
+}
+
+.apo-allegato-inline-field input:focus,
+.apo-allegato-textarea-field textarea:focus {
+    border-color: var(--gf-blue-600);
+    box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.13);
+    outline: none;
+}
+
+.apo-allegato-clinical-grid {
+    display: block;
+    column-count: 2;
+    column-gap: 10px;
+}
+
+.apo-allegato-clinical-section {
+    min-width: 0;
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 10px;
+    break-inside: avoid;
+    padding: 10px;
+    border: 1px solid var(--gf-border);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: none;
+}
+
+.apo-allegato-clinical-section h3,
+.apo-allegato-esito h3 {
+    margin: 0 0 7px;
+    color: var(--gf-blue-700);
+    font-family: sans-serif;
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-align: left;
+}
+
+.apo-allegato-clinical-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+    min-height: 30px;
+    align-items: center;
+    padding: 4px 6px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.apo-allegato-clinical-controls {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.apo-allegato-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    color: var(--gf-text);
+    font-size: 0.84rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.apo-allegato-check input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--gf-blue-700);
+}
+
+.apo-allegato-esito {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border: 1px solid var(--gf-border);
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+.apo-allegato-esito h3 {
+    text-align: left;
+}
+
+.apo-allegato-esito-grid {
+    display: grid;
+    grid-template-columns: auto repeat(2, minmax(140px, 1fr));
+    gap: 10px 18px;
+    align-items: center;
+}
+
+.apo-allegato-paziente-label {
+    grid-row: 1 / span 2;
+}
+
+.apo-allegato-nondifferibile {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--gf-border);
+    border-radius: 14px;
+    background: var(--gf-blue-050);
+    color: var(--gf-text);
+    font-weight: 700;
+}
+
+.apo-allegato-nondifferibile input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--gf-blue-700);
+}
+
+.apo-allegato-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 2px;
+}
+
+.apo-allegato-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 126px;
+    min-height: 42px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    color: #ffffff;
+    font-weight: 700;
+    transition: border-color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.apo-allegato-action-button:hover,
+.apo-allegato-action-button:focus-visible {
+    box-shadow: 0 10px 18px rgba(31, 95, 184, 0.16);
+    outline: none;
+}
+
+.apo-allegato-action-save {
+    border-color: #1f8f4d;
+    background: #1f8f4d;
+}
+
+.apo-allegato-action-save:hover,
+.apo-allegato-action-save:focus-visible {
+    border-color: #176f3b;
+    background: #176f3b;
+}
+
+.apo-allegato-action-print {
+    border-color: var(--gf-blue-700);
+    background: var(--gf-blue-700);
+}
+
+.apo-allegato-action-print:hover,
+.apo-allegato-action-print:focus-visible {
+    border-color: #17498f;
+    background: #17498f;
+}
+
+.apo-allegato-action-cancel {
+    border-color: #c92a2a;
+    background: #c92a2a;
+}
+
+.apo-allegato-action-cancel:hover,
+.apo-allegato-action-cancel:focus-visible {
+    border-color: #9f1f1f;
+    background: #9f1f1f;
+}
+
+.apo-paziente-sheet-subtitle {
+    margin: 0 0 14px;
+    color: var(--gf-text-soft);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.apo-placeholder-card .empty-state {
+    margin-top: 6px;
+}
+
+.empty-state {
+    padding: 18px 16px;
+    border-radius: 16px;
+    border: 1px dashed var(--gf-border-strong);
+    background: var(--gf-surface-soft);
+    color: var(--gf-text-soft);
+    line-height: 1.6;
+    font-size: 0.92rem;
+}
+
+#session-message,
+#apo-new-accesso-message {
+    margin-bottom: 0;
+    border-radius: 12px;
+}
+
+.apo-page-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 80;
+    width: min(420px, calc(100vw - 48px));
+    padding: 14px 18px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 700;
+    line-height: 1.4;
+    box-shadow: 0 18px 44px rgba(15, 34, 62, 0.28);
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition: opacity 0.24s ease, transform 0.24s ease;
+    pointer-events: none;
+}
+
+.apo-page-toast-hidden {
+    opacity: 0;
+    transform: translate3d(18px, 18px, 0);
+}
+
+.apo-page-toast-success {
+    border-color: #166534;
+    background: #15803d;
+}
+
+.apo-page-toast-danger {
+    border-color: #991b1b;
+    background: #dc2626;
+}
+
+.apo-page-toast-warning {
+    border-color: #c27336;
+    background: #f59e0b;
+}
+
+.apo-page-toast-info {
+    border-color: #1d4ed8;
+    background: #2563eb;
+}
+
+@media (max-width: 640px) {
+    .apo-page-toast {
+        right: 16px;
+        bottom: 16px;
+        width: calc(100vw - 32px);
+    }
+}
+
+@keyframes gestfarm-orbital-bg {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes gestfarm-space-star-drift {
+    0% {
+        transform: translate3d(0, 0, 0) scale(0.98);
+    }
+    50% {
+        transform: translate3d(var(--dx-half), var(--dy-half), 0) scale(1.08);
+    }
+    100% {
+        transform: translate3d(var(--dx), var(--dy), 0) scale(0.98);
+    }
+}
+
+@keyframes gestfarm-space-star-twinkle {
+    0%,
+    100% {
+        opacity: var(--alpha-min, 0.25);
+    }
+    40% {
+        opacity: var(--alpha, 0.82);
+    }
+    70% {
+        opacity: var(--alpha-mid, 0.52);
+    }
+}
+
+@keyframes apo-spinner-rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 1280px) {
+    .riepilogo-stack {
+        grid-template-columns: minmax(280px, 320px) minmax(0, 1fr) var(--apo-detail-width);
+    }
+}
+
+@media (max-width: 1080px) {
+    .gestfarm-topbar {
+        grid-template-columns: 1fr;
+    }
+
+    .gestfarm-topbar-actions {
+        justify-content: flex-start;
+    }
+
+    .apo-new-accesso-form {
+        grid-template-columns: 1fr;
+    }
+
+    .riepilogo-stack {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "filters"
+            "movements"
+            "detail";
+        overflow: visible;
+    }
+
+    .apo-paziente-view {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "selected"
+            "history"
+            "content"
+            "actions";
+        grid-template-rows: auto auto minmax(520px, auto) auto;
+    }
+
+    .apo-paziente-selected-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .riepilogo-movements-card {
+        min-height: 520px;
+        max-height: none;
+    }
+
+    .apo-detail-card {
+        display: none;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
+
+    .riepilogo-stack.is-detail-open .apo-detail-card {
+        display: flex;
+    }
+}
+
+@media (max-width: 840px) {
+    .gestfarm-page {
+        padding: 14px;
+    }
+
+    .gestfarm-shell {
+        width: 100%;
+    }
+
+    .apo-navbar-menu {
+        grid-template-columns: 1fr 1fr 1fr;
+        width: 100%;
+    }
+
+    .gestfarm-nav-button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .gestfarm-user-card {
+        width: 100%;
+        max-width: none;
+    }
+
+    .riepilogo-movement-actions {
+        width: 100%;
+        justify-content: flex-start;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .gestfarm-topbar,
+    .gestfarm-card {
+        padding: 16px;
+    }
+
+    .gestfarm-brand {
+        align-items: flex-start;
+    }
+
+    .gestfarm-topbar h1 {
+        font-size: 1.6rem;
+    }
+
+    .apo-navbar-menu {
+        grid-template-columns: 1fr;
+    }
+
+    .riepilogo-patient-filter {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    #apo-filter-paziente-cognome,
+    #apo-filter-paziente-nome {
+        border-radius: 12px;
+        border-right: 1px solid var(--gf-border);
+        border-left: 1px solid var(--gf-border);
+    }
+
+    .riepilogo-date-filter {
+        grid-template-columns: minmax(0, 1fr) 60px;
+    }
+
+    .riepilogo-filter-actions {
+        flex-direction: column;
+    }
+
+    .riepilogo-filter-actions .btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .apo-paziente-sheet {
+        padding: 14px;
+    }
+
+    .apo-paziente-selected-sheet {
+        padding: 14px;
+    }
+
+    .apo-paziente-selected-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .apo-allegato-contact-row,
+    .apo-allegato-esito-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .apo-allegato-clinical-grid {
+        column-count: 1;
+    }
+
+    .apo-allegato-actions {
+        flex-direction: column;
+    }
+
+    .apo-allegato-action-button {
+        width: 100%;
+    }
+}
