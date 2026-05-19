@@ -148,6 +148,7 @@ public class AccessiServlet extends HttpServlet {
         payload.put("tipoAccesso", safeString(req.getParameter("tipoAccesso")));
         payload.put("tipoAccessoLabel", safeString(req.getParameter("tipoAccessoLabel")));
         payload.put("tipoAccessoValue", safeString(tipoAccessoValue));
+        payload.put("patologia", safeString(req.getParameter("patologia")));
         payload.put("codComuneRes", safeString(codComuneRes));
         payload.put("schedaPaziente", safeString(req.getParameter("schedaPaziente")));
         payload.put("schedaTelefono", safeString(req.getParameter("schedaTelefono")));
@@ -157,7 +158,9 @@ public class AccessiServlet extends HttpServlet {
         payload.put("schedaIbmKg", safeString(req.getParameter("schedaIbmKg")));
         payload.put("schedaIbmCm", safeString(req.getParameter("schedaIbmCm")));
         payload.put("schedaAllergie", safeString(req.getParameter("schedaAllergie")));
+        payload.put("schedaAllergieCodes", safeString(req.getParameter("schedaAllergieCodes")));
         payload.put("schedaTerapie", safeString(req.getParameter("schedaTerapie")));
+        payload.put("schedaTerapieJson", safeString(req.getParameter("schedaTerapieJson")));
         payload.put("schedaCaregiver", safeString(req.getParameter("schedaCaregiver")));
         payload.put("schedaDiario", safeString(req.getParameter("schedaDiario")));
         payload.put("schedaPatologie", safeString(req.getParameter("schedaPatologie")));

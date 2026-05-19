@@ -1,0 +1,1181 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R 21 0 R 23 0 R 25 0 R 27 0 R 29 0 R 31 0 R 33 0 R 35 0 R 37 0 R 39 0 R 41 0 R] /Count 20 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2805 >>
+stream
+0.725 0.761 0.827 RG 1.2 w 42 55 511 735 re S 0 G
+1.000 1.000 1.000 rg 50 704 68 68 re f 0 g
+0.180 0.369 0.561 RG 1.4 w 50 704 68 68 re S 0 G
+q 52 0 0 52 58 712 cm /Im1 Do Q
+0.090 0.212 0.365 rg BT /F3 24 Tf 388 742 Td (AmbMMG) Tj ET 0 g
+0.314 0.376 0.439 rg BT /F2 11 Tf 365 722 Td (Sistema web ambulatoriale MMG) Tj ET 0 g
+0.180 0.369 0.561 RG 2 w 50 692 m 545 692 l S 0 G
+0.314 0.376 0.439 rg BT /F2 14 Tf 50 610 Td (SPECIFICHE TECNICHE) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F4 29 Tf 50 562 Td (Specifiche tecniche e specifiche di test) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 13 Tf 50 528 Td (Architettura, configurazione, integrazioni, flussi applicativi e casi di) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 13 Tf 50 510 Td (test del sistema AmbMMG.) Tj ET 0 g
+0.918 0.949 0.984 rg 72 330 110 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 72 330 110 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 12 Tf 103 362 Td (Utente) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 8 Tf 90 346 Td (Browser aziendale) Tj ET 0 g
+0.267 0.447 0.769 RG 2 w 182 357 m 232 357 l S 0 G
+1.000 1.000 1.000 rg 232 320 140 75 re f 0 g
+0.180 0.459 0.714 RG 1 w 232 320 140 75 re S 0 G
+0.090 0.212 0.365 rg BT /F2 13 Tf 270 368 Td (AmbMMG) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 8 Tf 250 350 Td (Servlet + JavaScript) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 8 Tf 259 337 Td (API JSON / PDF) Tj ET 0 g
+0.267 0.447 0.769 RG 2 w 372 357 m 422 357 l S 0 G
+0.929 0.969 0.929 rg 422 342 88 48 re f 0 g
+0.439 0.678 0.278 RG 1 w 422 342 88 48 re S 0 G
+0.216 0.337 0.137 rg BT /F2 11 Tf 440 369 Td (Oracle) Tj ET 0 g
+1.000 0.957 0.910 rg 422 288 88 42 re f 0 g
+0.929 0.490 0.192 RG 1 w 422 288 88 42 re S 0 G
+0.518 0.235 0.047 rg BT /F2 11 Tf 448 313 Td (LDAP) Tj ET 0 g
+0.969 0.976 0.988 rg 65 92 465 120 re f 0 g
+0.725 0.761 0.827 RG 0.8 w 65 92 465 120 re S 0 G
+0.322 0.380 0.435 rg BT /F2 9 Tf 82 178 Td (Applicativo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 150 178 Td (AmbMMG) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 330 178 Td (Versione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 410 178 Td (1.0) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 82 150 Td (Data) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 150 150 Td (19/05/2026) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 330 150 Td (Stato) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 410 150 Td (Documento operativo) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 82 122 Td (Ambiente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 150 122 Td (Java Web / Tomcat / Oracle) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 330 122 Td (Classificazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 410 122 Td (Uso interno) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 1) Tj ET 0 g
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 5103 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Controllo del documento) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.851 0.886 0.953 rg 50 712 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 712 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 718 Td (Versione) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 124 718 Td (Data) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 209 718 Td (Descrizione) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 454 718 Td (Redazione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 692 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 692 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 700 Td (1.0) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 124 700 Td (19/05/2026) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 209 700 Td (Prima emissione delle specifiche tecniche AmbMMG.) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 454 700 Td (Ufficio applicativo) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 120 712 m 120 692 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 205 712 m 205 692 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 450 712 m 450 692 l S 0 G
+0.180 0.369 0.561 rg BT /F2 13 Tf 50 673 Td (Indice) Tj ET 0 g
+0.851 0.886 0.953 rg 50 641 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 641 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 647 Td (Capitolo) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 134 647 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 621 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 621 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 629 Td (1) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 629 Td (Scopo e perimetro) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 641 m 130 621 l S 0 G
+0.965 0.973 0.984 rg 50 601 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 601 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 609 Td (2) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 609 Td (Architettura e componenti) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 621 m 130 601 l S 0 G
+1.000 1.000 1.000 rg 50 581 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 581 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 589 Td (3) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 589 Td (Configurazione) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 601 m 130 581 l S 0 G
+0.965 0.973 0.984 rg 50 561 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 561 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 569 Td (4) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 569 Td (Sicurezza e sessione) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 581 m 130 561 l S 0 G
+1.000 1.000 1.000 rg 50 541 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 541 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 549 Td (5) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 549 Td (Endpoint) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 561 m 130 541 l S 0 G
+0.965 0.973 0.984 rg 50 521 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 521 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 529 Td (6) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 529 Td (Base dati) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 541 m 130 521 l S 0 G
+1.000 1.000 1.000 rg 50 501 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 501 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 509 Td (7) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 509 Td (Flussi funzionali) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 521 m 130 501 l S 0 G
+0.965 0.973 0.984 rg 50 481 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 481 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 489 Td (8) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 489 Td (Reportistica) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 501 m 130 481 l S 0 G
+1.000 1.000 1.000 rg 50 461 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 461 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 469 Td (9) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 469 Td (Integrazioni) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 481 m 130 461 l S 0 G
+0.965 0.973 0.984 rg 50 441 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 441 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 449 Td (10) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 449 Td (Dipendenze) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 461 m 130 441 l S 0 G
+1.000 1.000 1.000 rg 50 421 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 421 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 429 Td (11) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 429 Td (Specifiche di test) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 441 m 130 421 l S 0 G
+0.965 0.973 0.984 rg 50 401 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 401 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 409 Td (12) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 409 Td (Rilascio) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 421 m 130 401 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 2) Tj ET 0 g
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 3237 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (1. Scopo e perimetro) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (AmbMMG e' una web application a supporto delle attivita' ambulatoriali svolte dagli operatori) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (autorizzati. Il sistema centralizza consultazione accessi, selezione paziente, scheda clinico-) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 700 Td (amministrativa, prestazioni infermieristiche e Allegato M.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 669 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 669 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 675 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 244 675 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 637 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 637 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 657 Td (Autenticazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 657 Td (Login LDAP, caricamento servizi utente, cambio servizio,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 646 Td (logout e sessione.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 669 m 240 637 l S 0 G
+0.965 0.973 0.984 rg 50 605 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 605 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 625 Td (Accessi) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 625 Td (Ricerca, ordinamento, inserimento nuovo accesso, eliminazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 614 Td (logica.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 637 m 240 605 l S 0 G
+1.000 1.000 1.000 rg 50 573 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 573 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 593 Td (Paziente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 593 Td (Ricerca anagrafica, censimento, codice fiscale, scheda) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 582 Td (paziente.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 605 m 240 573 l S 0 G
+0.965 0.973 0.984 rg 50 541 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 541 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 561 Td (Storici) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 561 Td (Prestazioni infermieristiche, ricette farmaci, ricette) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 550 Td (dematerializzate, piani terapeutici.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 573 m 240 541 l S 0 G
+0.933 0.957 0.984 rg 50 473 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 473 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 473 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 473 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 509 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 497 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 3) Tj ET 0 g
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 5556 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (2. Architettura e componenti) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (La soluzione segue un modello a livelli: presentazione web, servlet controller, servizi) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (infrastrutturali, DAO e sistemi esterni. La comunicazione client/server avviene tramite) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 700 Td (chiamate HTTP JSON e risposta ApiResponse.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 628 495 42 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 628 495 42 re S 0 G
+0.090 0.212 0.365 rg BT /F2 12 Tf 250 650 Td (Front-end web: LOGIN.html, APO.html, APO.js) Tj ET 0 g
+0.933 0.957 0.984 rg 50 546 105 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 546 105 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 62 577 Td (AuthServlet) Tj ET 0 g
+0.933 0.957 0.984 rg 180 546 105 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 180 546 105 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 192 577 Td (AccessiServlet) Tj ET 0 g
+0.933 0.957 0.984 rg 310 546 105 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 310 546 105 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 322 577 Td (PazienteServlet) Tj ET 0 g
+0.933 0.957 0.984 rg 440 546 105 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 440 546 105 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 452 577 Td (StampaReport) Tj ET 0 g
+0.933 0.957 0.984 rg 70 463 130 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 70 463 130 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 82 494 Td (DAO Oracle) Tj ET 0 g
+0.933 0.957 0.984 rg 232 463 130 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 232 463 130 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 244 494 Td (Servizi) Tj ET 0 g
+0.933 0.957 0.984 rg 394 463 130 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 394 463 130 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 406 494 Td (Integrazioni) Tj ET 0 g
+0.267 0.447 0.769 RG 2 w 297 628 m 297 601 l S 0 G
+0.267 0.447 0.769 RG 1.5 w 102 546 m 102 518 l S 0 G
+0.267 0.447 0.769 RG 1.5 w 232 546 m 232 518 l S 0 G
+0.267 0.447 0.769 RG 1.5 w 362 546 m 362 518 l S 0 G
+0.267 0.447 0.769 RG 1.5 w 492 546 m 492 518 l S 0 G
+0.333 0.333 0.333 rg BT /F1 8 Tf 60 446 Td (Figura - Architettura logica AmbMMG) Tj ET 0 g
+0.851 0.886 0.953 rg 50 416 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 416 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 422 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 189 422 Td (Componente) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 379 422 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 384 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 384 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 404 Td (Presentazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 404 Td (LOGIN.html, APO.html, LOGIN.js,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 393 Td (APO.js, CSS) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 404 Td (Interfaccia utente e chiamate) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 393 Td (fetch.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 416 m 185 384 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 416 m 375 384 l S 0 G
+0.965 0.973 0.984 rg 50 352 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 352 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 372 Td (Controller) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 372 Td (AuthServlet, AccessiServlet,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 361 Td (PazienteServlet, StampaReport) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 372 Td (Routing HTTP, controllo sessione e) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 361 Td (output JSON/PDF.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 384 m 185 352 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 384 m 375 352 l S 0 G
+1.000 1.000 1.000 rg 50 320 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 320 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 340 Td (Servizi) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 340 Td (DataService, LdapService) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 340 Td (Connessioni Oracle e) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 329 Td (autenticazione LDAP.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 352 m 185 320 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 352 m 375 320 l S 0 G
+0.965 0.973 0.984 rg 50 288 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 288 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 308 Td (DAO) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 308 Td (UserServiceDao, AccessiDao,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 297 Td (PazienteDao) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 308 Td (Query, insert, update e delete.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 320 m 185 288 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 320 m 375 288 l S 0 G
+0.933 0.957 0.984 rg 50 220 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 220 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 220 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 220 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 256 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 244 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 4) Tj ET 0 g
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 12 0 R >>
+endobj
+12 0 obj
+<< /Length 3301 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (3. Configurazione) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (La configurazione applicativa e' definita in web.xml e nei file NetBeans. In esercizio e') Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (raccomandato l'uso di risorse JNDI o configurazione esterna per le credenziali.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 189 688 Td (Componente) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 379 688 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (dbDriver) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 670 Td (Driver JDBC Oracle) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 670 Td (DAO e report Jasper.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 682 m 185 662 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 682 m 375 662 l S 0 G
+0.965 0.973 0.984 rg 50 630 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 630 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (dbUrl) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 650 Td (URL Oracle) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 650 Td (Accesso dati applicativi e) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 639 Td (sanitari.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 662 m 185 630 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 662 m 375 630 l S 0 G
+1.000 1.000 1.000 rg 50 610 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 610 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 618 Td (dbUser/dbPassword) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 618 Td (Credenziali database) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 618 Td (Connessioni JDBC.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 630 m 185 610 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 630 m 375 610 l S 0 G
+0.965 0.973 0.984 rg 50 590 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 590 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 598 Td (ldapUrl) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 598 Td (Endpoint LDAP) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 598 Td (Autenticazione utente.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 610 m 185 590 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 610 m 375 590 l S 0 G
+0.933 0.957 0.984 rg 50 522 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 522 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 522 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 522 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 558 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 546 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 5) Tj ET 0 g
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 14 0 R >>
+endobj
+14 0 obj
+<< /Length 2789 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (4. Sicurezza e sessione) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Le misure applicative includono rigenerazione della sessione al login, cookie HttpOnly e) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (SameSite=Lax, header no-cache, SecurityHeadersFilter e controllo sessione su tutti gli endpoint) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 700 Td (operativi.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 669 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 669 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 675 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 244 675 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 649 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 649 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 657 Td (Sessione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 657 Td (authUser, authUserData, authServiceData) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 669 m 240 649 l S 0 G
+0.965 0.973 0.984 rg 50 629 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 629 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 637 Td (Cookie) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 637 Td (HttpOnly e SameSite=Lax) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 649 m 240 629 l S 0 G
+1.000 1.000 1.000 rg 50 609 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 609 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 617 Td (Cache) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 617 Td (no-store, no-cache, must-revalidate) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 629 m 240 609 l S 0 G
+0.965 0.973 0.984 rg 50 589 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 589 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 597 Td (Autorizzazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 597 Td (Verifica servizio associato all'utente) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 609 m 240 589 l S 0 G
+0.933 0.957 0.984 rg 50 521 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 521 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 521 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 521 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 557 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 545 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 6) Tj ET 0 g
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 16 0 R >>
+endobj
+16 0 obj
+<< /Length 3449 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (5. Endpoint) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Gli endpoint espongono risposte JSON uniformi tramite ApiResponse. In caso di errore, il) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (servlet imposta lo stato HTTP coerente e restituisce un messaggio applicativo.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 189 688 Td (Componente) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 379 688 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 650 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 650 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Autenticazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 670 Td (/api/auth/services, /login, /logout,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 659 Td (/session) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 670 Td (GET/POST) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 682 m 185 650 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 682 m 375 650 l S 0 G
+0.965 0.973 0.984 rg 50 630 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 630 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 638 Td (Accessi) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 638 Td (/api/accessi/search, /new, /delete) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 638 Td (GET/POST) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 650 m 185 630 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 650 m 375 630 l S 0 G
+1.000 1.000 1.000 rg 50 598 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 598 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 618 Td (Paziente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 618 Td (/api/paziente/anagrafe/search,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 607 Td (/anagrafe/new) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 618 Td (GET/POST) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 630 m 185 598 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 630 m 375 598 l S 0 G
+0.965 0.973 0.984 rg 50 566 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 566 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 586 Td (Allegato M) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 586 Td (/api/paziente/allegato-m,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 575 Td (/StampaReport) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 586 Td (GET/POST) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 598 m 185 566 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 598 m 375 566 l S 0 G
+0.933 0.957 0.984 rg 50 498 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 498 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 498 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 498 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 534 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 522 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 7) Tj ET 0 g
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 18 0 R >>
+endobj
+18 0 obj
+<< /Length 2725 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (6. Base dati) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (La persistenza e' Oracle. I DAO usano viste e tabelle applicative e sanitarie dedicate.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 695 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 695 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 701 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 244 701 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 675 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 675 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 683 Td (VIEW_CONSULENZE_GMNEW, CONSULENZE_GM) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 683 Td (Elenco, inserimento ed eliminazione logica degli accessi.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 695 m 240 675 l S 0 G
+0.965 0.973 0.984 rg 50 643 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 643 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 663 Td (VIEW_ANAGRAFE_DETTAGLIO_GM,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 652 Td (TOPSAN.PAZIENTI_BUFFER) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 663 Td (Ricerca e censimento paziente.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 675 m 240 643 l S 0 G
+1.000 1.000 1.000 rg 50 623 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 623 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 631 Td (APO_SCHEDE_PAZIENTE*) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 631 Td (Scheda paziente e contenuti clinici.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 643 m 240 623 l S 0 G
+0.965 0.973 0.984 rg 50 603 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 603 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 611 Td (ALLEGATOM) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 611 Td (Compilazione e aggiornamento Allegato M.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 623 m 240 603 l S 0 G
+0.933 0.957 0.984 rg 50 535 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 535 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 535 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 535 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 571 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 559 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 8) Tj ET 0 g
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 20 0 R >>
+endobj
+20 0 obj
+<< /Length 2785 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (7. Flussi funzionali) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (I flussi principali sono guidati da modali e griglie lato client, con persistenza tramite) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (servlet e DAO.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 244 688 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Login) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 670 Td (Credenziali LDAP, servizio autorizzato, creazione sessione.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 682 m 240 662 l S 0 G
+0.965 0.973 0.984 rg 50 630 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 630 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Nuovo accesso) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 650 Td (Ricerca paziente, censimento eventuale, salvataggio) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 639 Td (consulenza.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 662 m 240 630 l S 0 G
+1.000 1.000 1.000 rg 50 610 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 610 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 618 Td (Scheda paziente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 618 Td (Dati generali, diario, patologie, allergie e terapie.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 630 m 240 610 l S 0 G
+0.965 0.973 0.984 rg 50 590 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 590 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 598 Td (Allegato M) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 598 Td (Caricamento, salvataggio e stampa PDF.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 610 m 240 590 l S 0 G
+0.933 0.957 0.984 rg 50 522 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 522 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 522 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 522 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 558 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 546 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 9) Tj ET 0 g
+endstream
+endobj
+21 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 22 0 R >>
+endobj
+22 0 obj
+<< /Length 2668 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (8. Reportistica) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (StampaReport produce il PDF Allegato M usando JasperReports. Il report riceve COD_CONSULENZA e) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (COD_SERVIZIO, apre connessione Oracle e restituisce il PDF inline.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 244 688 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Report) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 670 Td (AllegatoM2.jasper) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 682 m 240 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Parametri) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 650 Td (COD_CONSULENZA, COD_SERVIZIO) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 662 m 240 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Output) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 630 Td (application/pdf inline) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 642 m 240 622 l S 0 G
+0.965 0.973 0.984 rg 50 602 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 602 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 610 Td (Errore) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 610 Td (400 per parametri mancanti, 404 per report assente) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 622 m 240 602 l S 0 G
+0.933 0.957 0.984 rg 50 534 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 534 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 534 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 534 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 570 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 558 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 10) Tj ET 0 g
+endstream
+endobj
+23 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 24 0 R >>
+endobj
+24 0 obj
+<< /Length 3302 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (9. Integrazioni) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (AmbMMG interagisce con sistemi aziendali e sanitari tramite JDBC, LDAP, URL esterni e funzioni) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (database.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 189 688 Td (Componente) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 379 688 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (LDAP / Active Directory) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 670 Td (Autenticazione e attributi utente.) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 670 Td (JNDI LDAP) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 682 m 185 662 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 682 m 375 662 l S 0 G
+0.965 0.973 0.984 rg 50 630 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 630 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Oracle Database) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 650 Td (Dati accessi, pazienti, servizi,) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 639 Td (storici e Allegato M.) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 650 Td (JDBC) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 662 m 185 630 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 662 m 375 630 l S 0 G
+1.000 1.000 1.000 rg 50 610 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 610 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 618 Td (JasperReports) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 618 Td (Produzione PDF Allegato M.) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 618 Td (Report .jasper) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 630 m 185 610 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 630 m 375 610 l S 0 G
+0.965 0.973 0.984 rg 50 590 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 590 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 598 Td (Ricette / DSE / Referti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 189 598 Td (Sistemi collegati al paziente.) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 379 598 Td (URL/funzioni DB) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 185 610 m 185 590 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 375 610 m 375 590 l S 0 G
+0.933 0.957 0.984 rg 50 522 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 522 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 522 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 522 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 558 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 546 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 11) Tj ET 0 g
+endstream
+endobj
+25 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 26 0 R >>
+endobj
+26 0 obj
+<< /Length 2697 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (10. Dipendenze) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Le dipendenze sono censite nel file sbom.json in formato CycloneDX. Le principali librerie sono) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (Oracle JDBC, Gson, JasperReports, iText, Groovy, Apache Commons, JFreeChart e JCommon.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 244 688 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (ojdbc8) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 670 Td (Driver Oracle JDBC) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 682 m 240 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (gson-2.3.1) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 650 Td (Serializzazione JSON) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 662 m 240 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (jasperreports) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 630 Td (Reportistica) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 642 m 240 622 l S 0 G
+0.965 0.973 0.984 rg 50 602 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 602 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 610 Td (commons-* / groovy / iText) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 610 Td (Dipendenze di supporto e generazione documentale) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 622 m 240 602 l S 0 G
+0.933 0.957 0.984 rg 50 534 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 534 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 534 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 534 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 570 Td (Riferimento progetto: codice sorgente Java Servlet, pagine HTML/JS e configurazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 558 Td (web rilevati nel repository locale. Denominazione funzionale: AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 12) Tj ET 0 g
+endstream
+endobj
+27 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 28 0 R >>
+endobj
+28 0 obj
+<< /Length 7154 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (11. Specifiche di test) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.851 0.886 0.953 rg 50 712 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 712 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 7.5 Tf 54 718 Td (ID) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 7.5 Tf 109 718 Td (Caso di test) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 7.5 Tf 289 718 Td (Prerequisiti) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 7.5 Tf 414 718 Td (Esito atteso) Tj ET 0 g
+1.000 1.000 1.000 rg 50 680 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 680 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 700 Td (AMB-01) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 700 Td (Login con credenziali valide) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 700 Td (Utente LDAP abilitato) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 700 Td (Sessione creata e accesso) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 689 Td (alla home.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 712 m 105 680 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 712 m 285 680 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 712 m 410 680 l S 0 G
+0.965 0.973 0.984 rg 50 648 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 648 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 668 Td (AMB-02) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 668 Td (Login con servizio non autorizzato) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 668 Td (Utente non associato) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 668 Td (Errore e sessione non) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 657 Td (creata.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 680 m 105 648 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 680 m 285 648 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 680 m 410 648 l S 0 G
+1.000 1.000 1.000 rg 50 616 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 616 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 636 Td (AMB-03) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 636 Td (Ricerca accessi per data e paziente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 636 Td (Accessi presenti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 636 Td (Lista filtrata coerente col) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 625 Td (servizio.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 648 m 105 616 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 648 m 285 616 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 648 m 410 616 l S 0 G
+0.965 0.973 0.984 rg 50 584 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 584 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 604 Td (AMB-04) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 604 Td (Inserimento nuovo accesso) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 604 Td (Paziente valido) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 604 Td (Consulenza inserita e) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 593 Td (griglia aggiornata.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 616 m 105 584 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 616 m 285 584 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 616 m 410 584 l S 0 G
+1.000 1.000 1.000 rg 50 552 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 552 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 572 Td (AMB-05) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 572 Td (Censimento incompleto) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 572 Td (Campi obbligatori) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 561 Td (mancanti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 572 Td (Errore sul campo mancante.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 584 m 105 552 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 584 m 285 552 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 584 m 410 552 l S 0 G
+0.965 0.973 0.984 rg 50 520 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 520 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 540 Td (AMB-06) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 540 Td (Salvataggio scheda paziente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 540 Td (Paziente selezionato) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 540 Td (Dati persistiti e) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 529 Td (ricaricabili.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 552 m 105 520 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 552 m 285 520 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 552 m 410 520 l S 0 G
+1.000 1.000 1.000 rg 50 488 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 488 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 508 Td (AMB-07) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 508 Td (Aggiunta) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 497 Td (diario/patologia/allergia/terapia) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 508 Td (Scheda disponibile) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 508 Td (Elemento visibile nello) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 497 Td (storico.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 520 m 105 488 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 520 m 285 488 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 520 m 410 488 l S 0 G
+0.965 0.973 0.984 rg 50 468 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 468 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 476 Td (AMB-08) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 476 Td (Prestazioni senza sottocategoria) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 476 Td (Consulenza selezionata) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 476 Td (Validazione bloccante.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 488 m 105 468 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 488 m 285 468 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 488 m 410 468 l S 0 G
+1.000 1.000 1.000 rg 50 436 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 436 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 456 Td (AMB-09) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 456 Td (Allegato M salvato da altro utente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 456 Td (Record esistente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 456 Td (Risposta 403 e modifica) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 445 Td (impedita.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 468 m 105 436 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 468 m 285 436 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 468 m 410 436 l S 0 G
+0.965 0.973 0.984 rg 50 416 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 416 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 54 424 Td (AMB-10) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 109 424 Td (Stampa Allegato M) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 289 424 Td (Parametri validi) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 7.5 Tf 414 424 Td (PDF restituito al browser.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 105 436 m 105 416 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 285 436 m 285 416 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 410 436 m 410 416 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 13) Tj ET 0 g
+endstream
+endobj
+29 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 30 0 R >>
+endobj
+30 0 obj
+<< /Length 2745 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (12. Rilascio e controlli) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.851 0.886 0.953 rg 50 712 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 712 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 718 Td (Voce) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 244 718 Td (Valore) Tj ET 0 g
+1.000 1.000 1.000 rg 50 692 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 692 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 700 Td (Versione Java) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 700 Td (1.8) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 712 m 240 692 l S 0 G
+0.965 0.973 0.984 rg 50 672 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 672 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 680 Td (Container) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 680 Td (Apache Tomcat / Servlet 3.0) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 692 m 240 672 l S 0 G
+1.000 1.000 1.000 rg 50 652 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 652 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 660 Td (Formato distribuzione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 660 Td (WAR) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 672 m 240 652 l S 0 G
+0.965 0.973 0.984 rg 50 632 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 632 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 640 Td (DBMS) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 640 Td (Oracle Database) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 652 m 240 632 l S 0 G
+1.000 1.000 1.000 rg 50 612 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 612 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 620 Td (Autenticazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 244 620 Td (LDAP / Active Directory) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 240 632 m 240 612 l S 0 G
+1.000 0.957 0.910 rg 50 544 495 48 re f 0 g
+0.773 0.353 0.067 RG 1 w 50 544 495 48 re S 0 G
+0.773 0.353 0.067 rg 50 544 5 48 re f 0 g
+0.773 0.353 0.067 RG 0 w 50 544 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 580 Td (Prima del rilascio definitivo allineare display-name, nome WAR ed eventuali) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 568 Td (riferimenti visibili da APO ad AmbMMG, mantenendo solo i riferimenti storici necessari) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 556 Td (alla compatibilita' tecnica.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 14) Tj ET 0 g
+endstream
+endobj
+31 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 32 0 R >>
+endobj
+32 0 obj
+<< /Length 1901 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Appendice tecnica) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Pagina riservata a evidenze di collaudo, note di rilascio, tracciati dati e aggiornamenti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (tecnici AmbMMG.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Elemento) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 214 688 Td (Annotazione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Controllo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 670 Td (Da completare in fase di collaudo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 682 m 210 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Esito) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 650 Td (Da valorizzare dal referente applicativo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 662 m 210 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Note) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 630 Td (Spazio per integrazioni e riferimenti interni.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 642 m 210 622 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 15) Tj ET 0 g
+endstream
+endobj
+33 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 34 0 R >>
+endobj
+34 0 obj
+<< /Length 1901 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Appendice tecnica) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Pagina riservata a evidenze di collaudo, note di rilascio, tracciati dati e aggiornamenti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (tecnici AmbMMG.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Elemento) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 214 688 Td (Annotazione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Controllo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 670 Td (Da completare in fase di collaudo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 682 m 210 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Esito) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 650 Td (Da valorizzare dal referente applicativo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 662 m 210 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Note) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 630 Td (Spazio per integrazioni e riferimenti interni.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 642 m 210 622 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 16) Tj ET 0 g
+endstream
+endobj
+35 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 36 0 R >>
+endobj
+36 0 obj
+<< /Length 1901 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Appendice tecnica) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Pagina riservata a evidenze di collaudo, note di rilascio, tracciati dati e aggiornamenti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (tecnici AmbMMG.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Elemento) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 214 688 Td (Annotazione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Controllo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 670 Td (Da completare in fase di collaudo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 682 m 210 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Esito) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 650 Td (Da valorizzare dal referente applicativo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 662 m 210 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Note) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 630 Td (Spazio per integrazioni e riferimenti interni.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 642 m 210 622 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 17) Tj ET 0 g
+endstream
+endobj
+37 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 38 0 R >>
+endobj
+38 0 obj
+<< /Length 1901 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Appendice tecnica) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Pagina riservata a evidenze di collaudo, note di rilascio, tracciati dati e aggiornamenti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (tecnici AmbMMG.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Elemento) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 214 688 Td (Annotazione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Controllo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 670 Td (Da completare in fase di collaudo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 682 m 210 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Esito) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 650 Td (Da valorizzare dal referente applicativo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 662 m 210 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Note) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 630 Td (Spazio per integrazioni e riferimenti interni.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 642 m 210 622 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 18) Tj ET 0 g
+endstream
+endobj
+39 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 40 0 R >>
+endobj
+40 0 obj
+<< /Length 1901 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Appendice tecnica) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Pagina riservata a evidenze di collaudo, note di rilascio, tracciati dati e aggiornamenti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (tecnici AmbMMG.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Elemento) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 214 688 Td (Annotazione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Controllo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 670 Td (Da completare in fase di collaudo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 682 m 210 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Esito) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 650 Td (Da valorizzare dal referente applicativo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 662 m 210 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Note) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 630 Td (Spazio per integrazioni e riferimenti interni.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 642 m 210 622 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 19) Tj ET 0 g
+endstream
+endobj
+41 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 43 0 R >> >> /Contents 42 0 R >>
+endobj
+42 0 obj
+<< /Length 1901 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Appendice tecnica) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Pagina riservata a evidenze di collaudo, note di rilascio, tracciati dati e aggiornamenti) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (tecnici AmbMMG.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Elemento) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 214 688 Td (Annotazione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Controllo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 670 Td (Da completare in fase di collaudo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 682 m 210 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Esito) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 650 Td (Da valorizzare dal referente applicativo.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 662 m 210 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Note) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 214 630 Td (Spazio per integrazioni e riferimenti interni.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 210 642 m 210 622 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Specifiche tecniche e test AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 20) Tj ET 0 g
+endstream
+endobj
+43 0 obj
+<< /Type /XObject /Subtype /Image /Width 64 /Height 64 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length 1956 >>
+stream
+ˇÿˇ‡ JFIF  ` `  ˇ€ C 		
+ $.' ",#(7),01444'9=82<.342ˇ€ C			2!!22222222222222222222222222222222222222222222222222ˇ¿  @ @" ˇƒ           	
+ˇƒ µ   } !1AQa"q2Åë°#B±¡R—$3brÇ	
+%&'()*456789:CDEFGHIJSTUVWXYZcdefghijstuvwxyzÉÑÖÜáàâäíìîïñóòôö¢£§•¶ß®©™≤≥¥µ∂∑∏π∫¬√ƒ≈∆«»… “”‘’÷◊ÿŸ⁄·‚„‰ÂÊÁËÈÍÒÚÛÙıˆ˜¯˘˙ˇƒ        	
+ˇƒ µ  w !1AQaq"2ÅBë°±¡	#3Rbr—
+$4·%Ò&'()*56789:CDEFGHIJSTUVWXYZcdefghijstuvwxyzÇÉÑÖÜáàâäíìîïñóòôö¢£§•¶ß®©™≤≥¥µ∂∑∏π∫¬√ƒ≈∆«»… “”‘’÷◊ÿŸ⁄‚„‰ÂÊÁËÈÍÚÛÙıˆ˜¯˘˙ˇ⁄   ? ˜⁄FuE,ÏGRN ¶O2[¡$Ú∂ÿ„RÏ} 5·æ"Ò-ÁàoIùñ‘‹€ÉÚ®Ìë‹˙öÏ¬`Ââì≥≤G>#®ÆÌû◊˝´ßœ˝Ø˝˛_Ò§˛÷”øË!iˇ ◊¸k¬Ï¥IÔmZıÃñvµ’…⁄ôÙ^Ï}Ä®ÊèCàïKªÀÜ∆ñÈ˛õ?†ÆÔÏ w≤õ#óÎ”µ‹ﬁ?µ¥ﬂ˙Zﬂıˇ ?µ¥ﬂ˙Zﬂıˇ ˘ÊTµ<¡)oˆd@Ê	˚£Ú™˛»áÛ?∏üÌ/‚}.é≤ t` yNAßWÄxs≈ææIaëö–∑Ô≠…˘]{‡voC^˜—‹AÒ6Ë‰PËﬁ†åäÛ±xIa‰ÆÓôŸáƒ*À≥FgäI’H8ˇ Eì˘WçxsKãT‘$k∑1ÈˆëãπdáπÈ˘◊≤xØ˛E-[˛Ω$˛U‰p±¥¯g™O√›ﬂ«n«˝ï]ÿ˛u›ó…™Q›¥æÛóì™õËÆgk:‘⁄’‡ïì…µàlµ∂^Ï ıı5Î~∂∑oiÓ`å≥,JìΩ∫“ÿx'√oßZªÈ0;4HYõ$í@‰Û[ˆ∂∂zFû∞[Fñˆ∞)!W¢éI˛µé/N•5JöjÃ”áú&Á7{úüƒÀx#té∞∆¨≥≈ÜlWåñØd¨qÎ⁄^•g≠¬∑	-¬ﬂà‰'%”ÚÁÚ©uox`xv˙Ó◊L∂»µíX•âèe$A≠ÿ®·ó±ù€øÊe_Îøi4<Lµ}·ROÑ¥ÇN–‚ˇ –E|‡*®Ø£|%ˇ "~èˇ ^qË"¥Õˇ áR2ˇ çáã?‰Q’ˇ Î“OÂ^=¶∑ˆáÇuÕ-9ûKËó‘ïøJˆˇ »°´ˇ ◊§ü ºN‘Ê“µØ ¡d8*z:û™~µly® €›?∏ºl≠Q_±Í_±Ù‘∞≤K-FY!Uïn¨¶sêBÑZ÷çıø¯}ö€Q“≈ïÙmöñ≤´Ö9V¿f‡ıÎ^G©È+,™È ÕßπÀ∆£/n›’áß°ØT¯}≠ÈPxNÜmJŒ)c$ùT©ﬁ«°>ı¨<)SS•´øı–™•Rn3⁄ƒ~&i4ù]mlGñ⁄ΩÇÿAÅ—÷@¸F?ÁãÙ˚„B±÷¨[O,º∂ó"∆Ÿ dÄ} ≠ˇ àöˆîû76óñSÍ∆;fI√4~`(Ï =v◊•xìD–¬åÍSx˝⁄û§z˝=˚÷ò:
+≠;œOÛˇ Ü˝Hƒ’tÁhóØ≠l-`Ci´«z‰‡¢€I:ÂÜ+ËOˇ »ù£◊ú_˙ØöW“˛ˇ ë7Eˇ Ø(øÙFjößªÍyΩ[õxÓÌf∂ôwE2‹zÇ0kÁ_¯r˚√:É€]∆∆«…∏«…"ˆÁ◊‘W—Ù…°ä‚&ähíH€™:Ü5Á·1r√∑•”;1uYvh˘ÇÀS∫”nE≈ïÀ¡/L©Í=ËG÷¥$Ò%•ﬂÕ®¯K∫óº©∫oÆ”ä˜ˇ ¯G4?˙iˇ ¯
+ü·G¸#z˝tÔ¸OÆÈft§Ó‡˛Ûë`f¥Ê>uì[∑èù?F”¨õ¥òiú}íÂYRŒ”J“Õ+I#≥ªdö˙˛Ω˛Ä∫w˛ß¯R¬7†ˇ –Nˇ ¿Tˇ 
+k4¶∂ã˚¡‡&˛—ÛœÜ<1‚≠M-≠#any˜8˘"^¸˜>Çæï∂∑é“÷hWlP¢∆É—@¿•Ü≠‚X†â"çz"(P?RWüã≈À÷ñHÎ√·’›≥ˇŸ
+endstream
+endobj
+xref
+0 44
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000252 00000 n 
+0000000649 00000 n 
+0000003506 00000 n 
+0000003903 00000 n 
+0000009058 00000 n 
+0000009455 00000 n 
+0000012744 00000 n 
+0000013142 00000 n 
+0000018751 00000 n 
+0000019150 00000 n 
+0000022504 00000 n 
+0000022903 00000 n 
+0000025745 00000 n 
+0000026144 00000 n 
+0000029646 00000 n 
+0000030045 00000 n 
+0000032823 00000 n 
+0000033222 00000 n 
+0000036060 00000 n 
+0000036459 00000 n 
+0000039180 00000 n 
+0000039579 00000 n 
+0000042934 00000 n 
+0000043333 00000 n 
+0000046083 00000 n 
+0000046482 00000 n 
+0000053689 00000 n 
+0000054088 00000 n 
+0000056886 00000 n 
+0000057285 00000 n 
+0000059239 00000 n 
+0000059638 00000 n 
+0000061592 00000 n 
+0000061991 00000 n 
+0000063945 00000 n 
+0000064344 00000 n 
+0000066298 00000 n 
+0000066697 00000 n 
+0000068651 00000 n 
+0000069050 00000 n 
+0000071004 00000 n 
+trailer << /Size 44 /Root 1 0 R /Info << /Title (Specifiche tecniche e test AmbMMG) /Producer (AmbMMG) >> >>
+startxref
+73127
+%%EOF

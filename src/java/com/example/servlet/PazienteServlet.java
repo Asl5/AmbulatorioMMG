@@ -1,5 +1,6 @@
 package com.example.servlet;
 
+import com.example.dao.AccessiDao;
 import com.example.dao.PazienteDao;
 import com.example.dto.ApiResponse;
 import com.example.service.DataService;
@@ -21,6 +22,7 @@ public class PazienteServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(PazienteServlet.class.getName());
     private PazienteDao pazienteDao;
+    private AccessiDao accessiDao;
 
     @Override
     public void init() {
@@ -32,6 +34,7 @@ public class PazienteServlet extends HttpServlet {
 
         DataService dataService = new DataService(jndiName, dbDriver, dbUrl, dbUser, dbPassword);
         pazienteDao = new PazienteDao(dataService);
+        accessiDao = new AccessiDao(dataService);
     }
 
     @Override
@@ -87,6 +90,26 @@ public class PazienteServlet extends HttpServlet {
             loadPatologieCronicheIcd10(req, resp);
             return;
         }
+        if ("/allergie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadAllergie(req, resp);
+            return;
+        }
+        if ("/terapie/principi-attivi".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadTerapiePrincipiAttivi(req, resp);
+            return;
+        }
+        if ("/terapie/farmaci".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadTerapieFarmaci(req, resp);
+            return;
+        }
+        if ("/terapie/confezioni".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadTerapieConfezioni(req, resp);
+            return;
+        }
         if ("/scheda-paziente".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             loadSchedaPaziente(req, resp);
@@ -100,6 +123,16 @@ public class PazienteServlet extends HttpServlet {
         if ("/scheda-paziente/patologie".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             loadSchedaPazientePatologie(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/allergie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadSchedaPazienteAllergie(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/terapie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadSchedaPazienteTerapie(req, resp);
             return;
         }
         if ("/ricette-farmaci".equals(action)) {
@@ -139,6 +172,11 @@ public class PazienteServlet extends HttpServlet {
             saveAllegatoM(req, resp);
             return;
         }
+        if ("/scheda-paziente".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            saveSchedaPaziente(req, resp);
+            return;
+        }
         if ("/scheda-paziente/diario".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             saveSchedaPazienteDiario(req, resp);
@@ -147,6 +185,16 @@ public class PazienteServlet extends HttpServlet {
         if ("/scheda-paziente/patologie".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             saveSchedaPazientePatologia(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/allergie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            saveSchedaPazienteAllergia(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/terapie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            saveSchedaPazienteTerapia(req, resp);
             return;
         }
         if ("/prestazioni-infermieristiche".equals(action)) {
@@ -169,6 +217,16 @@ public class PazienteServlet extends HttpServlet {
         if ("/scheda-paziente/patologie".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             deleteSchedaPazientePatologia(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/allergie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            deleteSchedaPazienteAllergia(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/terapie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            deleteSchedaPazienteTerapia(req, resp);
             return;
         }
 
@@ -528,6 +586,122 @@ public class PazienteServlet extends HttpServlet {
         }
     }
 
+    private void loadAllergie(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String filtro = trimToNull(req.getParameter("filtro"));
+        if (filtro == null) {
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("allergie", new ArrayList<Map<String, String>>());
+            JsonUtil.write(resp, ApiResponse.ok(data));
+            return;
+        }
+
+        try {
+            List<Map<String, String>> allergie = pazienteDao.searchAllergie(filtro);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("allergie", allergie);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento delle allergie.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento delle allergie.")));
+        }
+    }
+
+    private void loadTerapiePrincipiAttivi(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String filtro = firstNonBlank(req.getParameter("filtro"), "");
+
+        try {
+            List<Map<String, String>> principiAttivi = pazienteDao.searchTerapiePrincipiAttivi(filtro);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("principiAttivi", principiAttivi);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento dei principi attivi.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento dei principi attivi.")));
+        }
+    }
+
+    private void loadTerapieFarmaci(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String principioAttivo = trimToNull(req.getParameter("principioAttivo"));
+        String filtro = firstNonBlank(req.getParameter("filtro"), "");
+        if (principioAttivo == null) {
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("farmaci", new ArrayList<Map<String, String>>());
+            JsonUtil.write(resp, ApiResponse.ok(data));
+            return;
+        }
+
+        try {
+            List<Map<String, String>> farmaci = pazienteDao.searchTerapieFarmaci(principioAttivo, filtro);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("farmaci", farmaci);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento dei farmaci.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento dei farmaci.")));
+        }
+    }
+
+    private void loadTerapieConfezioni(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String farmaco = trimToNull(req.getParameter("farmaco"));
+        String filtro = firstNonBlank(req.getParameter("filtro"), "");
+        if (farmaco == null) {
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("confezioni", new ArrayList<Map<String, String>>());
+            JsonUtil.write(resp, ApiResponse.ok(data));
+            return;
+        }
+
+        try {
+            List<Map<String, String>> confezioni = pazienteDao.searchTerapieConfezioni(farmaco, filtro);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("confezioni", confezioni);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento delle confezioni.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento delle confezioni.")));
+        }
+    }
+
     private void loadSchedaPaziente(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setNoCache(resp);
 
@@ -558,6 +732,43 @@ public class PazienteServlet extends HttpServlet {
             LOGGER.log(Level.SEVERE, "Errore nel caricamento della scheda paziente.", ex);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento della scheda paziente.")));
+        }
+    }
+
+    private void saveSchedaPaziente(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String username = trimToNull(safeString(session.getAttribute("authUser")));
+        HashMap<String, String> payload = readRequestParameters(req);
+        String codPaz = trimToNull(payload.get("codPaz"));
+        if (codPaz == null) {
+            codPaz = trimToNull(payload.get("codPaziente"));
+        }
+        if (username == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Utente loggato non disponibile."));
+            return;
+        }
+        if (codPaz == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice paziente non valorizzato."));
+            return;
+        }
+
+        try {
+            accessiDao.saveSchedaPaziente(codPaz, payload, username);
+            JsonUtil.write(resp, ApiResponse.ok(new HashMap<String, Object>(), "Scheda paziente salvata correttamente."));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel salvataggio della scheda paziente.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel salvataggio della scheda paziente.")));
         }
     }
 
@@ -804,6 +1015,276 @@ public class PazienteServlet extends HttpServlet {
             LOGGER.log(Level.SEVERE, "Errore nell'eliminazione della patologia scheda paziente.", ex);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nell'eliminazione della patologia cronica.")));
+        }
+    }
+
+    private void loadSchedaPazienteAllergie(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String codPaz = trimToNull(req.getParameter("codPaz"));
+        if (codPaz == null) {
+            codPaz = trimToNull(req.getParameter("codPaziente"));
+        }
+        if (codPaz == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice paziente non valorizzato."));
+            return;
+        }
+
+        try {
+            List<Map<String, String>> allergie = pazienteDao.findSchedaPazienteAllergie(codPaz);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("allergie", allergie);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento delle allergie scheda paziente.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento delle allergie.")));
+        }
+    }
+
+    private void saveSchedaPazienteAllergia(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String username = trimToNull(safeString(session.getAttribute("authUser")));
+        String codPaz = trimToNull(req.getParameter("codPaz"));
+        String codiceAllergia = trimToNull(req.getParameter("codiceAllergia"));
+        if (codPaz == null) {
+            codPaz = trimToNull(req.getParameter("codPaziente"));
+        }
+        if (codiceAllergia == null) {
+            codiceAllergia = trimToNull(req.getParameter("codice"));
+        }
+        if (username == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Utente loggato non disponibile."));
+            return;
+        }
+        if (codPaz == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice paziente non valorizzato."));
+            return;
+        }
+        if (codiceAllergia == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice allergia non valorizzato."));
+            return;
+        }
+
+        try {
+            int inserted = pazienteDao.insertSchedaPazienteAllergia(codPaz, codiceAllergia, username);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("inserted", Integer.valueOf(inserted));
+            JsonUtil.write(resp, ApiResponse.ok(data,
+                    inserted > 0 ? "Allergia aggiunta correttamente." : "Allergia gia' presente."));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel salvataggio dell'allergia scheda paziente.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel salvataggio dell'allergia.")));
+        }
+    }
+
+    private void deleteSchedaPazienteAllergia(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String idAllergia = trimToNull(req.getParameter("id"));
+        String codPaz = trimToNull(req.getParameter("codPaz"));
+        if (idAllergia == null) {
+            idAllergia = trimToNull(req.getParameter("idAllergia"));
+        }
+        if (codPaz == null) {
+            codPaz = trimToNull(req.getParameter("codPaziente"));
+        }
+        if (idAllergia == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("ID allergia non valorizzato."));
+            return;
+        }
+        if (codPaz == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice paziente non valorizzato."));
+            return;
+        }
+
+        try {
+            int deleted = pazienteDao.deleteSchedaPazienteAllergia(idAllergia, codPaz);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("deleted", Integer.valueOf(deleted));
+            JsonUtil.write(resp, ApiResponse.ok(data,
+                    deleted > 0 ? "Allergia eliminata correttamente." : "Allergia gia' eliminata."));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nell'eliminazione dell'allergia scheda paziente.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nell'eliminazione dell'allergia.")));
+        }
+    }
+
+    private void loadSchedaPazienteTerapie(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String codPaz = trimToNull(req.getParameter("codPaz"));
+        if (codPaz == null) {
+            codPaz = trimToNull(req.getParameter("codPaziente"));
+        }
+        if (codPaz == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice paziente non valorizzato."));
+            return;
+        }
+
+        try {
+            List<Map<String, String>> terapie = pazienteDao.findSchedaPazienteTerapie(codPaz);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("terapie", terapie);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento delle terapie scheda paziente.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento delle terapie.")));
+        }
+    }
+
+    private void saveSchedaPazienteTerapia(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String username = trimToNull(safeString(session.getAttribute("authUser")));
+        String codPaz = trimToNull(req.getParameter("codPaz"));
+        if (codPaz == null) {
+            codPaz = trimToNull(req.getParameter("codPaziente"));
+        }
+        String principioAttivo = trimToNull(req.getParameter("principioAttivo"));
+        String farmaco = trimToNull(req.getParameter("farmaco"));
+        String confezione = trimToNull(req.getParameter("confezione"));
+        String quantita = trimToNull(req.getParameter("quantita"));
+        String frequenza = firstNonBlank(req.getParameter("frequenzaUnita"), req.getParameter("frequenza"));
+        String durataValore = trimToNull(req.getParameter("durataValore"));
+        String durataUnita = trimToNull(req.getParameter("durataUnita"));
+
+        if (username == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Utente loggato non disponibile."));
+            return;
+        }
+        if (codPaz == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice paziente non valorizzato."));
+            return;
+        }
+        if (farmaco == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Farmaco non valorizzato."));
+            return;
+        }
+
+        try {
+            int inserted = pazienteDao.insertSchedaPazienteTerapia(
+                    codPaz,
+                    principioAttivo,
+                    farmaco,
+                    confezione,
+                    quantita,
+                    frequenza,
+                    durataValore,
+                    durataUnita,
+                    username);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("inserted", Integer.valueOf(inserted));
+            JsonUtil.write(resp, ApiResponse.ok(data, "Terapia aggiunta correttamente."));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel salvataggio della terapia scheda paziente.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel salvataggio della terapia.")));
+        }
+    }
+
+    private void deleteSchedaPazienteTerapia(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String codPaz = trimToNull(req.getParameter("codPaz"));
+        if (codPaz == null) {
+            codPaz = trimToNull(req.getParameter("codPaziente"));
+        }
+        String idTerapia = firstNonBlank(req.getParameter("id"), req.getParameter("idTerapia"));
+        String principioAttivo = trimToNull(req.getParameter("principioAttivo"));
+        String farmaco = trimToNull(req.getParameter("farmaco"));
+        String confezione = trimToNull(req.getParameter("confezione"));
+        String quantita = trimToNull(req.getParameter("quantita"));
+        String frequenza = firstNonBlank(req.getParameter("frequenzaUnita"), req.getParameter("frequenza"));
+        String durataValore = trimToNull(req.getParameter("durataValore"));
+        String durataUnita = trimToNull(req.getParameter("durataUnita"));
+
+        if (codPaz == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice paziente non valorizzato."));
+            return;
+        }
+        if (farmaco == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Farmaco non valorizzato."));
+            return;
+        }
+
+        try {
+            int deleted = pazienteDao.deleteSchedaPazienteTerapia(
+                    idTerapia,
+                    codPaz,
+                    principioAttivo,
+                    farmaco,
+                    confezione,
+                    quantita,
+                    frequenza,
+                    durataValore,
+                    durataUnita);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("deleted", Integer.valueOf(deleted));
+            JsonUtil.write(resp, ApiResponse.ok(data,
+                    deleted > 0 ? "Terapia eliminata correttamente." : "Terapia gia' eliminata."));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nell'eliminazione della terapia scheda paziente.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nell'eliminazione della terapia.")));
         }
     }
 

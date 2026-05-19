@@ -1,0 +1,566 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R] /Count 9 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2764 >>
+stream
+0.725 0.761 0.827 RG 1.2 w 42 55 511 735 re S 0 G
+1.000 1.000 1.000 rg 50 704 68 68 re f 0 g
+0.180 0.369 0.561 RG 1.4 w 50 704 68 68 re S 0 G
+q 52 0 0 52 58 712 cm /Im1 Do Q
+0.090 0.212 0.365 rg BT /F3 24 Tf 388 742 Td (AmbMMG) Tj ET 0 g
+0.314 0.376 0.439 rg BT /F2 11 Tf 365 722 Td (Sistema web ambulatoriale MMG) Tj ET 0 g
+0.180 0.369 0.561 RG 2 w 50 692 m 545 692 l S 0 G
+0.314 0.376 0.439 rg BT /F2 14 Tf 50 610 Td (MANUALE OPERATIVO) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F4 29 Tf 50 562 Td (Guida Utente) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 13 Tf 50 528 Td (Istruzioni operative per l'utilizzo quotidiano del sistema AmbMMG da parte) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 13 Tf 50 510 Td (degli utenti autorizzati.) Tj ET 0 g
+0.918 0.949 0.984 rg 72 330 110 55 re f 0 g
+0.180 0.459 0.714 RG 1 w 72 330 110 55 re S 0 G
+0.090 0.212 0.365 rg BT /F2 12 Tf 103 362 Td (Utente) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 8 Tf 90 346 Td (Browser aziendale) Tj ET 0 g
+0.267 0.447 0.769 RG 2 w 182 357 m 232 357 l S 0 G
+1.000 1.000 1.000 rg 232 320 140 75 re f 0 g
+0.180 0.459 0.714 RG 1 w 232 320 140 75 re S 0 G
+0.090 0.212 0.365 rg BT /F2 13 Tf 270 368 Td (AmbMMG) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 8 Tf 250 350 Td (Servlet + JavaScript) Tj ET 0 g
+0.200 0.200 0.200 rg BT /F1 8 Tf 259 337 Td (API JSON / PDF) Tj ET 0 g
+0.267 0.447 0.769 RG 2 w 372 357 m 422 357 l S 0 G
+0.929 0.969 0.929 rg 422 342 88 48 re f 0 g
+0.439 0.678 0.278 RG 1 w 422 342 88 48 re S 0 G
+0.216 0.337 0.137 rg BT /F2 11 Tf 440 369 Td (Oracle) Tj ET 0 g
+1.000 0.957 0.910 rg 422 288 88 42 re f 0 g
+0.929 0.490 0.192 RG 1 w 422 288 88 42 re S 0 G
+0.518 0.235 0.047 rg BT /F2 11 Tf 448 313 Td (LDAP) Tj ET 0 g
+0.969 0.976 0.988 rg 65 92 465 120 re f 0 g
+0.725 0.761 0.827 RG 0.8 w 65 92 465 120 re S 0 G
+0.322 0.380 0.435 rg BT /F2 9 Tf 82 178 Td (Applicativo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 150 178 Td (AmbMMG) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 330 178 Td (Versione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 410 178 Td (1.0) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 82 150 Td (Data) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 150 150 Td (19/05/2026) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 330 150 Td (Stato) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 410 150 Td (Documento operativo) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 82 122 Td (Ambiente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 150 122 Td (Java Web / Tomcat / Oracle) Tj ET 0 g
+0.322 0.380 0.435 rg BT /F2 9 Tf 330 122 Td (Classificazione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9 Tf 410 122 Td (Uso interno) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 1) Tj ET 0 g
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3992 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Controllo del documento) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.851 0.886 0.953 rg 50 712 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 712 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 718 Td (Versione) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 124 718 Td (Data) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 209 718 Td (Descrizione) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 454 718 Td (Redazione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 692 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 692 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 700 Td (1.0) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 124 700 Td (19/05/2026) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 209 700 Td (Prima emissione della guida utente AmbMMG.) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 454 700 Td (Ufficio applicativo) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 120 712 m 120 692 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 205 712 m 205 692 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 450 712 m 450 692 l S 0 G
+0.180 0.369 0.561 rg BT /F2 13 Tf 50 673 Td (Indice) Tj ET 0 g
+0.851 0.886 0.953 rg 50 641 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 641 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 647 Td (Capitolo) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 134 647 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 621 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 621 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 629 Td (1) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 629 Td (Accesso all'applicazione) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 641 m 130 621 l S 0 G
+0.965 0.973 0.984 rg 50 601 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 601 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 609 Td (2) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 609 Td (Schermata Accessi) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 621 m 130 601 l S 0 G
+1.000 1.000 1.000 rg 50 581 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 581 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 589 Td (3) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 589 Td (Nuovo accesso e censimento paziente) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 601 m 130 581 l S 0 G
+0.965 0.973 0.984 rg 50 561 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 561 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 569 Td (4) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 569 Td (Scheda paziente) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 581 m 130 561 l S 0 G
+1.000 1.000 1.000 rg 50 541 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 541 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 549 Td (5) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 549 Td (Storici, prestazioni e Allegato M) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 561 m 130 541 l S 0 G
+0.965 0.973 0.984 rg 50 521 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 521 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 529 Td (6) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 134 529 Td (Logout, messaggi e assistenza) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 130 541 m 130 521 l S 0 G
+0.933 0.957 0.984 rg 50 453 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 453 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 453 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 453 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 489 Td (Documento redatto secondo lo standard grafico dei manuali applicativi aziendali:) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 477 Td (copertina, controllo versione, indice, sezioni operative, tabelle e figure) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 465 Td (esplicative.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 2) Tj ET 0 g
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 3934 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (1. Accesso all'applicazione) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Aprire AmbMMG dal browser aziendale. La pagina iniziale richiede utente, password e servizio) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (operativo. Dopo la digitazione dell'utente, il sistema carica l'elenco dei servizi abilitati;) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 700 Td (selezionare quello corretto e premere Entra.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 669 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 669 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 675 Td (Campo) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 194 675 Td (Descrizione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 649 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 649 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 657 Td (Utente) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 194 657 Td (Nome utente aziendale.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 190 669 m 190 649 l S 0 G
+0.965 0.973 0.984 rg 50 629 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 629 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 637 Td (Password) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 194 637 Td (Password personale di dominio.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 190 649 m 190 629 l S 0 G
+1.000 1.000 1.000 rg 50 609 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 609 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 617 Td (Servizio) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 194 617 Td (Servizio operativo associato all'utente.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 190 629 m 190 609 l S 0 G
+0.965 0.973 0.984 rg 50 589 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 589 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 597 Td (Entra) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 194 597 Td (Avvia autenticazione e apre la home applicativa.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 190 609 m 190 589 l S 0 G
+1.000 1.000 1.000 rg 50 360 495 198 re f 0 g
+0.557 0.667 0.859 RG 1 w 50 360 495 198 re S 0 G
+0.918 0.949 0.984 rg 50 532 495 26 re f 0 g
+0.557 0.667 0.859 RG 1 w 50 532 495 26 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 62 541 Td (Figura 1 - Login e accesso al sistema) Tj ET 0 g
+0.929 0.953 0.980 rg 65 495 80 22 re f 0 g
+0.624 0.706 0.812 RG 1 w 65 495 80 22 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 82 503 Td (Accessi) Tj ET 0 g
+1.000 1.000 1.000 rg 153 495 80 22 re f 0 g
+0.624 0.706 0.812 RG 1 w 153 495 80 22 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 171 503 Td (Paziente) Tj ET 0 g
+1.000 1.000 1.000 rg 241 495 80 22 re f 0 g
+0.624 0.706 0.812 RG 1 w 241 495 80 22 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 256 503 Td (Statistiche) Tj ET 0 g
+0.969 0.976 0.988 rg 65 450 140 32 re f 0 g
+0.773 0.816 0.875 RG 1 w 65 450 140 32 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 75 468 Td (Filtri ricerca) Tj ET 0 g
+0.969 0.976 0.988 rg 215 450 150 32 re f 0 g
+0.773 0.816 0.875 RG 1 w 215 450 150 32 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 225 468 Td (Azioni e ordinamento) Tj ET 0 g
+0.969 0.976 0.988 rg 375 450 145 32 re f 0 g
+0.773 0.816 0.875 RG 1 w 375 450 145 32 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 385 468 Td (Paziente selezionato) Tj ET 0 g
+1.000 1.000 1.000 rg 65 395 455 42 re f 0 g
+0.773 0.816 0.875 RG 1 w 65 395 455 42 re S 0 G
+0.200 0.200 0.200 rg BT /F1 8 Tf 75 418 Td (Griglia risultati: data, paziente, codice fiscale, sede, medico, diagnosi) Tj ET 0 g
+0.333 0.333 0.333 rg BT /F1 8 Tf 60 347 Td (Figura - Schermata schematica AmbMMG) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 3) Tj ET 0 g
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 4206 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (2. Schermata Accessi) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (La sezione Accessi e' la pagina principale dopo il login. Permette di cercare consulenze gia') Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (registrate, selezionare un paziente e avviare l'inserimento di un nuovo accesso.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Area schermata) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 204 688 Td (Funzione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Menu principale) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 670 Td (Accessi, Paziente, Statistiche e Logout.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 682 m 200 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Filtri) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 650 Td (Data, consulenza, paziente, sede, codice fiscale e medico.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 662 m 200 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Azioni) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 630 Td (Cerca, Pulisci e Nuovo accesso.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 642 m 200 622 l S 0 G
+0.965 0.973 0.984 rg 50 602 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 602 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 610 Td (Griglia risultati) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 610 Td (Elenco degli accessi filtrati e ordinabili.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 622 m 200 602 l S 0 G
+1.000 1.000 1.000 rg 50 582 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 582 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 590 Td (Paziente selezionato) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 590 Td (Dati sintetici e accesso alla scheda paziente.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 602 m 200 582 l S 0 G
+1.000 1.000 1.000 rg 50 353 495 198 re f 0 g
+0.557 0.667 0.859 RG 1 w 50 353 495 198 re S 0 G
+0.918 0.949 0.984 rg 50 525 495 26 re f 0 g
+0.557 0.667 0.859 RG 1 w 50 525 495 26 re S 0 G
+0.090 0.212 0.365 rg BT /F2 10 Tf 62 534 Td (Figura 2 - Area Accessi e selezione paziente) Tj ET 0 g
+0.929 0.953 0.980 rg 65 488 80 22 re f 0 g
+0.624 0.706 0.812 RG 1 w 65 488 80 22 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 82 496 Td (Accessi) Tj ET 0 g
+1.000 1.000 1.000 rg 153 488 80 22 re f 0 g
+0.624 0.706 0.812 RG 1 w 153 488 80 22 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 171 496 Td (Paziente) Tj ET 0 g
+1.000 1.000 1.000 rg 241 488 80 22 re f 0 g
+0.624 0.706 0.812 RG 1 w 241 488 80 22 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 256 496 Td (Statistiche) Tj ET 0 g
+0.969 0.976 0.988 rg 65 443 140 32 re f 0 g
+0.773 0.816 0.875 RG 1 w 65 443 140 32 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 75 461 Td (Filtri ricerca) Tj ET 0 g
+0.969 0.976 0.988 rg 215 443 150 32 re f 0 g
+0.773 0.816 0.875 RG 1 w 215 443 150 32 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 225 461 Td (Azioni e ordinamento) Tj ET 0 g
+0.969 0.976 0.988 rg 375 443 145 32 re f 0 g
+0.773 0.816 0.875 RG 1 w 375 443 145 32 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8 Tf 385 461 Td (Paziente selezionato) Tj ET 0 g
+1.000 1.000 1.000 rg 65 388 455 42 re f 0 g
+0.773 0.816 0.875 RG 1 w 65 388 455 42 re S 0 G
+0.200 0.200 0.200 rg BT /F1 8 Tf 75 411 Td (Griglia risultati: data, paziente, codice fiscale, sede, medico, diagnosi) Tj ET 0 g
+0.333 0.333 0.333 rg BT /F1 8 Tf 60 340 Td (Figura - Schermata schematica AmbMMG) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 4) Tj ET 0 g
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 12 0 R >>
+endobj
+12 0 obj
+<< /Length 3339 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (3. Nuovo accesso e censimento paziente) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Premere Nuovo accesso, ricercare il paziente tramite codice fiscale, cognome o nome, quindi) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (selezionare la riga corretta. Se il paziente non e' presente, usare la funzione di censimento.) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F1 10 Tf 50 696 Td (?) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 696 Td (Se il paziente e' presente, selezionare la riga, compilare il dettaglio e premere Aggiungi) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 683 Td (nuovo accesso.) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F1 10 Tf 50 668 Td (?) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 668 Td (Se il paziente non e' presente, compilare i dati obbligatori di censimento.) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F1 10 Tf 50 653 Td (?) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 653 Td (Il pulsante Calcola consente di ottenere il codice fiscale dai dati anagrafici quando) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 640 Td (completi.) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F1 10 Tf 50 625 Td (?) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 625 Td (Il sistema valida servizio, paziente, data/ora e tipo accesso prima del salvataggio.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 596 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 596 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 602 Td (Dati obbligatori censimento) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 264 602 Td (Nota) Tj ET 0 g
+1.000 1.000 1.000 rg 50 576 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 576 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 584 Td (Codice fiscale, cognome, nome) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 264 584 Td (Il codice fiscale deve avere 16 caratteri.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 260 596 m 260 576 l S 0 G
+0.965 0.973 0.984 rg 50 556 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 556 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 564 Td (Data nascita, sesso, comune nascita) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 264 564 Td (Il comune va selezionato dai suggerimenti.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 260 576 m 260 556 l S 0 G
+1.000 1.000 1.000 rg 50 536 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 536 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 544 Td (Indirizzo, comune e CAP residenza) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 264 544 Td (Necessari per completare anagrafica.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 260 556 m 260 536 l S 0 G
+0.965 0.973 0.984 rg 50 516 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 516 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 524 Td (ASL residenza e ASL iscrizione) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 264 524 Td (Selezionare dall'elenco disponibile.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 260 536 m 260 516 l S 0 G
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 5) Tj ET 0 g
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 14 0 R >>
+endobj
+14 0 obj
+<< /Length 2998 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (4. Scheda paziente) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (La scheda paziente raccoglie informazioni sintetiche utili alla presa in carico. Si apre dal) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (pannello del paziente selezionato o durante la procedura di nuovo accesso.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Sezione) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 204 688 Td (Contenuto) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Dati generali) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 670 Td (Telefono, stato civile, fumo, BMI, caregiver e note.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 682 m 200 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Diario) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 650 Td (Annotazioni datate e storico.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 662 m 200 642 l S 0 G
+1.000 1.000 1.000 rg 50 622 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 622 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Patologie) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 630 Td (Patologie croniche codificate ICD10.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 642 m 200 622 l S 0 G
+0.965 0.973 0.984 rg 50 602 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 602 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 610 Td (Allergie) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 610 Td (Allergie codificate.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 622 m 200 602 l S 0 G
+1.000 1.000 1.000 rg 50 582 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 582 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 590 Td (Terapie) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 590 Td (Principio attivo, farmaco, confezione, quantita', frequenza e durata.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 602 m 200 582 l S 0 G
+0.933 0.957 0.984 rg 50 514 495 48 re f 0 g
+0.180 0.459 0.714 RG 1 w 50 514 495 48 re S 0 G
+0.180 0.459 0.714 rg 50 514 5 48 re f 0 g
+0.180 0.459 0.714 RG 0 w 50 514 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 550 Td (Dopo ogni modifica premere Salva scheda. In presenza di errori, correggere il campo) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 538 Td (indicato e ripetere il salvataggio.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 6) Tj ET 0 g
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 16 0 R >>
+endobj
+16 0 obj
+<< /Length 3131 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (5. Storici, prestazioni e Allegato M) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (La sezione Paziente contiene schede di consultazione per gli storici collegati al codice) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (fiscale selezionato. Le informazioni dipendono dalle abilitazioni dell'utente e dalla) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 700 Td (disponibilita' dei sistemi collegati.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 669 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 669 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 675 Td (Scheda) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 224 675 Td (Contenuto) Tj ET 0 g
+1.000 1.000 1.000 rg 50 649 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 649 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 657 Td (Prestazioni infermieristiche) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 224 657 Td (Prestazioni registrate per il paziente.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 220 669 m 220 649 l S 0 G
+0.965 0.973 0.984 rg 50 629 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 629 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 637 Td (Ricette dematerializzate) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 224 637 Td (Elenco ricette dematerializzate disponibili.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 220 649 m 220 629 l S 0 G
+1.000 1.000 1.000 rg 50 609 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 609 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 617 Td (Ricette farmaci) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 224 617 Td (Storico ricette farmaci.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 220 629 m 220 609 l S 0 G
+0.965 0.973 0.984 rg 50 589 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 589 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 597 Td (Piani terapeutici) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 224 597 Td (Piani associati al paziente.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 220 609 m 220 589 l S 0 G
+1.000 1.000 1.000 rg 50 569 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 569 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 577 Td (Allegato M) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 224 577 Td (Compilazione, salvataggio e stampa PDF.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 220 589 m 220 569 l S 0 G
+1.000 0.957 0.910 rg 50 501 495 48 re f 0 g
+0.773 0.353 0.067 RG 1 w 50 501 495 48 re S 0 G
+0.773 0.353 0.067 rg 50 501 5 48 re f 0 g
+0.773 0.353 0.067 RG 0 w 50 501 5 48 re S 0 G
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 537 Td (Se l'Allegato M e' gia' stato salvato da un altro utente, il sistema blocca la) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 9.5 Tf 63 525 Td (modifica per evitare sovrascritture.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 7) Tj ET 0 g
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 18 0 R >>
+endobj
+18 0 obj
+<< /Length 4345 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (6. Logout, messaggi e assistenza) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Al termine del lavoro premere Logout. La sessione scade automaticamente dopo inattivita') Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 713 Td (prolungata; in caso di sessione scaduta e' necessario effettuare nuovamente l'accesso.) Tj ET 0 g
+0.851 0.886 0.953 rg 50 682 495 18 re f 0 g
+0.624 0.706 0.812 RG 0.8 w 50 682 495 18 re S 0 G
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 54 688 Td (Messaggio) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 204 688 Td (Significato) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F2 8.5 Tf 374 688 Td (Azione) Tj ET 0 g
+1.000 1.000 1.000 rg 50 662 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 662 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 670 Td (Sessione non attiva) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 670 Td (Sessione scaduta o non valida) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 374 670 Td (Effettuare nuovamente il login.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 682 m 200 662 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 370 682 m 370 662 l S 0 G
+0.965 0.973 0.984 rg 50 642 495 20 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 642 495 20 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 650 Td (Credenziali non valide) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 650 Td (Utente o password errati) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 374 650 Td (Verificare le credenziali.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 662 m 200 642 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 370 662 m 370 642 l S 0 G
+1.000 1.000 1.000 rg 50 610 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 610 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 630 Td (Valorizza almeno un filtro) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 630 Td (Ricerca anagrafica senza parametri) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 374 630 Td (Inserire codice fiscale, cognome o) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 374 619 Td (nome.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 642 m 200 610 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 370 642 m 370 610 l S 0 G
+0.965 0.973 0.984 rg 50 578 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 578 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 598 Td (Campo obbligatorio non) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 587 Td (valorizzato) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 598 Td (Manca un dato richiesto) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 374 598 Td (Compilare il campo indicato.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 610 m 200 578 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 370 610 m 370 578 l S 0 G
+1.000 1.000 1.000 rg 50 546 495 32 re f 0 g
+0.741 0.780 0.839 RG 0.5 w 50 546 495 32 re S 0 G
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 54 566 Td (Errore nel caricamento) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 566 Td (Problema temporaneo o dato non) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 204 555 Td (disponibile) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 8.5 Tf 374 566 Td (Riprovare o contattare assistenza.) Tj ET 0 g
+0.741 0.780 0.839 RG 0.4 w 200 578 m 200 546 l S 0 G
+0.741 0.780 0.839 RG 0.4 w 370 578 m 370 546 l S 0 G
+0.180 0.369 0.561 rg BT /F2 13 Tf 50 527 Td (Buone pratiche) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F1 10 Tf 50 509 Td (?) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 509 Td (Verificare sempre il paziente selezionato prima di inserire nuovi dati.) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F1 10 Tf 50 494 Td (?) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 494 Td (Usare il logout quando si lascia la postazione.) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F1 10 Tf 50 479 Td (?) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 479 Td (Non condividere credenziali personali.) Tj ET 0 g
+0.090 0.212 0.365 rg BT /F1 10 Tf 50 464 Td (?) Tj ET 0 g
+0.133 0.133 0.133 rg BT /F1 10 Tf 60 464 Td (Segnalare anomalie indicando utente, servizio, paziente e orario.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 8) Tj ET 0 g
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F3 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >> /F4 << /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >> >> /XObject << /Im1 21 0 R >> >> /Contents 20 0 R >>
+endobj
+20 0 obj
+<< /Length 657 >>
+stream
+0.310 0.373 0.439 rg BT /F2 9 Tf 50 812 Td (AmbMMG) Tj ET 0 g
+0.310 0.373 0.439 rg BT /F1 8 Tf 440 812 Td (Versione 1.0 - 19/05/2026) Tj ET 0 g
+0.624 0.706 0.812 RG 0.8 w 50 800 m 545 800 l S 0 G
+0.090 0.212 0.365 rg BT /F3 18 Tf 50 752 Td (Appendice operativa) Tj ET 0 g
+0.624 0.706 0.812 RG 1.2 w 50 744 m 545 744 l S 0 G
+0.133 0.133 0.133 rg BT /F1 10 Tf 50 726 Td (Pagina riservata a note operative, controlli di reparto e aggiornamenti della guida AmbMMG.) Tj ET 0 g
+0.725 0.761 0.827 RG 0.5 w 50 45 m 545 45 l S 0 G
+0.400 0.400 0.400 rg BT /F1 8 Tf 50 31 Td (Guida Utente AmbMMG) Tj ET 0 g
+0.400 0.400 0.400 rg BT /F1 8 Tf 505 31 Td (Pag. 9) Tj ET 0 g
+endstream
+endobj
+21 0 obj
+<< /Type /XObject /Subtype /Image /Width 64 /Height 64 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length 1956 >>
+stream
+ˇÿˇ‡ JFIF  ` `  ˇ€ C 		
+ $.' ",#(7),01444'9=82<.342ˇ€ C			2!!22222222222222222222222222222222222222222222222222ˇ¿  @ @" ˇƒ           	
+ˇƒ µ   } !1AQa"q2Åë°#B±¡R—$3brÇ	
+%&'()*456789:CDEFGHIJSTUVWXYZcdefghijstuvwxyzÉÑÖÜáàâäíìîïñóòôö¢£§•¶ß®©™≤≥¥µ∂∑∏π∫¬√ƒ≈∆«»… “”‘’÷◊ÿŸ⁄·‚„‰ÂÊÁËÈÍÒÚÛÙıˆ˜¯˘˙ˇƒ        	
+ˇƒ µ  w !1AQaq"2ÅBë°±¡	#3Rbr—
+$4·%Ò&'()*56789:CDEFGHIJSTUVWXYZcdefghijstuvwxyzÇÉÑÖÜáàâäíìîïñóòôö¢£§•¶ß®©™≤≥¥µ∂∑∏π∫¬√ƒ≈∆«»… “”‘’÷◊ÿŸ⁄‚„‰ÂÊÁËÈÍÚÛÙıˆ˜¯˘˙ˇ⁄   ? ˜⁄FuE,ÏGRN ¶O2[¡$Ú∂ÿ„RÏ} 5·æ"Ò-ÁàoIùñ‘‹€ÉÚ®Ìë‹˙öÏ¬`Ââì≥≤G>#®ÆÌû◊˝´ßœ˝Ø˝˛_Ò§˛÷”øË!iˇ ◊¸k¬Ï¥IÔmZıÃñvµ’…⁄ôÙ^Ï}Ä®ÊèCàïKªÀÜ∆ñÈ˛õ?†ÆÔÏ w≤õ#óÎ”µ‹ﬁ?µ¥ﬂ˙Zﬂıˇ ?µ¥ﬂ˙Zﬂıˇ ˘ÊTµ<¡)oˆd@Ê	˚£Ú™˛»áÛ?∏üÌ/‚}.é≤ t` yNAßWÄxs≈ææIaëö–∑Ô≠…˘]{‡voC^˜—‹AÒ6Ë‰PËﬁ†åäÛ±xIa‰ÆÓôŸáƒ*À≥FgäI’H8ˇ Eì˘WçxsKãT‘$k∑1ÈˆëãπdáπÈ˘◊≤xØ˛E-[˛Ω$˛U‰p±¥¯g™O√›ﬂ«n«˝ï]ÿ˛u›ó…™Q›¥æÛóì™õËÆgk:‘⁄’‡ïì…µàlµ∂^Ï ıı5Î~∂∑oiÓ`å≥,JìΩ∫“ÿx'√oßZªÈ0;4HYõ$í@‰Û[ˆ∂∂zFû∞[Fñˆ∞)!W¢éI˛µé/N•5JöjÃ”áú&Á7{úüƒÀx#té∞∆¨≥≈ÜlWåñØd¨qÎ⁄^•g≠¬∑	-¬ﬂà‰'%”ÚÁÚ©uox`xv˙Ó◊L∂»µíX•âèe$A≠ÿ®·ó±ù€øÊe_Îøi4<Lµ}·ROÑ¥ÇN–‚ˇ –E|‡*®Ø£|%ˇ "~èˇ ^qË"¥Õˇ áR2ˇ çáã?‰Q’ˇ Î“OÂ^=¶∑ˆáÇuÕ-9ûKËó‘ïøJˆˇ »°´ˇ ◊§ü ºN‘Ê“µØ ¡d8*z:û™~µly® €›?∏ºl≠Q_±Í_±Ù‘∞≤K-FY!Uïn¨¶sêBÑZ÷çıø¯}ö€Q“≈ïÙmöñ≤´Ö9V¿f‡ıÎ^G©È+,™È ÕßπÀ∆£/n›’áß°ØT¯}≠ÈPxNÜmJŒ)c$ùT©ﬁ«°>ı¨<)SS•´øı–™•Rn3⁄ƒ~&i4ù]mlGñ⁄ΩÇÿAÅ—÷@¸F?ÁãÙ˚„B±÷¨[O,º∂ó"∆Ÿ dÄ} ≠ˇ àöˆîû76óñSÍ∆;fI√4~`(Ï =v◊•xìD–¬åÍSx˝⁄û§z˝=˚÷ò:
+≠;œOÛˇ Ü˝Hƒ’tÁhóØ≠l-`Ci´«z‰‡¢€I:ÂÜ+ËOˇ »ù£◊ú_˙ØöW“˛ˇ ë7Eˇ Ø(øÙFjößªÍyΩ[õxÓÌf∂ôwE2‹zÇ0kÁ_¯r˚√:É€]∆∆«…∏«…"ˆÁ◊‘W—Ù…°ä‚&ähíH€™:Ü5Á·1r√∑•”;1uYvh˘ÇÀS∫”nE≈ïÀ¡/L©Í=ËG÷¥$Ò%•ﬂÕ®¯K∫óº©∫oÆ”ä˜ˇ ¯G4?˙iˇ ¯
+ü·G¸#z˝tÔ¸OÆÈft§Ó‡˛Ûë`f¥Ê>uì[∑èù?F”¨õ¥òiú}íÂYRŒ”J“Õ+I#≥ªdö˙˛Ω˛Ä∫w˛ß¯R¬7†ˇ –Nˇ ¿Tˇ 
+k4¶∂ã˚¡‡&˛—ÛœÜ<1‚≠M-≠#any˜8˘"^¸˜>Çæï∂∑é“÷hWlP¢∆É—@¿•Ü≠‚X†â"çz"(P?RWüã≈À÷ñHÎ√·’›≥ˇŸ
+endstream
+endobj
+xref
+0 22
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000174 00000 n 
+0000000571 00000 n 
+0000003387 00000 n 
+0000003784 00000 n 
+0000007828 00000 n 
+0000008225 00000 n 
+0000012211 00000 n 
+0000012609 00000 n 
+0000016868 00000 n 
+0000017267 00000 n 
+0000020659 00000 n 
+0000021058 00000 n 
+0000024109 00000 n 
+0000024508 00000 n 
+0000027692 00000 n 
+0000028091 00000 n 
+0000032489 00000 n 
+0000032888 00000 n 
+0000033597 00000 n 
+trailer << /Size 22 /Root 1 0 R /Info << /Title (Guida Utente AmbMMG) /Producer (AmbMMG) >> >>
+startxref
+35720
+%%EOF

@@ -21,7 +21,7 @@
     </context-param>
     <context-param>
         <param-name>dbPassword</param-name>
-        <param-value>caponord</param-value>
+        <param-value></param-value>
     </context-param>
 
     <servlet>

@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -341,6 +342,113 @@ public class PazienteDao {
         return results;
     }
 
+    public List<Map<String, String>> searchAllergie(String filtro) throws SQLException {
+        String sql = "SELECT CODICE, CODICE || ' - ' || DESCRIZIONE AS DESCRIZIONE "
+                + "FROM APO_ALLERGIE "
+                + "WHERE A_DATA IS NULL "
+                + "ORDER BY CODICE";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    results.add(mapAllergia(rs));
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public List<Map<String, String>> searchTerapiePrincipiAttivi(String filtro) throws SQLException {
+        String sql = "SELECT DISTINCT TRIM(CAST(T.PA AS VARCHAR2(500))) AS PA, "
+                + "TRIM(CAST(T.PA AS VARCHAR2(500))) AS PRINC_ATTIVO "
+                + "FROM TOPSAN.TERAPIE T "
+                + "JOIN TOPSAN.REPARTI_TERAPIE R ON T.CODICE_TERAPIA = R.COD_TERAPIA AND R.DATA_A IS NULL "
+                + "WHERE NVL(T.A_DATA, SYSDATE) >= TRUNC(SYSDATE) "
+                + "AND T.STATO = 1 "
+                + "AND T.PA IS NOT NULL "
+                + "AND UPPER(TRIM(CAST(T.PA AS VARCHAR2(500)))) LIKE '%' || UPPER(?) || '%' "
+                + "ORDER BY PA";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, safe(filtro));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> item = new HashMap<>();
+                    item.put("pa", safe(rs.getString("PA")));
+                    item.put("principioAttivo", safe(rs.getString("PRINC_ATTIVO")));
+                    results.add(item);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public List<Map<String, String>> searchTerapieFarmaci(String principioAttivo, String filtro) throws SQLException {
+        String sql = "SELECT DISTINCT TRIM(CAST(T.FARMACO AS VARCHAR2(500))) AS F, "
+                + "TRIM(CAST(T.FARMACO AS VARCHAR2(500))) AS FARMACO "
+                + "FROM TOPSAN.TERAPIE T "
+                + "JOIN TOPSAN.REPARTI_TERAPIE R ON T.CODICE_TERAPIA = R.COD_TERAPIA AND R.DATA_A IS NULL "
+                + "WHERE NVL(T.A_DATA, SYSDATE) >= TRUNC(SYSDATE) "
+                + "AND T.STATO = 1 "
+                + "AND T.FARMACO IS NOT NULL "
+                + "AND T.PA = ? "
+                + "AND UPPER(TRIM(CAST(T.FARMACO AS VARCHAR2(500)))) LIKE '%' || UPPER(?) || '%' "
+                + "ORDER BY FARMACO";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, safe(principioAttivo));
+            statement.setString(2, safe(filtro));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> item = new HashMap<>();
+                    item.put("f", safe(rs.getString("F")));
+                    item.put("farmaco", safe(rs.getString("FARMACO")));
+                    results.add(item);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public List<Map<String, String>> searchTerapieConfezioni(String farmaco, String filtro) throws SQLException {
+        String sql = "SELECT DISTINCT TRIM(CAST(T.CONFEZIONE AS VARCHAR2(500))) AS C, "
+                + "TRIM(CAST(T.CONFEZIONE AS VARCHAR2(500))) AS CONFEZIONE "
+                + "FROM TOPSAN.TERAPIE T "
+                + "JOIN TOPSAN.REPARTI_TERAPIE R ON T.CODICE_TERAPIA = R.COD_TERAPIA AND R.DATA_A IS NULL "
+                + "WHERE NVL(T.A_DATA, SYSDATE) >= TRUNC(SYSDATE) "
+                + "AND T.STATO = 1 "
+                + "AND T.CONFEZIONE IS NOT NULL "
+                + "AND T.FARMACO = ? "
+                + "AND UPPER(TRIM(CAST(T.CONFEZIONE AS VARCHAR2(500)))) LIKE '%' || UPPER(?) || '%' "
+                + "ORDER BY CONFEZIONE";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, safe(farmaco));
+            statement.setString(2, safe(filtro));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> item = new HashMap<>();
+                    item.put("c", safe(rs.getString("C")));
+                    item.put("confezione", safe(rs.getString("CONFEZIONE")));
+                    results.add(item);
+                }
+            }
+        }
+
+        return results;
+    }
+
     public Map<String, Object> findLatestSchedaPaziente(String codPaz) throws SQLException {
         String sql = "SELECT ID, COD_PAZ, TO_CHAR(DATA_INS, 'DD/MM/YYYY HH24:MI') DATA_INS, UTENTE_INS, "
                 + "TELEFONO, STATO_CIVILE, FUMO, IBM, IBM_KG, IBM_CM, ALLERGIE, TERAPIE, CAREGIVER "
@@ -387,16 +495,21 @@ public class PazienteDao {
         }
 
         scheda.put("patologieCroniche", findSchedaPazientePatologieByScheda(idScheda, codPaz));
+        scheda.put("allergieSelezionate", findSchedaPazienteAllergieByScheda(idScheda, codPaz));
+        scheda.put("terapieSelezionate", findSchedaPazienteTerapieByScheda(idScheda, codPaz));
         scheda.put("diarioStorico", findSchedaPazienteDiario(codPaz));
         return scheda;
     }
 
     public List<Map<String, String>> findSchedaPazienteDiario(String codPaz) throws SQLException {
-        String sql = "SELECT D.ID, TO_CHAR(D.DATA_DIARIO, 'DD/MM/YYYY HH24:MI') AS DATA_DIARIO, "
-                + "D.DESCRIZIONE AS DESCRIZIONE "
+        String sql = "SELECT DISTINCT D.ID, TO_CHAR(D.DATA_DIARIO, 'DD/MM/YYYY HH24:MI') AS DATA_DIARIO, "
+                + "D.DESCRIZIONE AS DESCRIZIONE, "
+                + "TRIM(CAST(U.COGNOME AS VARCHAR2(255))) AS UTENTE_INS_COGNOME, "
+                + "TRIM(CAST(U.NOME AS VARCHAR2(255))) AS UTENTE_INS_NOME "
                 + "FROM APO_SCHEDE_PAZIENTE_DIARIO D "
+                + "LEFT JOIN UTENTI U ON D.UTENTE_INS = U.COD_UTENTE "
                 + "WHERE TRIM(CAST(D.COD_PAZ AS VARCHAR2(100))) = ? "
-                + "ORDER BY D.DATA_DIARIO DESC";
+                + "ORDER BY DATA_DIARIO DESC";
 
         List<Map<String, String>> results = new ArrayList<>();
         try (Connection connection = dataService.getConnection();
@@ -410,6 +523,8 @@ public class PazienteDao {
                     diario.put("id", safe(rs.getString("ID")));
                     diario.put("dataDiario", safe(rs.getString("DATA_DIARIO")));
                     diario.put("descrizione", safe(rs.getString("DESCRIZIONE")));
+                    diario.put("utenteInsCognome", safe(rs.getString("UTENTE_INS_COGNOME")));
+                    diario.put("utenteInsNome", safe(rs.getString("UTENTE_INS_NOME")));
                     results.add(diario);
                 }
             }
@@ -460,31 +575,11 @@ public class PazienteDao {
     }
 
     public List<Map<String, String>> findSchedaPazientePatologie(String codPaz) throws SQLException {
-        String sql = "SELECT P.ID, I2.CODICE, I2.DESCRIZIONE PATOLOGIA "
-                + "FROM TOPSAN.ICD10 I2 "
-                + "JOIN APO_SCHEDE_PAZIENTE_PATOLOGIE P ON P.CODICE_PATOLOGIA = I2.CODICE "
-                + "WHERE I2.SOTTOCATEGORIA IS NOT NULL "
-                + "AND TRIM(CAST(P.COD_PAZIENTE AS VARCHAR2(100))) = ? "
-                + "ORDER BY I2.CODICE, I2.SOTTOCATEGORIA";
-
-        List<Map<String, String>> results = new ArrayList<>();
-        try (Connection connection = dataService.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, safe(codPaz));
-            try (ResultSet rs = statement.executeQuery()) {
-                int rowIndex = 0;
-                while (rs.next()) {
-                    rowIndex += 1;
-                    HashMap<String, String> patologia = new HashMap<>();
-                    patologia.put("id", safe(rs.getString("ID")));
-                    patologia.put("codice", safe(rs.getString("CODICE")));
-                    patologia.put("descrizione", safe(rs.getString("PATOLOGIA")));
-                    results.add(patologia);
-                }
-            }
+        BigDecimal idScheda;
+        try (Connection connection = dataService.getConnection()) {
+            idScheda = findLatestSchedaPazienteId(connection, codPaz);
         }
-
-        return results;
+        return findSchedaPazientePatologieByScheda(idScheda, codPaz);
     }
 
     private List<Map<String, String>> findSchedaPazientePatologieByScheda(BigDecimal idScheda,
@@ -493,13 +588,16 @@ public class PazienteDao {
             return new ArrayList<>();
         }
 
-        String sql = "SELECT P.ID, I2.CODICE, I2.DESCRIZIONE PATOLOGIA "
+        String sql = "SELECT DISTINCT P.ID, I2.CODICE, I2.DESCRIZIONE PATOLOGIA, "
+                + "TRIM(CAST(U.COGNOME AS VARCHAR2(255))) AS UTENTE_INS_COGNOME, "
+                + "TRIM(CAST(U.NOME AS VARCHAR2(255))) AS UTENTE_INS_NOME "
                 + "FROM TOPSAN.ICD10 I2 "
                 + "JOIN APO_SCHEDE_PAZIENTE_PATOLOGIE P ON P.CODICE_PATOLOGIA = I2.CODICE "
+                + "LEFT JOIN UTENTI U ON P.UTENTE_INS = U.COD_UTENTE "
                 + "WHERE I2.SOTTOCATEGORIA IS NOT NULL "
                 + "AND P.ID_SCHEDA = ? "
                 + "AND TRIM(CAST(P.COD_PAZIENTE AS VARCHAR2(100))) = ? "
-                + "ORDER BY I2.CODICE, I2.SOTTOCATEGORIA";
+                + "ORDER BY CODICE";
 
         List<Map<String, String>> results = new ArrayList<>();
         try (Connection connection = dataService.getConnection();
@@ -512,6 +610,8 @@ public class PazienteDao {
                     patologia.put("id", safe(rs.getString("ID")));
                     patologia.put("codice", safe(rs.getString("CODICE")));
                     patologia.put("descrizione", safe(rs.getString("PATOLOGIA")));
+                    patologia.put("utenteInsCognome", safe(rs.getString("UTENTE_INS_COGNOME")));
+                    patologia.put("utenteInsNome", safe(rs.getString("UTENTE_INS_NOME")));
                     results.add(patologia);
                 }
             }
@@ -526,7 +626,7 @@ public class PazienteDao {
             if (idScheda == null) {
                 throw new SQLException("Scheda paziente non trovata per il paziente selezionato.");
             }
-            if (existsSchedaPazientePatologia(connection, codPaz, codicePatologia)) {
+            if (existsSchedaPazientePatologia(connection, idScheda, codPaz, codicePatologia)) {
                 return 0;
             }
 
@@ -562,6 +662,297 @@ public class PazienteDao {
         }
     }
 
+    public List<Map<String, String>> findSchedaPazienteAllergie(String codPaz) throws SQLException {
+        BigDecimal idScheda;
+        try (Connection connection = dataService.getConnection()) {
+            idScheda = findLatestSchedaPazienteId(connection, codPaz);
+        }
+        return findSchedaPazienteAllergieByScheda(idScheda, codPaz);
+    }
+
+    private List<Map<String, String>> findSchedaPazienteAllergieByScheda(BigDecimal idScheda,
+            String codPaz) throws SQLException {
+        if (idScheda == null) {
+            return new ArrayList<>();
+        }
+
+        String sql = "SELECT DISTINCT S.ID, A.CODICE, A.CODICE || ' - ' || A.DESCRIZIONE AS DESCRIZIONE, "
+                + "TRIM(CAST(U.COGNOME AS VARCHAR2(255))) AS UTENTE_INS_COGNOME, "
+                + "TRIM(CAST(U.NOME AS VARCHAR2(255))) AS UTENTE_INS_NOME "
+                + "FROM APO_ALLERGIE A "
+                + "JOIN APO_SCHEDE_PAZIENTE_ALLERGIE S ON S.CODICE_ALLERGIA = A.CODICE "
+                + "LEFT JOIN UTENTI U ON S.UTENTE_INS = U.COD_UTENTE "
+                + "WHERE A.A_DATA IS NULL "
+                + "AND S.ID_SCHEDA = ? "
+                + "AND TRIM(CAST(S.COD_PAZIENTE AS VARCHAR2(100))) = ? "
+                + "ORDER BY CODICE";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, idScheda);
+            statement.setString(2, safe(codPaz));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> allergia = new HashMap<>();
+                    allergia.put("id", safe(rs.getString("ID")));
+                    allergia.put("codice", safe(rs.getString("CODICE")));
+                    allergia.put("descrizione", safe(rs.getString("DESCRIZIONE")));
+                    allergia.put("utenteInsCognome", safe(rs.getString("UTENTE_INS_COGNOME")));
+                    allergia.put("utenteInsNome", safe(rs.getString("UTENTE_INS_NOME")));
+                    results.add(allergia);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public int insertSchedaPazienteAllergia(String codPaz, String codiceAllergia, String username) throws SQLException {
+        try (Connection connection = dataService.getConnection()) {
+            BigDecimal idScheda = findLatestSchedaPazienteId(connection, codPaz);
+            if (idScheda == null) {
+                throw new SQLException("Scheda paziente non trovata per il paziente selezionato.");
+            }
+            if (existsSchedaPazienteAllergia(connection, idScheda, codPaz, codiceAllergia)) {
+                return 0;
+            }
+
+            String sql = "INSERT INTO APO_SCHEDE_PAZIENTE_ALLERGIE ("
+                    + "ID_SCHEDA, COD_PAZIENTE, CODICE_ALLERGIA, UTENTE_INS"
+                    + ") VALUES (?, ?, ?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setBigDecimal(1, idScheda);
+                statement.setString(2, safe(codPaz));
+                statement.setString(3, safe(codiceAllergia));
+                statement.setString(4, safe(username));
+                return statement.executeUpdate();
+            }
+        }
+    }
+
+    public int deleteSchedaPazienteAllergia(String idAllergia, String codPaz) throws SQLException {
+        BigDecimal id;
+        try {
+            id = new BigDecimal(safe(idAllergia));
+        } catch (NumberFormatException ex) {
+            throw new SQLException("ID allergia non valido.", ex);
+        }
+
+        String sql = "DELETE FROM APO_SCHEDE_PAZIENTE_ALLERGIE "
+                + "WHERE ID = ? "
+                + "AND TRIM(CAST(COD_PAZIENTE AS VARCHAR2(100))) = ?";
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, id);
+            statement.setString(2, safe(codPaz));
+            return statement.executeUpdate();
+        }
+    }
+
+    public List<Map<String, String>> findSchedaPazienteTerapie(String codPaz) throws SQLException {
+        BigDecimal idScheda;
+        try (Connection connection = dataService.getConnection()) {
+            idScheda = findLatestSchedaPazienteId(connection, codPaz);
+        }
+        return findSchedaPazienteTerapieByScheda(idScheda, codPaz);
+    }
+
+    private List<Map<String, String>> findSchedaPazienteTerapieByScheda(BigDecimal idScheda,
+            String codPaz) throws SQLException {
+        if (idScheda == null) {
+            return new ArrayList<>();
+        }
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection()) {
+            Map<String, String> columns = findTableColumns(connection, "APO_SCHEDE_PAZIENTE_TERAPIE");
+            String patientColumn = firstExistingColumn(columns, "COD_PAZIENTE", "COD_PAZ");
+            String userColumn = firstExistingColumn(columns, "UTENTE_INS", "INS_UTENTE");
+            if (patientColumn == null) {
+                throw new SQLException("Colonna paziente non trovata in APO_SCHEDE_PAZIENTE_TERAPIE.");
+            }
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT DISTINCT T.*");
+            if (columns.containsKey("DATA_INS")) {
+                sql.append(", TO_CHAR(T.DATA_INS, 'DD/MM/YYYY') AS TERAPIA_DATA_INS, ")
+                        .append("TO_CHAR(T.DATA_INS, 'YYYY-MM-DD') AS TERAPIA_DATA_INS_SORT");
+            }
+            if (userColumn != null) {
+                sql.append(", TRIM(CAST(U.COGNOME AS VARCHAR2(255))) AS UTENTE_INS_COGNOME, ")
+                        .append("TRIM(CAST(U.NOME AS VARCHAR2(255))) AS UTENTE_INS_NOME");
+            }
+            sql.append(" FROM APO_SCHEDE_PAZIENTE_TERAPIE T ");
+            if (userColumn != null) {
+                sql.append("LEFT JOIN UTENTI U ON T.").append(userColumn).append(" = U.COD_UTENTE ");
+            }
+            sql.append("WHERE T.ID_SCHEDA = ? ")
+                    .append("AND TRIM(CAST(T.").append(patientColumn).append(" AS VARCHAR2(100))) = ? ");
+            if (columns.containsKey("ID")) {
+                sql.append("ORDER BY T.ID DESC");
+            }
+
+            try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+                statement.setBigDecimal(1, idScheda);
+                statement.setString(2, safe(codPaz));
+                try (ResultSet rs = statement.executeQuery()) {
+                    while (rs.next()) {
+                        HashMap<String, String> terapia = new HashMap<>();
+                        terapia.put("id", getResultColumnValue(rs, columns, "ID"));
+                        terapia.put("principioAttivo", getResultColumnValue(rs, columns, "PRINCIPIO_ATTIVO", "PRINC_ATTIVO", "PA"));
+                        terapia.put("farmaco", getResultColumnValue(rs, columns, "FARMACO"));
+                        terapia.put("confezione", getResultColumnValue(rs, columns, "CONFEZIONE"));
+                        terapia.put("quantita", getResultColumnValue(rs, columns, "QUANTIUTA", "QUANTITA", "QTA"));
+                        terapia.put("frequenzaUnita", firstNonBlank(
+                                getResultColumnValue(rs, columns, "FREQUENZA_UNITA"),
+                                getResultColumnValue(rs, columns, "FREQUENZA")));
+                        terapia.put("durataValore", firstNonBlank(
+                                getResultColumnValue(rs, columns, "DURATA_VALORE"),
+                                getResultColumnValue(rs, columns, "DURATA")));
+                        String durataUnita = firstNonBlank(
+                                getResultColumnValue(rs, columns, "UNITA"),
+                                getResultColumnValue(rs, columns, "DURATA_UNITA"));
+                        terapia.put("durataUnita", durataUnita);
+                        terapia.put("unita", durataUnita);
+                        if (columns.containsKey("DATA_INS")) {
+                            terapia.put("dataIns", safe(rs.getString("TERAPIA_DATA_INS")));
+                            terapia.put("dataInsSort", safe(rs.getString("TERAPIA_DATA_INS_SORT")));
+                        }
+                        if (userColumn != null) {
+                            terapia.put("utenteInsCognome", safe(rs.getString("UTENTE_INS_COGNOME")));
+                            terapia.put("utenteInsNome", safe(rs.getString("UTENTE_INS_NOME")));
+                        }
+                        results.add(terapia);
+                    }
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public int insertSchedaPazienteTerapia(String codPaz, String principioAttivo, String farmaco,
+            String confezione, String quantita, String frequenza, String durataValore, String durataUnita,
+            String username) throws SQLException {
+        try (Connection connection = dataService.getConnection()) {
+            BigDecimal idScheda = findLatestSchedaPazienteId(connection, codPaz);
+            if (idScheda == null) {
+                throw new SQLException("Scheda paziente non trovata per il paziente selezionato.");
+            }
+
+            Map<String, String> tableColumns = findTableColumns(connection, "APO_SCHEDE_PAZIENTE_TERAPIE");
+            ArrayList<String> columns = new ArrayList<>();
+            ArrayList<Object> values = new ArrayList<>();
+            addInsertColumn(columns, values, tableColumns, idScheda, "ID_SCHEDA");
+            addInsertColumn(columns, values, tableColumns, safe(codPaz), "COD_PAZIENTE", "COD_PAZ");
+            addInsertColumn(columns, values, tableColumns, safe(principioAttivo), "PRINCIPIO_ATTIVO", "PRINC_ATTIVO", "PA");
+            addInsertColumn(columns, values, tableColumns, safe(farmaco), "FARMACO");
+            addInsertColumn(columns, values, tableColumns, safe(confezione), "CONFEZIONE");
+            addInsertColumn(columns, values, tableColumns,
+                    parseBigDecimal(quantita, "quantita"), "QUANTIUTA", "QUANTITA", "QTA");
+            addInsertColumn(columns, values, tableColumns, safe(frequenza), "FREQUENZA");
+            addInsertColumn(columns, values, tableColumns, safe(frequenza), "FREQUENZA_UNITA");
+            addInsertColumn(columns, values, tableColumns, parseBigDecimal(durataValore, "durata"), "DURATA");
+            addInsertColumn(columns, values, tableColumns, parseBigDecimal(durataValore, "durata"), "DURATA_VALORE");
+            addInsertColumn(columns, values, tableColumns, safe(durataUnita), "UNITA", "DURATA_UNITA");
+            addInsertColumn(columns, values, tableColumns, safe(username), "UTENTE_INS", "INS_UTENTE");
+
+            if (columns.isEmpty()) {
+                throw new SQLException("Nessuna colonna valida trovata in APO_SCHEDE_PAZIENTE_TERAPIE.");
+            }
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("INSERT INTO APO_SCHEDE_PAZIENTE_TERAPIE (");
+            for (int index = 0; index < columns.size(); index += 1) {
+                if (index > 0) {
+                    sql.append(", ");
+                }
+                sql.append(columns.get(index));
+            }
+            sql.append(") VALUES (");
+            for (int index = 0; index < columns.size(); index += 1) {
+                if (index > 0) {
+                    sql.append(", ");
+                }
+                sql.append("?");
+            }
+            sql.append(")");
+
+            try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+                for (int index = 0; index < values.size(); index += 1) {
+                    bindTerapiaInsertValue(statement, index + 1, columns.get(index), values.get(index));
+                }
+                return statement.executeUpdate();
+            }
+        }
+    }
+
+    public int deleteSchedaPazienteTerapia(String idTerapia, String codPaz, String principioAttivo,
+            String farmaco, String confezione, String quantita, String frequenza, String durataValore,
+            String durataUnita) throws SQLException {
+        try (Connection connection = dataService.getConnection()) {
+            BigDecimal idScheda = findLatestSchedaPazienteId(connection, codPaz);
+            if (idScheda == null) {
+                throw new SQLException("Scheda paziente non trovata per il paziente selezionato.");
+            }
+
+            Map<String, String> tableColumns = findTableColumns(connection, "APO_SCHEDE_PAZIENTE_TERAPIE");
+            String patientColumn = firstExistingColumn(tableColumns, "COD_PAZIENTE", "COD_PAZ");
+            if (patientColumn == null) {
+                throw new SQLException("Colonna paziente non trovata in APO_SCHEDE_PAZIENTE_TERAPIE.");
+            }
+
+            BigDecimal id = tryParseBigDecimal(idTerapia);
+            String idColumn = firstExistingColumn(tableColumns, "ID");
+            if (idColumn != null && id != null) {
+                String sql = "DELETE FROM APO_SCHEDE_PAZIENTE_TERAPIE "
+                        + "WHERE " + idColumn + " = ? "
+                        + "AND ID_SCHEDA = ? "
+                        + "AND TRIM(CAST(" + patientColumn + " AS VARCHAR2(100))) = ?";
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    statement.setBigDecimal(1, id);
+                    statement.setBigDecimal(2, idScheda);
+                    statement.setString(3, safe(codPaz));
+                    return statement.executeUpdate();
+                }
+            }
+
+            ArrayList<Object> values = new ArrayList<>();
+            StringBuilder sql = new StringBuilder();
+            sql.append("DELETE FROM APO_SCHEDE_PAZIENTE_TERAPIE ")
+                    .append("WHERE ID_SCHEDA = ? ")
+                    .append("AND TRIM(CAST(").append(patientColumn).append(" AS VARCHAR2(100))) = ? ");
+            values.add(idScheda);
+            values.add(safe(codPaz));
+            appendTerapiaDeleteTextCondition(sql, values, tableColumns, principioAttivo,
+                    "PRINCIPIO_ATTIVO", "PRINC_ATTIVO", "PA");
+            appendTerapiaDeleteTextCondition(sql, values, tableColumns, farmaco, "FARMACO");
+            appendTerapiaDeleteTextCondition(sql, values, tableColumns, confezione, "CONFEZIONE");
+            appendTerapiaDeleteNumericCondition(sql, values, tableColumns, quantita, "quantita",
+                    "QUANTIUTA", "QUANTITA", "QTA");
+            appendTerapiaDeleteTextCondition(sql, values, tableColumns, frequenza, "FREQUENZA");
+            appendTerapiaDeleteTextCondition(sql, values, tableColumns, frequenza, "FREQUENZA_UNITA");
+            appendTerapiaDeleteNumericCondition(sql, values, tableColumns, durataValore, "durata",
+                    "DURATA");
+            appendTerapiaDeleteNumericCondition(sql, values, tableColumns, durataValore, "durata",
+                    "DURATA_VALORE");
+            appendTerapiaDeleteTextCondition(sql, values, tableColumns, durataUnita, "UNITA", "DURATA_UNITA");
+
+            try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+                for (int index = 0; index < values.size(); index += 1) {
+                    Object value = values.get(index);
+                    if (value instanceof BigDecimal) {
+                        statement.setBigDecimal(index + 1, (BigDecimal) value);
+                    } else {
+                        statement.setString(index + 1, safe((String) value));
+                    }
+                }
+                return statement.executeUpdate();
+            }
+        }
+    }
+
     private BigDecimal findLatestSchedaPazienteId(Connection connection, String codPaz) throws SQLException {
         String sql = "SELECT ID FROM ("
                 + "SELECT ID FROM APO_SCHEDE_PAZIENTE "
@@ -579,15 +970,40 @@ public class PazienteDao {
         return null;
     }
 
-    private boolean existsSchedaPazientePatologia(Connection connection, String codPaz,
+    private boolean existsSchedaPazientePatologia(Connection connection, BigDecimal idScheda, String codPaz,
             String codicePatologia) throws SQLException {
+        if (idScheda == null) {
+            return false;
+        }
         String sql = "SELECT 1 FROM APO_SCHEDE_PAZIENTE_PATOLOGIE "
-                + "WHERE TRIM(CAST(COD_PAZIENTE AS VARCHAR2(100))) = ? "
+                + "WHERE ID_SCHEDA = ? "
+                + "AND TRIM(CAST(COD_PAZIENTE AS VARCHAR2(100))) = ? "
                 + "AND UPPER(TRIM(CODICE_PATOLOGIA)) = UPPER(?) "
                 + "AND ROWNUM = 1";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, safe(codPaz));
-            statement.setString(2, safe(codicePatologia));
+            statement.setBigDecimal(1, idScheda);
+            statement.setString(2, safe(codPaz));
+            statement.setString(3, safe(codicePatologia));
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    private boolean existsSchedaPazienteAllergia(Connection connection, BigDecimal idScheda, String codPaz,
+            String codiceAllergia) throws SQLException {
+        if (idScheda == null) {
+            return false;
+        }
+        String sql = "SELECT 1 FROM APO_SCHEDE_PAZIENTE_ALLERGIE "
+                + "WHERE ID_SCHEDA = ? "
+                + "AND TRIM(CAST(COD_PAZIENTE AS VARCHAR2(100))) = ? "
+                + "AND UPPER(TRIM(CODICE_ALLERGIA)) = UPPER(?) "
+                + "AND ROWNUM = 1";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, idScheda);
+            statement.setString(2, safe(codPaz));
+            statement.setString(3, safe(codiceAllergia));
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next();
             }
@@ -1205,6 +1621,13 @@ public class PazienteDao {
         return patologia;
     }
 
+    private Map<String, String> mapAllergia(ResultSet rs) throws SQLException {
+        HashMap<String, String> allergia = new HashMap<>();
+        allergia.put("codice", safe(rs.getString("CODICE")));
+        allergia.put("descrizione", safe(rs.getString("DESCRIZIONE")));
+        return allergia;
+    }
+
     private Map<String, String> mapRicettaFarmaco(ResultSet rs) throws SQLException {
         HashMap<String, String> ricetta = new HashMap<>();
         ricetta.put("codRicetta", safe(rs.getString("COD_RICETTA")));
@@ -1422,6 +1845,146 @@ public class PazienteDao {
         }
 
         return columns;
+    }
+
+    private Map<String, String> findTableColumns(Connection connection, String tableName) throws SQLException {
+        HashMap<String, String> columns = new HashMap<>();
+        String sql = "SELECT * FROM " + tableName + " WHERE 1 = 0";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            ResultSetMetaData metaData = rs.getMetaData();
+            for (int index = 1; index <= metaData.getColumnCount(); index += 1) {
+                String columnName = safe(metaData.getColumnLabel(index));
+                if (columnName.isEmpty()) {
+                    columnName = safe(metaData.getColumnName(index));
+                }
+                if (!columnName.isEmpty()) {
+                    columns.put(columnName.toUpperCase(Locale.ITALY), columnName);
+                }
+            }
+        }
+
+        return columns;
+    }
+
+    private String firstExistingColumn(Map<String, String> columns, String... candidates) {
+        if (columns == null || candidates == null) {
+            return null;
+        }
+
+        for (String candidate : candidates) {
+            String columnName = columns.get(safe(candidate).toUpperCase(Locale.ITALY));
+            if (columnName != null) {
+                return columnName;
+            }
+        }
+        return null;
+    }
+
+    private String getResultColumnValue(ResultSet rs, Map<String, String> columns, String... candidates)
+            throws SQLException {
+        String columnName = firstExistingColumn(columns, candidates);
+        return columnName == null ? "" : safe(rs.getString(columnName));
+    }
+
+    private void addInsertColumn(List<String> insertColumns, List<Object> insertValues,
+            Map<String, String> tableColumns, Object value, String... candidates) {
+        String columnName = firstExistingColumn(tableColumns, candidates);
+        if (columnName == null || insertColumns.contains(columnName)) {
+            return;
+        }
+
+        insertColumns.add(columnName);
+        insertValues.add(value);
+    }
+
+    private void bindTerapiaInsertValue(PreparedStatement statement, int parameterIndex,
+            String columnName, Object value) throws SQLException {
+        if (value instanceof BigDecimal) {
+            statement.setBigDecimal(parameterIndex, (BigDecimal) value);
+            return;
+        }
+        if (value == null && isTerapiaNumericColumn(columnName)) {
+            statement.setNull(parameterIndex, Types.NUMERIC);
+            return;
+        }
+        statement.setString(parameterIndex, value == null ? "" : String.valueOf(value).trim());
+    }
+
+    private boolean isTerapiaNumericColumn(String columnName) {
+        String normalized = safe(columnName).toUpperCase(Locale.ITALY);
+        return "ID_SCHEDA".equals(normalized)
+                || "QUANTIUTA".equals(normalized)
+                || "QUANTITA".equals(normalized)
+                || "QTA".equals(normalized)
+                || "DURATA".equals(normalized)
+                || "DURATA_VALORE".equals(normalized);
+    }
+
+    private BigDecimal parseBigDecimal(String value, String fieldName) throws SQLException {
+        String normalizedValue = safe(value).replace(',', '.');
+        if (normalizedValue.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return new BigDecimal(normalizedValue);
+        } catch (NumberFormatException ex) {
+            throw new SQLException("Valore numerico non valido per " + safe(fieldName) + ": " + normalizedValue, ex);
+        }
+    }
+
+    private BigDecimal tryParseBigDecimal(String value) {
+        String normalizedValue = safe(value).replace(',', '.');
+        if (normalizedValue.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return new BigDecimal(normalizedValue);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    private void appendTerapiaDeleteTextCondition(StringBuilder sql, List<Object> values,
+            Map<String, String> tableColumns, String value, String... candidates) {
+        String columnName = firstExistingColumn(tableColumns, candidates);
+        if (columnName == null) {
+            return;
+        }
+
+        String normalizedValue = safe(value);
+        if (normalizedValue.isEmpty()) {
+            sql.append("AND ").append(columnName).append(" IS NULL ");
+            return;
+        }
+
+        sql.append("AND TRIM(CAST(").append(columnName).append(" AS VARCHAR2(4000))) = ? ");
+        values.add(normalizedValue);
+    }
+
+    private void appendTerapiaDeleteNumericCondition(StringBuilder sql, List<Object> values,
+            Map<String, String> tableColumns, String value, String fieldName, String... candidates)
+            throws SQLException {
+        String columnName = firstExistingColumn(tableColumns, candidates);
+        if (columnName == null) {
+            return;
+        }
+
+        BigDecimal numberValue = parseBigDecimal(value, fieldName);
+        if (numberValue == null) {
+            sql.append("AND ").append(columnName).append(" IS NULL ");
+            return;
+        }
+
+        sql.append("AND ").append(columnName).append(" = ? ");
+        values.add(numberValue);
+    }
+
+    private String buildDurataTerapia(String durataValore, String durataUnita) {
+        return firstNonBlank(safe(durataValore) + " " + safe(durataUnita), safe(durataValore), safe(durataUnita));
     }
 
     private List<String> getExistingAllegatoMEditableColumns(List<String> existingColumns) {

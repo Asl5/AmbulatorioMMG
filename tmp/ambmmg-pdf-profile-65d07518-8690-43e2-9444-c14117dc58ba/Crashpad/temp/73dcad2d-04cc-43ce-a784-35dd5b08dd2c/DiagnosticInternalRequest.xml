@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<req ver="2">
+ <tlm>
+  <src>
+   <desc>
+    <mach>
+     <os>
+      <arg nm="vermaj" val="10"/>
+      <arg nm="vermin" val="0"/>
+      <arg nm="verbld" val="19044"/>
+      <arg nm="vercsdbld" val="1706"/>
+      <arg nm="verqfe" val="1706"/>
+      <arg nm="csdbld" val="1706"/>
+      <arg nm="versp" val=""/>
+      <arg nm="arch" val="9"/>
+      <arg nm="lcid" val="1040"/>
+      <arg nm="geoid" val="118"/>
+      <arg nm="sku" val="48"/>
+      <arg nm="domain" val="1"/>
+      <arg nm="portos" val="0"/>
+      <arg nm="ram" val="16287"/>
+      <arg nm="svolsz" val="446"/>
+      <arg nm="wimbt" val="0"/>
+      <arg nm="blddt" val="191206"/>
+      <arg nm="bldtm" val="1406"/>
+      <arg nm="bldbrch" val="vb_release"/>
+      <arg nm="os" val="Windows"/>
+      <arg nm="osver" val="10.0.19041.1706.amd64fre.vb_release.191206-1406"/>
+      <arg nm="buildflightid" val=""/>
+      <arg nm="expid" val="FX:11A8C293,FX:11A8C2FE,"/>
+      <arg nm="edition" val="Professional"/>
+     </os>
+     <hw>
+      <arg nm="form" val="1"/>
+      <arg nm="arch" val="9"/>
+      <arg nm="deviceclass" val="Windows.Desktop"/>
+      <arg nm="sysmfg" val="LENOVO"/>
+      <arg nm="syspro" val="10GSS0MT00"/>
+      <arg nm="bv" val="M05KT50A"/>
+      <arg nm="ram" val="16384"/>
+      <arg nm="proccnt" val="4"/>
+      <arg nm="proclsp" val="2712"/>
+      <arg nm="wscpusc" val="0"/>
+      <arg nm="wsdsksc" val="0"/>
+      <arg nm="wscpudn" val="Intel(R) Core(TM) i5-6600T CPU @ 2.70GHz"/>
+      <arg nm="wsdgsc" val="0"/>
+      <arg nm="aoac" val="0"/>
+      <arg nm="bssku" val="LENOVO_MT_10GS_BU_LENOVO_FM_ThinkCentre M700"/>
+      <arg nm="chid" val="{b6e4d04f-b669-5c45-9f18-464e5dbe5117}"/>
+      <arg nm="sdksz" val="447"/>
+     </hw>
+     <ctrl>
+      <arg nm="tm" val="134236502445789730"/>
+      <arg nm="mid" val="B1526C1B-522B-4682-8C69-40D706CFC8DF"/>
+      <arg nm="sample" val="81810130"/>
+      <arg nm="msft" val="0"/>
+      <arg nm="test" val="0"/>
+      <arg nm="scf" val="0"/>
+      <arg nm="commercialid" val=""/>
+      <arg nm="telemetry" val="Optional"/>
+     </ctrl>
+    </mach>
+   </desc>
+  </src>
+  <reqs>
+   <req key="1">
+    <namespace svc="watson" ptr="generic" gp="generic" app="msedge.exe">
+     <arg nm="p1" val="msedge.exe"/>
+     <arg nm="p2" val="148.0.3967.70"/>
+     <arg nm="p3" val="msedge.dll"/>
+     <arg nm="p4" val="148.0.3967.70"/>
+     <arg nm="p5" val="169706717"/>
+     <arg nm="p6" val="browser"/>
+     <arg nm="p7" val="0x80000003"/>
+     <arg nm="p8" val="0"/>
+    </namespace>
+    <ctrl>
+     <arg nm="reportid" val="73dcad2d-04cc-43ce-a784-35dd5b08dd2c"/>
+     <arg nm="procmeta.Channel" val=""/>
+     <arg nm="procmeta.MetricsClientId" val="88cfd924-aecb-41b9-8a0e-4b4306b5bfb6"/>
+     <arg nm="procmeta.MetricsClientIdHash" val="7651884593779341299"/>
+     <arg nm="procmeta.MetricsSessionId" val="0"/>
+     <arg nm="procmeta.OfficialBuild" val="1"/>
+     <arg nm="procmeta.RuntimeVariationsSeedETag" val=""/>
+     <arg nm="procmeta.TPI" val="1"/>
+     <arg nm="procmeta.UXConfigCorrelationId" val="47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU="/>
+     <arg nm="procmeta.VariationsSeedETag" val=""/>
+    </ctrl>
+    <cmd nm="event">
+     <arg nm="eventtype" val="crashpad_exp"/>
+     <arg nm="cat" val="generic"/>
+     <arg nm="p1" val="msedge.exe"/>
+     <arg nm="p2" val="148.0.3967.70"/>
+     <arg nm="p3" val="msedge.dll"/>
+     <arg nm="p4" val="148.0.3967.70"/>
+     <arg nm="p5" val="169706717"/>
+     <arg nm="p6" val="browser"/>
+     <arg nm="p7" val="0x80000003"/>
+     <arg nm="p8" val="0"/>
+     <arg nm="appsessionguid" val="00007834-0001-00c1-d15c-733863e7dc01"/>
+    </cmd>
+   </req>
+  </reqs>
+ </tlm>
+</req>

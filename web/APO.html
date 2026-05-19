@@ -173,6 +173,7 @@
                             <div>
                                 <h2>Paziente selezionato</h2>
                             </div>
+                            <button id="apo-selected-scheda-button" type="button" class="btn btn-outline-secondary apo-selected-scheda-button" disabled>Scheda paziente</button>
                         </div>
                         <div id="apo-paziente-selected-body" class="apo-paziente-selected-body"></div>
                     </article>
@@ -185,9 +186,9 @@
                         <div id="apo-paziente-scheda-panel" class="apo-paziente-history-panel apo-paziente-scheda-panel" role="tabpanel" aria-labelledby="apo-history-main-tab-scheda">
                             <div id="apo-paziente-scheda-tabs" class="apo-paziente-storico-tabs apo-paziente-scheda-actions" role="tablist" aria-label="Sezioni scheda paziente">
                                 <button id="apo-scheda-tab-diario" type="button" class="apo-paziente-storico-tab is-active" role="tab" aria-selected="true" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="diario">Diario</button>
+                                <button id="apo-scheda-tab-terapie" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="terapie">Terapie in corso</button>
                                 <button id="apo-scheda-tab-patologie-croniche" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="patologie-croniche">Patologie croniche</button>
                                 <button id="apo-scheda-tab-allergie" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="allergie">Allergie</button>
-                                <button id="apo-scheda-tab-terapie" type="button" class="apo-paziente-storico-tab" role="tab" aria-selected="false" aria-controls="apo-paziente-scheda-body" data-scheda-paziente-history-section="terapie">Terapie in corso</button>
                             </div>
                             <div id="apo-paziente-scheda-body" class="apo-paziente-scheda-body" role="tabpanel" aria-labelledby="apo-scheda-tab-diario"></div>
                         </div>
@@ -358,6 +359,14 @@
                                 <button type="button" class="apo-new-accesso-type-button" data-new-accesso-type="certificazioni" data-new-accesso-value="CERT_AM2" aria-pressed="false">Certificazioni</button>
                             </div>
                         </div>
+                        <div class="field-group">
+                            <span class="form-label">Patologia</span>
+                            <div class="apo-new-accesso-type-toggle apo-new-accesso-pathology-toggle" role="group" aria-label="Patologia">
+                                <button type="button" class="apo-new-accesso-type-button is-active" data-new-accesso-patologia="ortopedica" aria-pressed="true">Ortopedica</button>
+                                <button type="button" class="apo-new-accesso-type-button" data-new-accesso-patologia="interinale" aria-pressed="false">Interinale</button>
+                                <button type="button" class="apo-new-accesso-type-button" data-new-accesso-patologia="chirurgica" aria-pressed="false">Chirurgica</button>
+                            </div>
+                        </div>
                         <div class="field-group apo-new-accesso-detail-diagnosi">
                             <label for="apo-new-accesso-diagnosi" class="form-label">Diagnosi di accesso</label>
                             <textarea id="apo-new-accesso-diagnosi" class="form-control"></textarea>
@@ -374,6 +383,10 @@
                 <div class="apo-modal-panel apo-scheda-paziente-panel">
                     <div class="apo-modal-heading">
                         <h2 id="apo-scheda-paziente-title">Scheda paziente</h2>
+                        <div class="apo-modal-heading-actions">
+                            <button id="apo-scheda-paziente-back" type="button" class="btn btn-outline-secondary apo-new-accesso-back-button">Torna alla schermata precedente</button>
+                            <span id="apo-scheda-paziente-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                        </div>
                     </div>
                     <div id="apo-scheda-paziente-body" class="apo-scheda-paziente-body" aria-live="polite"></div>
                     <div class="apo-modal-actions">
@@ -407,6 +420,16 @@
                             <button id="apo-diario-save" type="submit" class="btn btn-success">Salva diario</button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <div id="apo-terapia-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-terapia-title">
+                <div class="apo-modal-panel apo-terapia-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-terapia-title">Aggiungi nuova terapia</h2>
+                        <span id="apo-terapia-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                    </div>
+                    <div id="apo-terapia-form-host" class="apo-terapia-form"></div>
                 </div>
             </div>
 
@@ -506,6 +529,6 @@
             </div>
         </main>
 
-        <script src="js/APO.js"></script>
+        <script src="js/APO.js?v=20260518-terapie-unita-db-3"></script>
     </body>
 </html>

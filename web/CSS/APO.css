@@ -302,6 +302,7 @@ body::before {
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 16px;
+    align-items: center;
 }
 
 .section-heading h2 {
@@ -764,6 +765,13 @@ body::before {
     font-size: 1rem;
 }
 
+.apo-selected-scheda-button {
+    min-height: 34px;
+    white-space: nowrap;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
 .apo-paziente-history-card {
     grid-area: history;
     position: relative;
@@ -1014,6 +1022,23 @@ body::before {
     white-space: nowrap;
 }
 
+.apo-paziente-terapie-add {
+    position: sticky;
+    top: 0;
+    z-index: 12;
+    display: flex;
+    gap: 8px;
+    align-items: start;
+    padding: 4px 0 10px;
+    margin-bottom: 10px;
+    background: #ffffff;
+}
+
+.apo-paziente-terapie-add .btn {
+    width: 100%;
+    white-space: nowrap;
+}
+
 .apo-paziente-patologie-add-field {
     position: relative;
     min-width: 0;
@@ -1081,6 +1106,19 @@ body::before {
     justify-content: space-between;
     gap: 10px;
     min-width: 0;
+}
+
+.apo-paziente-history-meta-block {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.apo-paziente-history-inseritore {
+    color: var(--gf-text-soft);
+    font-size: 0.74rem;
+    font-weight: 700;
+    line-height: 1.2;
 }
 
 .apo-paziente-patologia-delete-button {
@@ -1510,6 +1548,8 @@ body::before {
     font-size: 0.9rem;
     font-weight: 700;
     line-height: 1.35;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
 .apo-paziente-history-meta {
@@ -1543,9 +1583,9 @@ body::before {
 .apo-prestazioni-inf-items {
     display: grid;
     gap: 9px;
-    margin: 4px 0 0;
-    padding: 8px 0 0;
-    border-top: 1px solid var(--gf-border);
+    margin: 0px 0 0;
+    padding: 0px 0 0;
+    border-top: 0px solid var(--gf-border);
     color: var(--gf-text);
     font-size: 0.84rem;
     line-height: 1.4;
@@ -1566,6 +1606,7 @@ body::before {
 .apo-prestazioni-inf-subitems {
     display: grid;
     gap: 3px;
+    padding-left: 8px;;
 }
 
 .apo-prestazioni-inf-subitem {
@@ -1685,7 +1726,12 @@ body::before {
     width: min(750px, 100%);
 }
 
-.apo-diario-form {
+.apo-terapia-panel {
+    width: min(900px, 100%);
+}
+
+.apo-diario-form,
+.apo-terapia-form {
     display: grid;
     gap: 14px;
 }
@@ -1696,7 +1742,8 @@ body::before {
     gap: 12px;
 }
 
-.apo-diario-form .form-control {
+.apo-diario-form .form-control,
+.apo-terapia-form .form-control {
     min-height: 40px;
     border: 1px solid var(--gf-border);
     border-radius: 12px;
@@ -1708,7 +1755,8 @@ body::before {
     box-shadow: none;
 }
 
-.apo-diario-form .form-control:focus {
+.apo-diario-form .form-control:focus,
+.apo-terapia-form .form-control:focus {
     border-color: #79a9e5;
     box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.14);
     outline: none;
@@ -1720,6 +1768,10 @@ body::before {
     padding-bottom: 10px !important;
     line-height: 1.45;
     resize: vertical;
+}
+
+.apo-terapia-modal-controls {
+    gap: 12px;
 }
 
 .apo-new-accesso-panel {
@@ -2235,6 +2287,20 @@ body::before {
     font-weight: 800;
 }
 
+.apo-scheda-paziente-diario-storico-date-block {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.apo-scheda-paziente-diario-storico-utente,
+.apo-scheda-paziente-selected-utente {
+    color: var(--gf-text-soft);
+    font-size: 0.74rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
 .apo-scheda-paziente-diario-storico-text {
     color: var(--gf-text);
     font-size: 0.86rem;
@@ -2360,11 +2426,65 @@ body::before {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
-    align-items: center;
+    align-items: start;
+}
+
+.apo-scheda-paziente-patologie-field {
+    position: relative;
+    min-width: 0;
 }
 
 .apo-scheda-paziente-patologie-search .btn {
     min-height: 40px;
+    white-space: nowrap;
+}
+
+.apo-scheda-paziente-terapie-add {
+    display: grid;
+    gap: 8px;
+    align-items: start;
+}
+
+.apo-scheda-paziente-terapie-lookup-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    align-items: start;
+}
+
+.apo-scheda-paziente-terapie-dose-row {
+    display: grid;
+    grid-template-columns: minmax(92px, 0.55fr) minmax(132px, 0.7fr) minmax(172px, 0.9fr) auto;
+    gap: 8px;
+    align-items: start;
+}
+
+.apo-scheda-paziente-terapie-lookup-field {
+    position: relative;
+    min-width: 0;
+}
+
+.apo-scheda-paziente-terapie-inline {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+}
+
+.apo-scheda-paziente-terapie-durata {
+    grid-template-columns: auto minmax(58px, 0.7fr) minmax(0, 1fr);
+}
+
+.apo-scheda-paziente-terapie-inline span {
+    color: var(--gf-text-soft);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.apo-scheda-paziente-terapie-add .btn,
+.apo-paziente-terapie-add .btn {
+    min-height: 38px;
     white-space: nowrap;
 }
 
@@ -2486,6 +2606,8 @@ body::before {
 }
 
 .apo-scheda-paziente-selected-text {
+    display: grid;
+    gap: 2px;
     min-width: 0;
 }
 
@@ -2521,6 +2643,18 @@ body::before {
     border-color: #79a9e5;
     box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.14);
     outline: none;
+}
+
+@media (max-width: 1180px) {
+    .apo-scheda-paziente-terapie-lookup-row,
+    .apo-scheda-paziente-terapie-dose-row {
+        grid-template-columns: minmax(0, 1fr) minmax(92px, 0.45fr);
+    }
+
+    .apo-scheda-paziente-terapie-add .btn,
+    .apo-paziente-terapie-add .btn {
+        justify-self: start;
+    }
 }
 
 @media (max-width: 980px) {
@@ -2565,12 +2699,21 @@ body::before {
     .apo-scheda-paziente-caregiver-grid {
         grid-template-columns: 1fr;
     }
+
+    .apo-scheda-paziente-terapie-lookup-row,
+    .apo-scheda-paziente-terapie-dose-row {
+        grid-template-columns: 1fr;
+    }
 }
 
 .apo-new-accesso-type-toggle {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
+}
+
+.apo-new-accesso-pathology-toggle {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .apo-new-accesso-type-button {
@@ -2661,7 +2804,7 @@ body::before {
 
 .apo-diagnosi-esame-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     align-items: end;
 }

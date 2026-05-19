@@ -1,6 +1,9 @@
 package com.example.dao;
 
 import com.example.service.DataService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -61,6 +64,9 @@ public class AccessiDao {
             formatter("dd/MM/yyyy HH:mm", Locale.ITALY),
             formatter("dd/MM/yyyy HH:mm:ss", Locale.ITALY)
     );
+    private static final Gson GSON = new Gson();
+    private static final Type TERAPIE_PAYLOAD_TYPE = new TypeToken<List<Map<String, String>>>() {
+    }.getType();
 
     private final DataService dataService;
 
@@ -91,9 +97,13 @@ public class AccessiDao {
         sql.append("TRIM(CAST(MOD_UTENTE AS VARCHAR2(255))) AS MOD_UTENTE, ");
         sql.append("TRIM(CAST(MEDICO AS VARCHAR2(255))) AS MEDICO, ");
         sql.append("TRIM(CAST(NOTE AS VARCHAR2(2000))) AS NOTE, ");
+        sql.append("(SELECT TRIM(CAST(CG.PATOLOGIA AS VARCHAR2(255))) ");
+        sql.append("FROM CONSULENZE_GM CG ");
+        sql.append("WHERE TRIM(CAST(CG.COD_CONSULENZE AS VARCHAR2(100))) = TRIM(CAST(V.COD_CONSULENZE AS VARCHAR2(100))) ");
+        sql.append("AND ROWNUM = 1) AS PATOLOGIA, ");
         sql.append("TRIM(CAST(PIN AS VARCHAR2(20))) AS PIN, ");
         sql.append("TRIM(CAST(COD_PAZ AS VARCHAR2(20))) AS COD_PAZ ");
-        sql.append("FROM VIEW_CONSULENZE_GMNEW WHERE 1 = 1");
+        sql.append("FROM VIEW_CONSULENZE_GMNEW V WHERE 1 = 1");
 
         if (hasText(serviceCode)) {
             sql.append(" AND UPPER(TRIM(CAST(COD_SERVIZIO AS VARCHAR2(100)))) = UPPER(?)");
@@ -163,6 +173,7 @@ public class AccessiDao {
         String tipoAccesso = safe(payload.get("tipoAccesso"));
         String tipoAccessoLabel = safe(payload.get("tipoAccessoLabel"));
         String tipoAccessoValue = safe(payload.get("tipoAccessoValue"));
+        String patologia = safe(payload.get("patologia")).toUpperCase(Locale.ITALY);
         String diagnosi = safe(payload.get("diagnosi"));
         String codComuneRes = safe(payload.get("codComuneRes"));
         Timestamp dataConsulenza = parseTimestamp(payload.get("dataOra"));
@@ -199,6 +210,7 @@ public class AccessiDao {
                 putIfColumn(values, columns, "NOME", safe(payload.get("nome")));
                 putIfColumn(values, columns, "SESSO", safe(payload.get("sesso")));
                 putIfColumn(values, columns, "COD_COM_RES", codComuneRes);
+                putIfColumn(values, columns, "PATOLOGIA", patologia);
 
                 if (!values.containsKey("COD_CONSULENZE")
                         || !values.containsKey("DATA_CONSULENZE")
@@ -213,6 +225,8 @@ public class AccessiDao {
                 if (isTruthy(payload.get("schedaPaziente"))) {
                     BigDecimal idScheda = insertSchedaPaziente(connection, codPaz, payload, username);
                     insertSchedaPazientePatologie(connection, idScheda, codPaz, payload, username);
+                    insertSchedaPazienteAllergie(connection, idScheda, codPaz, payload, username);
+                    insertSchedaPazienteTerapie(connection, idScheda, codPaz, payload, username);
                     insertSchedaPazienteDiario(connection, idScheda, codPaz, payload, username);
                 }
                 connection.commit();
@@ -231,6 +245,7 @@ public class AccessiDao {
         created.put("tipoAccesso", tipoAccesso);
         created.put("tipoAccessoLabel", tipoAccessoLabel);
         created.put("tipoAccessoValue", tipoAccessoValue);
+        created.put("patologia", patologia);
         created.put("diagnosi", diagnosi);
         created.put("codComuneRes", codComuneRes);
         created.put("dataOra", dataConsulenza == null ? "" : dataConsulenza.toString());
@@ -245,6 +260,48 @@ public class AccessiDao {
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, safe(codConsulenza));
             return statement.executeUpdate();
+        }
+    }
+
+    public void saveSchedaPaziente(String codPaz, Map<String, String> payload, String username) throws SQLException {
+        try (Connection connection = dataService.getConnection()) {
+            boolean previousAutoCommit = connection.getAutoCommit();
+            connection.setAutoCommit(false);
+            try {
+                BigDecimal idScheda = insertSchedaPaziente(connection, codPaz, payload, username);
+                insertSchedaPazientePatologie(connection, idScheda, codPaz, payload, username);
+                insertSchedaPazienteAllergie(connection, idScheda, codPaz, payload, username);
+                deleteAllSchedaPazienteTerapie(connection, idScheda, codPaz);
+                insertSchedaPazienteTerapie(connection, idScheda, codPaz, payload, username);
+                connection.commit();
+            } catch (SQLException | RuntimeException ex) {
+                connection.rollback();
+                throw ex;
+            } finally {
+                connection.setAutoCommit(previousAutoCommit);
+            }
+        }
+    }
+
+    private void deleteAllSchedaPazienteTerapie(Connection connection, BigDecimal idScheda, String codPaz)
+            throws SQLException {
+        if (idScheda == null) {
+            return;
+        }
+
+        Map<String, String> tableColumns = findTableColumns(connection, "APO_SCHEDE_PAZIENTE_TERAPIE");
+        String patientColumn = firstExistingColumn(tableColumns, "COD_PAZIENTE", "COD_PAZ");
+        if (patientColumn == null) {
+            return;
+        }
+
+        String sql = "DELETE FROM APO_SCHEDE_PAZIENTE_TERAPIE "
+                + "WHERE ID_SCHEDA = ? "
+                + "AND TRIM(CAST(" + patientColumn + " AS VARCHAR2(100))) = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, idScheda);
+            statement.setString(2, safe(codPaz));
+            statement.executeUpdate();
         }
     }
 
@@ -266,6 +323,7 @@ public class AccessiDao {
         String modUtente = safe(rs.getString("MOD_UTENTE"));
         String medico = safe(rs.getString("MEDICO"));
         String note = safe(rs.getString("NOTE"));
+        String patologia = safe(rs.getString("PATOLOGIA"));
         String pin = safe(rs.getString("PIN"));
         String codPaz = safe(rs.getString("COD_PAZ"));
 
@@ -296,6 +354,7 @@ public class AccessiDao {
         accesso.put("medico", medico);
         accesso.put("operatore", operatore);
         accesso.put("note", note);
+        accesso.put("patologia", patologia);
         accesso.put("pin", pin);
         accesso.put("codPaz", codPaz);
 
@@ -336,10 +395,16 @@ public class AccessiDao {
 
     private BigDecimal insertSchedaPaziente(Connection connection, String codPaz, Map<String, String> payload,
             String username) throws SQLException {
+        BigDecimal idScheda = findLatestSchedaPazienteId(connection, codPaz);
+        if (idScheda != null) {
+            updateSchedaPaziente(connection, idScheda, codPaz, payload);
+            return idScheda;
+        }
+
         String sql = "BEGIN INSERT INTO APO_SCHEDE_PAZIENTE ("
                 + "COD_PAZ, DATA_INS, UTENTE_INS, TELEFONO, STATO_CIVILE, "
-                + "FUMO, IBM, IBM_KG, IBM_CM, ALLERGIE, TERAPIE, CAREGIVER"
-                + ") VALUES (?, SYSDATE, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+                + "FUMO, IBM, IBM_KG, IBM_CM, CAREGIVER"
+                + ") VALUES (?, SYSDATE, ?, ?, ?, ?, ?, ?, ?, ?) "
                 + "RETURNING ID INTO ?; END;";
 
         try (CallableStatement statement = connection.prepareCall(sql)) {
@@ -352,8 +417,6 @@ public class AccessiDao {
             setNullableBigDecimal(statement, parameterIndex++, payload.get("schedaIbm"), "IBM");
             setNullableBigDecimal(statement, parameterIndex++, payload.get("schedaIbmKg"), "IBM_KG");
             setNullableBigDecimal(statement, parameterIndex++, payload.get("schedaIbmCm"), "IBM_CM");
-            statement.setString(parameterIndex++, safe(payload.get("schedaAllergie")));
-            statement.setString(parameterIndex++, safe(payload.get("schedaTerapie")));
             statement.setString(parameterIndex++, safe(payload.get("schedaCaregiver")));
             statement.registerOutParameter(parameterIndex, Types.NUMERIC);
             statement.execute();
@@ -361,25 +424,182 @@ public class AccessiDao {
         }
     }
 
+    private void updateSchedaPaziente(Connection connection, BigDecimal idScheda, String codPaz,
+            Map<String, String> payload) throws SQLException {
+        String sql = "UPDATE APO_SCHEDE_PAZIENTE SET "
+                + "TELEFONO = ?, STATO_CIVILE = ?, FUMO = ?, IBM = ?, IBM_KG = ?, IBM_CM = ?, CAREGIVER = ? "
+                + "WHERE ID = ? AND TRIM(CAST(COD_PAZ AS VARCHAR2(100))) = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int parameterIndex = 1;
+            statement.setString(parameterIndex++, safe(payload.get("schedaTelefono")));
+            setNullableInteger(statement, parameterIndex++, payload.get("schedaStatoCivile"), "STATO_CIVILE");
+            setNullableInteger(statement, parameterIndex++, normalizeFumoValue(payload.get("schedaFumo")), "FUMO");
+            setNullableBigDecimal(statement, parameterIndex++, payload.get("schedaIbm"), "IBM");
+            setNullableBigDecimal(statement, parameterIndex++, payload.get("schedaIbmKg"), "IBM_KG");
+            setNullableBigDecimal(statement, parameterIndex++, payload.get("schedaIbmCm"), "IBM_CM");
+            statement.setString(parameterIndex++, safe(payload.get("schedaCaregiver")));
+            statement.setBigDecimal(parameterIndex++, idScheda);
+            statement.setString(parameterIndex, safe(codPaz));
+            statement.executeUpdate();
+        }
+    }
+
     private void insertSchedaPazientePatologie(Connection connection, BigDecimal idScheda, String codPaz,
             Map<String, String> payload, String username) throws SQLException {
         List<String> codiciPatologia = parseSchedaPatologie(payload.get("schedaPatologie"));
-        if (idScheda == null || codiciPatologia.isEmpty()) {
+        if (idScheda == null) {
             return;
         }
+
+        LinkedHashMap<String, String> selected = new LinkedHashMap<>();
+        for (String codicePatologia : codiciPatologia) {
+            String key = normalizePatologiaKey(codicePatologia);
+            if (!key.isEmpty()) {
+                selected.put(key, safe(codicePatologia));
+            }
+        }
+        Map<String, String> existing = loadSchedaPazientePatologie(connection, idScheda, codPaz);
+        deleteRemovedSchedaPazientePatologie(connection, idScheda, codPaz, existing, selected);
 
         String sql = "INSERT INTO APO_SCHEDE_PAZIENTE_PATOLOGIE ("
                 + "ID_SCHEDA, COD_PAZIENTE, CODICE_PATOLOGIA, UTENTE_INS"
                 + ") VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            for (String codicePatologia : codiciPatologia) {
+            boolean hasBatch = false;
+            for (Map.Entry<String, String> entry : selected.entrySet()) {
+                if (existing.containsKey(entry.getKey())) {
+                    continue;
+                }
                 statement.setBigDecimal(1, idScheda);
                 statement.setString(2, safe(codPaz));
-                statement.setString(3, safe(codicePatologia));
+                statement.setString(3, entry.getValue());
                 statement.setString(4, safe(username));
                 statement.addBatch();
+                hasBatch = true;
             }
-            statement.executeBatch();
+            if (hasBatch) {
+                statement.executeBatch();
+            }
+        }
+    }
+
+    private void insertSchedaPazienteAllergie(Connection connection, BigDecimal idScheda, String codPaz,
+            Map<String, String> payload, String username) throws SQLException {
+        List<String> codiciAllergia = parseSchedaPatologie(payload.get("schedaAllergieCodes"));
+        if (idScheda == null) {
+            return;
+        }
+
+        LinkedHashMap<String, String> selected = new LinkedHashMap<>();
+        for (String codiceAllergia : codiciAllergia) {
+            String key = normalizePatologiaKey(codiceAllergia);
+            if (!key.isEmpty()) {
+                selected.put(key, safe(codiceAllergia));
+            }
+        }
+        Map<String, String> existing = loadSchedaPazienteAllergie(connection, idScheda, codPaz);
+        deleteRemovedSchedaPazienteAllergie(connection, idScheda, codPaz, existing, selected);
+
+        String sql = "INSERT INTO APO_SCHEDE_PAZIENTE_ALLERGIE ("
+                + "ID_SCHEDA, COD_PAZIENTE, CODICE_ALLERGIA, UTENTE_INS"
+                + ") VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            boolean hasBatch = false;
+            for (Map.Entry<String, String> entry : selected.entrySet()) {
+                if (existing.containsKey(entry.getKey())) {
+                    continue;
+                }
+                statement.setBigDecimal(1, idScheda);
+                statement.setString(2, safe(codPaz));
+                statement.setString(3, entry.getValue());
+                statement.setString(4, safe(username));
+                statement.addBatch();
+                hasBatch = true;
+            }
+            if (hasBatch) {
+                statement.executeBatch();
+            }
+        }
+    }
+
+    private void insertSchedaPazienteTerapie(Connection connection, BigDecimal idScheda, String codPaz,
+            Map<String, String> payload, String username) throws SQLException {
+        List<Map<String, String>> terapie = parseSchedaTerapie(payload.get("schedaTerapieJson"));
+        if (idScheda == null || terapie.isEmpty()) {
+            return;
+        }
+
+        Map<String, String> tableColumns = findTableColumns(connection, "APO_SCHEDE_PAZIENTE_TERAPIE");
+        Map<String, String> existing = loadSchedaPazienteTerapie(connection, idScheda, codPaz, tableColumns);
+
+        for (Map<String, String> terapia : terapie) {
+            String farmaco = getTerapiaPayloadValue(terapia, "farmaco");
+            if (farmaco.isEmpty()) {
+                continue;
+            }
+
+            String key = buildSchedaTerapiaKey(terapia);
+            if (existing.containsKey(key)) {
+                continue;
+            }
+
+            ArrayList<String> insertColumns = new ArrayList<>();
+            ArrayList<Object> insertValues = new ArrayList<>();
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns, idScheda, "ID_SCHEDA");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns, safe(codPaz), "COD_PAZIENTE", "COD_PAZ");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns,
+                    getTerapiaPayloadValue(terapia, "principioAttivo", "principio_attivo", "pa"),
+                    "PRINCIPIO_ATTIVO", "PRINC_ATTIVO", "PA");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns, farmaco, "FARMACO");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns,
+                    getTerapiaPayloadValue(terapia, "confezione"), "CONFEZIONE");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns,
+                    parseBigDecimal(getTerapiaPayloadValue(terapia, "quantita", "qta"), "quantita"),
+                    "QUANTIUTA", "QUANTITA", "QTA");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns,
+                    getTerapiaPayloadValue(terapia, "frequenzaUnita", "frequenza"), "FREQUENZA");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns,
+                    getTerapiaPayloadValue(terapia, "frequenzaUnita", "frequenza"), "FREQUENZA_UNITA");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns,
+                    parseBigDecimal(getTerapiaPayloadValue(terapia, "durataValore", "durata"), "durata"),
+                    "DURATA");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns,
+                    parseBigDecimal(getTerapiaPayloadValue(terapia, "durataValore", "durata"), "durata"),
+                    "DURATA_VALORE");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns,
+                    getTerapiaPayloadValue(terapia, "durataUnita"), "UNITA", "DURATA_UNITA");
+            addTerapiaInsertColumn(insertColumns, insertValues, tableColumns, safe(username), "UTENTE_INS", "INS_UTENTE");
+
+            if (insertColumns.isEmpty()) {
+                continue;
+            }
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("INSERT INTO APO_SCHEDE_PAZIENTE_TERAPIE (");
+            for (int index = 0; index < insertColumns.size(); index += 1) {
+                if (index > 0) {
+                    sql.append(", ");
+                }
+                sql.append(insertColumns.get(index));
+            }
+            sql.append(") VALUES (");
+            for (int index = 0; index < insertColumns.size(); index += 1) {
+                if (index > 0) {
+                    sql.append(", ");
+                }
+                sql.append("?");
+            }
+            sql.append(")");
+
+            try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+                for (int index = 0; index < insertValues.size(); index += 1) {
+                    bindTerapiaInsertValue(statement, index + 1,
+                            insertColumns.get(index), insertValues.get(index));
+                }
+                statement.executeUpdate();
+                existing.put(key, key);
+            }
         }
     }
 
@@ -400,6 +620,168 @@ public class AccessiDao {
             statement.setString(4, safe(username));
             statement.executeUpdate();
         }
+    }
+
+    private BigDecimal findLatestSchedaPazienteId(Connection connection, String codPaz) throws SQLException {
+        String sql = "SELECT ID FROM ("
+                + "SELECT ID FROM APO_SCHEDE_PAZIENTE "
+                + "WHERE TRIM(CAST(COD_PAZ AS VARCHAR2(100))) = ? "
+                + "ORDER BY DATA_INS DESC NULLS LAST, ID DESC"
+                + ") WHERE ROWNUM = 1";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, safe(codPaz));
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBigDecimal("ID");
+                }
+            }
+        }
+        return null;
+    }
+
+    private Map<String, String> loadSchedaPazientePatologie(Connection connection, BigDecimal idScheda,
+            String codPaz) throws SQLException {
+        LinkedHashMap<String, String> existing = new LinkedHashMap<>();
+        String sql = "SELECT CODICE_PATOLOGIA FROM APO_SCHEDE_PAZIENTE_PATOLOGIE "
+                + "WHERE ID_SCHEDA = ? AND TRIM(CAST(COD_PAZIENTE AS VARCHAR2(100))) = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, idScheda);
+            statement.setString(2, safe(codPaz));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    String codice = safe(rs.getString("CODICE_PATOLOGIA"));
+                    String key = normalizePatologiaKey(codice);
+                    if (!key.isEmpty()) {
+                        existing.put(key, codice);
+                    }
+                }
+            }
+        }
+        return existing;
+    }
+
+    private Map<String, String> loadSchedaPazienteAllergie(Connection connection, BigDecimal idScheda,
+            String codPaz) throws SQLException {
+        LinkedHashMap<String, String> existing = new LinkedHashMap<>();
+        String sql = "SELECT CODICE_ALLERGIA FROM APO_SCHEDE_PAZIENTE_ALLERGIE "
+                + "WHERE ID_SCHEDA = ? AND TRIM(CAST(COD_PAZIENTE AS VARCHAR2(100))) = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, idScheda);
+            statement.setString(2, safe(codPaz));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    String codice = safe(rs.getString("CODICE_ALLERGIA"));
+                    String key = normalizePatologiaKey(codice);
+                    if (!key.isEmpty()) {
+                        existing.put(key, codice);
+                    }
+                }
+            }
+        }
+        return existing;
+    }
+
+    private Map<String, String> loadSchedaPazienteTerapie(Connection connection, BigDecimal idScheda,
+            String codPaz, Map<String, String> tableColumns) throws SQLException {
+        LinkedHashMap<String, String> existing = new LinkedHashMap<>();
+        String patientColumn = firstExistingColumn(tableColumns, "COD_PAZIENTE", "COD_PAZ");
+        if (idScheda == null || patientColumn == null) {
+            return existing;
+        }
+
+        String sql = "SELECT * FROM APO_SCHEDE_PAZIENTE_TERAPIE "
+                + "WHERE ID_SCHEDA = ? "
+                + "AND TRIM(CAST(" + patientColumn + " AS VARCHAR2(100))) = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, idScheda);
+            statement.setString(2, safe(codPaz));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> terapia = new HashMap<>();
+                    terapia.put("principioAttivo", getResultColumnValue(rs, tableColumns, "PRINCIPIO_ATTIVO", "PRINC_ATTIVO", "PA"));
+                    terapia.put("farmaco", getResultColumnValue(rs, tableColumns, "FARMACO"));
+                    terapia.put("confezione", getResultColumnValue(rs, tableColumns, "CONFEZIONE"));
+                    terapia.put("quantita", getResultColumnValue(rs, tableColumns, "QUANTIUTA", "QUANTITA", "QTA"));
+                    terapia.put("frequenzaUnita", firstNonEmpty(
+                            getResultColumnValue(rs, tableColumns, "FREQUENZA_UNITA"),
+                            getResultColumnValue(rs, tableColumns, "FREQUENZA")));
+                    terapia.put("durataValore", firstNonEmpty(
+                            getResultColumnValue(rs, tableColumns, "DURATA_VALORE"),
+                            getResultColumnValue(rs, tableColumns, "DURATA")));
+                    String durataUnita = firstNonEmpty(
+                            getResultColumnValue(rs, tableColumns, "UNITA"),
+                            getResultColumnValue(rs, tableColumns, "DURATA_UNITA"));
+                    terapia.put("durataUnita", durataUnita);
+                    terapia.put("unita", durataUnita);
+
+                    String key = buildSchedaTerapiaKey(terapia);
+                    if (!key.isEmpty()) {
+                        existing.put(key, key);
+                    }
+                }
+            }
+        }
+        return existing;
+    }
+
+    private void deleteRemovedSchedaPazientePatologie(Connection connection, BigDecimal idScheda, String codPaz,
+            Map<String, String> existing, Map<String, String> selected) throws SQLException {
+        if (existing.isEmpty()) {
+            return;
+        }
+
+        String sql = "DELETE FROM APO_SCHEDE_PAZIENTE_PATOLOGIE "
+                + "WHERE ID_SCHEDA = ? "
+                + "AND TRIM(CAST(COD_PAZIENTE AS VARCHAR2(100))) = ? "
+                + "AND UPPER(TRIM(CODICE_PATOLOGIA)) = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            boolean hasBatch = false;
+            for (String existingKey : existing.keySet()) {
+                if (selected.containsKey(existingKey)) {
+                    continue;
+                }
+                statement.setBigDecimal(1, idScheda);
+                statement.setString(2, safe(codPaz));
+                statement.setString(3, existingKey);
+                statement.addBatch();
+                hasBatch = true;
+            }
+            if (hasBatch) {
+                statement.executeBatch();
+            }
+        }
+    }
+
+    private void deleteRemovedSchedaPazienteAllergie(Connection connection, BigDecimal idScheda, String codPaz,
+            Map<String, String> existing, Map<String, String> selected) throws SQLException {
+        if (existing.isEmpty()) {
+            return;
+        }
+
+        String sql = "DELETE FROM APO_SCHEDE_PAZIENTE_ALLERGIE "
+                + "WHERE ID_SCHEDA = ? "
+                + "AND TRIM(CAST(COD_PAZIENTE AS VARCHAR2(100))) = ? "
+                + "AND UPPER(TRIM(CODICE_ALLERGIA)) = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            boolean hasBatch = false;
+            for (String existingKey : existing.keySet()) {
+                if (selected.containsKey(existingKey)) {
+                    continue;
+                }
+                statement.setBigDecimal(1, idScheda);
+                statement.setString(2, safe(codPaz));
+                statement.setString(3, existingKey);
+                statement.addBatch();
+                hasBatch = true;
+            }
+            if (hasBatch) {
+                statement.executeBatch();
+            }
+        }
+    }
+
+    private String normalizePatologiaKey(String value) {
+        return safe(value).toUpperCase(Locale.ITALY);
     }
 
     private void setNullableInteger(PreparedStatement statement, int parameterIndex, String value,
@@ -463,6 +845,45 @@ public class AccessiDao {
             }
         }
         return codiciPatologia;
+    }
+
+    private List<Map<String, String>> parseSchedaTerapie(String value) throws SQLException {
+        String normalizedValue = safe(value);
+        if (normalizedValue.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        try {
+            List<Map<String, String>> terapie = GSON.fromJson(normalizedValue, TERAPIE_PAYLOAD_TYPE);
+            return terapie == null ? new ArrayList<Map<String, String>>() : terapie;
+        } catch (RuntimeException ex) {
+            throw new SQLException("Terapie in corso non valide.", ex);
+        }
+    }
+
+    private String buildSchedaTerapiaKey(Map<String, String> terapia) {
+        return normalizePatologiaKey(getTerapiaPayloadValue(terapia, "principioAttivo", "principio_attivo", "pa"))
+                + "|" + normalizePatologiaKey(getTerapiaPayloadValue(terapia, "farmaco"))
+                + "|" + normalizePatologiaKey(getTerapiaPayloadValue(terapia, "confezione"))
+                + "|" + normalizePatologiaKey(getTerapiaPayloadValue(terapia, "quantita", "qta"))
+                + "|" + normalizePatologiaKey(getTerapiaPayloadValue(terapia, "frequenzaUnita", "frequenza"))
+                + "|" + normalizePatologiaKey(buildDurataTerapia(
+                        getTerapiaPayloadValue(terapia, "durataValore", "durata"),
+                        getTerapiaPayloadValue(terapia, "durataUnita")));
+    }
+
+    private String getTerapiaPayloadValue(Map<String, String> terapia, String... keys) {
+        if (terapia == null || keys == null) {
+            return "";
+        }
+
+        for (String key : keys) {
+            String value = safe(terapia.get(key));
+            if (!value.isEmpty()) {
+                return value;
+            }
+        }
+        return "";
     }
 
     private String normalizeFumoValue(String value) {
@@ -565,6 +986,87 @@ public class AccessiDao {
         }
 
         return columns;
+    }
+
+    private Map<String, String> findTableColumns(Connection connection, String tableName) throws SQLException {
+        HashMap<String, String> columns = new HashMap<>();
+        String sql = "SELECT * FROM " + tableName + " WHERE 1 = 0";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            ResultSetMetaData metaData = rs.getMetaData();
+            for (int index = 1; index <= metaData.getColumnCount(); index += 1) {
+                String columnName = safe(metaData.getColumnLabel(index));
+                if (columnName.isEmpty()) {
+                    columnName = safe(metaData.getColumnName(index));
+                }
+                if (!columnName.isEmpty()) {
+                    columns.put(columnName.toUpperCase(Locale.ITALY), columnName);
+                }
+            }
+        }
+
+        return columns;
+    }
+
+    private String firstExistingColumn(Map<String, String> columns, String... candidates) {
+        if (columns == null || candidates == null) {
+            return null;
+        }
+
+        for (String candidate : candidates) {
+            String columnName = columns.get(safe(candidate).toUpperCase(Locale.ITALY));
+            if (columnName != null) {
+                return columnName;
+            }
+        }
+        return null;
+    }
+
+    private String getResultColumnValue(ResultSet rs, Map<String, String> columns, String... candidates)
+            throws SQLException {
+        String columnName = firstExistingColumn(columns, candidates);
+        return columnName == null ? "" : safe(rs.getString(columnName));
+    }
+
+    private void addTerapiaInsertColumn(List<String> insertColumns, List<Object> insertValues,
+            Map<String, String> tableColumns, Object value, String... candidates) {
+        String columnName = firstExistingColumn(tableColumns, candidates);
+        if (columnName == null || insertColumns.contains(columnName)) {
+            return;
+        }
+
+        insertColumns.add(columnName);
+        insertValues.add(value);
+    }
+
+    private void bindTerapiaInsertValue(PreparedStatement statement, int parameterIndex,
+            String columnName, Object value) throws SQLException {
+        if (value instanceof BigDecimal) {
+            statement.setBigDecimal(parameterIndex, (BigDecimal) value);
+            return;
+        }
+        if (value == null && isTerapiaNumericColumn(columnName)) {
+            statement.setNull(parameterIndex, Types.NUMERIC);
+            return;
+        }
+        statement.setString(parameterIndex, value == null ? "" : String.valueOf(value).trim());
+    }
+
+    private boolean isTerapiaNumericColumn(String columnName) {
+        String normalized = safe(columnName).toUpperCase(Locale.ITALY);
+        return "ID_SCHEDA".equals(normalized)
+                || "QUANTIUTA".equals(normalized)
+                || "QUANTITA".equals(normalized)
+                || "QTA".equals(normalized)
+                || "DURATA".equals(normalized)
+                || "DURATA_VALORE".equals(normalized);
+    }
+
+    private String buildDurataTerapia(String durataValore, String durataUnita) {
+        return firstNonEmpty((safe(durataValore) + " " + safe(durataUnita)).trim(),
+                safe(durataValore),
+                safe(durataUnita));
     }
 
     private int loadNextCodConsulenze(Connection connection) throws SQLException {

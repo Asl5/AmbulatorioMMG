@@ -61,9 +61,15 @@ const apoPrestazioniInfermieristicheUrl = buildApoUrl("api/paziente/prestazioni-
 const apoPrestazioniInfCategorieUrl = buildApoUrl("api/paziente/prestazioni-infermieristiche/categorie");
 const apoPrestazioniInfSottocategorieUrl = buildApoUrl("api/paziente/prestazioni-infermieristiche/sottocategorie");
 const apoPatologieCronicheIcd10Url = buildApoUrl("api/paziente/icd10/patologie-croniche");
+const apoAllergieUrl = buildApoUrl("api/paziente/allergie");
+const apoTerapiePrincipiAttiviUrl = buildApoUrl("api/paziente/terapie/principi-attivi");
+const apoTerapieFarmaciUrl = buildApoUrl("api/paziente/terapie/farmaci");
+const apoTerapieConfezioniUrl = buildApoUrl("api/paziente/terapie/confezioni");
 const apoSchedaPazienteUrl = buildApoUrl("api/paziente/scheda-paziente");
 const apoSchedaPazienteDiarioUrl = buildApoUrl("api/paziente/scheda-paziente/diario");
 const apoSchedaPazientePatologieUrl = buildApoUrl("api/paziente/scheda-paziente/patologie");
+const apoSchedaPazienteAllergieUrl = buildApoUrl("api/paziente/scheda-paziente/allergie");
+const apoSchedaPazienteTerapieUrl = buildApoUrl("api/paziente/scheda-paziente/terapie");
 const apoRicetteFarmaciStoricoUrl = buildApoUrl("api/paziente/ricette-farmaci");
 const apoRicetteDematerializzateStoricoUrl = buildApoUrl("api/paziente/ricette-dematerializzate");
 const apoPianiTerapeuticiUrl = buildApoUrl("api/paziente/piani-terapeutici");
@@ -162,6 +168,7 @@ const apoState = {
     nuovoAccessoResults: [],
     nuovoAccessoSelectedId: "",
     nuovoAccessoSelectedTipi: ["visita-medica"],
+    nuovoAccessoPatologia: "ortopedica",
     nuovoAccessoLoading: false,
     nuovoAccessoError: "",
     nuovoAccessoLastFocus: null,
@@ -182,6 +189,23 @@ const apoState = {
     schedaPazientePatologieResults: [],
     schedaPazientePatologieSelected: [],
     schedaPazientePatologieRequestId: 0,
+    schedaPazienteAllergieSource: [],
+    schedaPazienteAllergieLoading: false,
+    schedaPazienteAllergieLoaded: false,
+    schedaPazienteAllergieError: "",
+    schedaPazienteAllergieResults: [],
+    schedaPazienteAllergieSelected: [],
+    schedaPazienteAllergieRequestId: 0,
+    schedaPazienteTerapieSelected: [],
+    schedaPazienteHistoryTerapie: [],
+    schedaPazienteHistoryTerapieCodPaz: "",
+    schedaPazienteHistoryTerapieLoading: false,
+    schedaPazienteHistoryTerapieLoaded: false,
+    schedaPazienteHistoryTerapieError: "",
+    schedaPazienteHistoryTerapieRequestId: 0,
+    schedaPazienteTerapiaModalLastFocus: null,
+    schedaPazienteTerapiaModalCodPaz: "",
+    schedaPazienteTerapiaModalAccesso: null,
     schedaPazienteDiario: [],
     schedaPazienteDiarioCodPaz: "",
     schedaPazienteDiarioLoading: false,
@@ -194,6 +218,12 @@ const apoState = {
     schedaPazienteHistoryPatologieLoaded: false,
     schedaPazienteHistoryPatologieError: "",
     schedaPazienteHistoryPatologieRequestId: 0,
+    schedaPazienteHistoryAllergie: [],
+    schedaPazienteHistoryAllergieCodPaz: "",
+    schedaPazienteHistoryAllergieLoading: false,
+    schedaPazienteHistoryAllergieLoaded: false,
+    schedaPazienteHistoryAllergieError: "",
+    schedaPazienteHistoryAllergieRequestId: 0,
     pendingDeleteAccessoId: "",
     deleteConfirmLastFocus: null,
     deleteConsulenzaLoading: false,
@@ -226,6 +256,18 @@ const apoSchedaPazienteHistorySections = [
     {id: "patologie-croniche", label: "Patologie croniche"},
     {id: "allergie", label: "Allergie"},
     {id: "terapie", label: "Terapie in corso"}
+];
+
+const apoSchedaPazienteTerapieFrequenzaOptions = [
+    {value: "giorno", label: "giorno"},
+    {value: "settimana", label: "settimana"},
+    {value: "mese", label: "mese"}
+];
+
+const apoSchedaPazienteTerapieDurataOptions = [
+    {value: "giorni", label: "giorni"},
+    {value: "settimane", label: "settimane"},
+    {value: "mesi", label: "mesi"}
 ];
 
 const apoPazienteSections = [
@@ -555,6 +597,7 @@ function normalizeApoAccesso(item, index) {
         codServizio: normalizeApoDisplayValue(source.codServizio),
         descServizio: normalizeApoDisplayValue(source.descServizio),
         valore: normalizeApoDisplayValue(source.valore),
+        patologia: normalizeApoDisplayValue(source.patologia),
         note: normalizeApoDisplayValue(source.note),
         eta: eta,
         codPaz: normalizeApoDisplayValue(source.codPaz),
@@ -2370,6 +2413,7 @@ function renderApoDiagnosiSheet(sheet, accesso) {
     esameRow.className = "apo-diagnosi-esame-row";
 
     esameRow.appendChild(createApoPazienteSheetField("Esame", accesso.valore || "-"));
+    esameRow.appendChild(createApoPazienteSheetField("Patologia", accesso.patologia || "-"));
     sheet.appendChild(esameRow);
     sheet.appendChild(createApoPazienteSheetField("Diagnosi", accesso.note || "-", "apo-paziente-sheet-field-notes"));
 }
@@ -3142,9 +3186,13 @@ async function loadApoMedicoCuranteForSelectedPaziente(accesso) {
 
 function renderApoSelectedPaziente() {
     const body = document.getElementById("apo-paziente-selected-body");
+    const schedaButton = document.getElementById("apo-selected-scheda-button");
     const accesso = getApoSelectedAccesso();
 
     updateApoSelectedConsulenzaHiddenFields(accesso);
+    if (schedaButton) {
+        schedaButton.disabled = !accesso || !normalizeApoDisplayValue(accesso.codPaz);
+    }
 
     if (!body) {
         return;
@@ -3169,6 +3217,10 @@ function renderApoSelectedPaziente() {
         clearApoRicetteDematerializzate();
         clearApoPianiTerapeutici();
         clearApoAllegatoM();
+        clearApoSchedaPazienteDiario();
+        clearApoSchedaPazienteHistoryPatologie();
+        clearApoSchedaPazienteHistoryAllergie();
+        clearApoSchedaPazienteHistoryTerapie();
         renderApoStoricoAccessi();
         return;
     }
@@ -3324,6 +3376,24 @@ function clearApoSchedaPazienteHistoryPatologie() {
     apoState.schedaPazienteHistoryPatologieRequestId += 1;
 }
 
+function clearApoSchedaPazienteHistoryAllergie() {
+    apoState.schedaPazienteHistoryAllergie = [];
+    apoState.schedaPazienteHistoryAllergieCodPaz = "";
+    apoState.schedaPazienteHistoryAllergieLoading = false;
+    apoState.schedaPazienteHistoryAllergieLoaded = false;
+    apoState.schedaPazienteHistoryAllergieError = "";
+    apoState.schedaPazienteHistoryAllergieRequestId += 1;
+}
+
+function clearApoSchedaPazienteHistoryTerapie() {
+    apoState.schedaPazienteHistoryTerapie = [];
+    apoState.schedaPazienteHistoryTerapieCodPaz = "";
+    apoState.schedaPazienteHistoryTerapieLoading = false;
+    apoState.schedaPazienteHistoryTerapieLoaded = false;
+    apoState.schedaPazienteHistoryTerapieError = "";
+    apoState.schedaPazienteHistoryTerapieRequestId += 1;
+}
+
 function isSameApoAccesso(left, right) {
     if (!left || !right) {
         return false;
@@ -3342,12 +3412,44 @@ function sortApoStoricoAccessi(items) {
     });
 }
 
+function getApoSchedaPazienteUtenteInsData(source) {
+    const item = source && typeof source === "object" ? source : {};
+    const cognome = normalizeApoDisplayValue(item.utenteInsCognome || item.utente_ins_cognome || item.cognomeUtenteIns);
+    const nome = normalizeApoDisplayValue(item.utenteInsNome || item.utente_ins_nome || item.nomeUtenteIns);
+    const descrizione = normalizeApoDisplayValue(item.utenteInsDescrizione || item.utenteIns || item.utente_ins);
+    const nomeCompleto = [cognome, nome].filter(function (part) {
+        return !!part;
+    }).join(" ");
+
+    return {
+        cognome: cognome,
+        nome: nome,
+        descrizione: nomeCompleto || descrizione
+    };
+}
+
+function appendApoSchedaPazienteUtenteIns(container, source, className) {
+    const utente = getApoSchedaPazienteUtenteInsData(source);
+    if (!container || !utente.descrizione) {
+        return;
+    }
+
+    const element = document.createElement("span");
+    element.className = className || "apo-scheda-paziente-utente-ins";
+    element.textContent = utente.descrizione;
+    container.appendChild(element);
+}
+
 function normalizeApoSchedaPazienteDiarioItem(item, index) {
     const source = item && typeof item === "object" ? item : {};
+    const utente = getApoSchedaPazienteUtenteInsData(source);
     return {
         id: normalizeApoDisplayValue(source.id),
         dataDiario: normalizeApoDisplayValue(source.dataDiario || source.data_diario),
-        descrizione: normalizeApoDisplayValue(source.descrizione)
+        descrizione: normalizeApoDisplayValue(source.descrizione),
+        utenteInsCognome: utente.cognome,
+        utenteInsNome: utente.nome,
+        utenteInsDescrizione: utente.descrizione
     };
 }
 
@@ -3362,10 +3464,14 @@ function normalizeApoSchedaPazienteDiario(items) {
 
 function normalizeApoSchedaPazienteHistoryPatologia(item, index) {
     const source = item && typeof item === "object" ? item : {};
+    const utente = getApoSchedaPazienteUtenteInsData(source);
     return {
         id: normalizeApoDisplayValue(source.id || ("PATOLOGIA_" + index)),
         codice: normalizeApoDisplayValue(source.codice),
-        descrizione: normalizeApoDisplayValue(source.descrizione || source.patologia)
+        descrizione: normalizeApoDisplayValue(source.descrizione || source.patologia),
+        utenteInsCognome: utente.cognome,
+        utenteInsNome: utente.nome,
+        utenteInsDescrizione: utente.descrizione
     };
 }
 
@@ -3375,6 +3481,34 @@ function normalizeApoSchedaPazienteHistoryPatologie(items) {
     }
     return items.map(function (item, index) {
         return normalizeApoSchedaPazienteHistoryPatologia(item, index);
+    });
+}
+
+function normalizeApoSchedaPazienteAllergia(item, index) {
+    const source = item && typeof item === "object" ? item : {};
+    const codice = normalizeApoDisplayValue(source.codice || source.codiceAllergia || source.codice_allergia);
+    const descrizione = normalizeApoDisplayValue(source.descrizione || source.allergia);
+    const utente = getApoSchedaPazienteUtenteInsData(source);
+    const idParts = [codice, descrizione].filter(function (part) {
+        return !!part;
+    });
+
+    return {
+        id: normalizeApoDisplayValue(source.id) || idParts.join("|") || ("ALLERGIA_" + index),
+        codice: codice,
+        descrizione: descrizione,
+        utenteInsCognome: utente.cognome,
+        utenteInsNome: utente.nome,
+        utenteInsDescrizione: utente.descrizione
+    };
+}
+
+function normalizeApoSchedaPazienteAllergie(items) {
+    if (!Array.isArray(items)) {
+        return [];
+    }
+    return items.map(function (item, index) {
+        return normalizeApoSchedaPazienteAllergia(item, index);
     });
 }
 
@@ -3477,9 +3611,14 @@ function renderApoSchedaPazienteDiario(body, accesso) {
         const header = document.createElement("div");
         header.className = "apo-paziente-patologia-row-header";
 
+        const dateBlock = document.createElement("div");
+        dateBlock.className = "apo-paziente-history-meta-block";
+
         const date = document.createElement("span");
         date.className = "apo-paziente-history-date";
         date.textContent = item.dataDiario || "-";
+        dateBlock.appendChild(date);
+        appendApoSchedaPazienteUtenteIns(dateBlock, item, "apo-paziente-history-inseritore");
 
         const deleteButton = document.createElement("button");
         deleteButton.type = "button";
@@ -3499,7 +3638,7 @@ function renderApoSchedaPazienteDiario(body, accesso) {
         description.className = "apo-paziente-history-title";
         description.textContent = item.descrizione || "-";
 
-        header.appendChild(date);
+        header.appendChild(dateBlock);
         header.appendChild(deleteButton);
         row.appendChild(header);
         row.appendChild(description);
@@ -3719,6 +3858,795 @@ function getApoSchedaPazientePatologiaCodeFromInput(inputValue, suggestions) {
 
     const separatorIndex = normalizedValue.indexOf(" - ");
     return separatorIndex > 0 ? normalizedValue.substring(0, separatorIndex).trim() : normalizedValue;
+}
+
+function formatApoSchedaPazienteAllergiaSuggestion(itemData) {
+    return normalizeApoDisplayValue(itemData && itemData.descrizione)
+        || normalizeApoDisplayValue(itemData && itemData.codice);
+}
+
+function formatApoSchedaPazienteAllergiaHistoryDescription(itemData) {
+    const description = normalizeApoDisplayValue(itemData && itemData.descrizione);
+    const code = normalizeApoDisplayValue(itemData && itemData.codice);
+    if (!description || !code) {
+        return description;
+    }
+
+    const separatorIndex = description.indexOf(" - ");
+    if (separatorIndex > 0
+            && normalizeApoValue(description.substring(0, separatorIndex)) === normalizeApoValue(code)) {
+        return description.substring(separatorIndex + 3).trim();
+    }
+    return description;
+}
+
+function getApoSchedaPazienteAllergiaCodeFromInput(inputValue, suggestions) {
+    const normalizedValue = normalizeApoDisplayValue(inputValue);
+    if (!normalizedValue) {
+        return "";
+    }
+
+    for (let index = 0; index < suggestions.length; index += 1) {
+        const suggestion = suggestions[index];
+        if (normalizeApoValue(formatApoSchedaPazienteAllergiaSuggestion(suggestion)) === normalizeApoValue(normalizedValue)
+                || normalizeApoValue(suggestion.codice) === normalizeApoValue(normalizedValue)) {
+            return normalizeApoDisplayValue(suggestion.codice);
+        }
+    }
+
+    const separatorIndex = normalizedValue.indexOf(" - ");
+    return separatorIndex > 0 ? normalizedValue.substring(0, separatorIndex).trim() : normalizedValue;
+}
+
+function normalizeApoSchedaPazienteTerapieLookupItems(items, valueKeys) {
+    if (!Array.isArray(items)) {
+        return [];
+    }
+
+    return items.map(function (item, index) {
+        const source = item && typeof item === "object" ? item : {};
+        let value = typeof item === "string" ? normalizeApoDisplayValue(item) : "";
+        if (!value) {
+            for (let keyIndex = 0; keyIndex < valueKeys.length; keyIndex += 1) {
+                value = normalizeApoDisplayValue(source[valueKeys[keyIndex]]);
+                if (value) {
+                    break;
+                }
+            }
+        }
+        return {
+            id: normalizeApoValue(value) || ("TERAPIA_LOOKUP_" + index),
+            value: value,
+            label: value
+        };
+    }).filter(function (itemData) {
+        return !!itemData.value;
+    });
+}
+
+async function loadApoSchedaPazienteTerapieLookup(url, params, dataKey, valueKeys, errorMessage) {
+    const queryString = params.toString();
+    const response = await fetch(queryString ? url + "?" + queryString : url, {
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+    if (response.status === 401) {
+        window.location.href = apoLoginUrl;
+        return [];
+    }
+
+    let payload = null;
+    try {
+        payload = await response.json();
+    } catch (error) {
+        payload = null;
+    }
+
+    if (!response.ok || !payload || payload.esito !== "ok") {
+        throw new Error(payload && payload.message ? payload.message : errorMessage);
+    }
+
+    return normalizeApoSchedaPazienteTerapieLookupItems(payload.data && payload.data[dataKey], valueKeys);
+}
+
+function createApoSchedaPazienteTerapieSelect(options, selectedValue) {
+    const select = document.createElement("select");
+    select.className = "form-select form-control apo-scheda-paziente-select";
+    const normalizedSelected = normalizeApoValue(selectedValue);
+    options.forEach(function (optionConfig) {
+        const option = document.createElement("option");
+        option.value = optionConfig.value;
+        option.textContent = optionConfig.label;
+        option.selected = normalizeApoValue(option.value) === normalizedSelected;
+        select.appendChild(option);
+    });
+    return select;
+}
+
+function makeApoSchedaPazienteTerapiaKey(itemData) {
+    return [
+        normalizeApoValue(itemData && itemData.principioAttivo),
+        normalizeApoValue(itemData && itemData.farmaco),
+        normalizeApoValue(itemData && itemData.confezione),
+        normalizeApoValue(itemData && itemData.quantita),
+        normalizeApoValue(itemData && itemData.frequenzaUnita),
+        normalizeApoValue(itemData && itemData.durataValore),
+        normalizeApoValue(itemData && itemData.durataUnita)
+    ].join("|");
+}
+
+function normalizeApoSchedaPazienteTerapia(item, index) {
+    const source = item && typeof item === "object" ? item : {};
+    const utente = getApoSchedaPazienteUtenteInsData(source);
+    const principioAttivo = normalizeApoDisplayValue(source.principioAttivo || source.pa || source.princAttivo);
+    const farmaco = typeof item === "string"
+        ? normalizeApoDisplayValue(item)
+        : normalizeApoDisplayValue(source.farmaco || source.descrizione || source.terapia || source.nomeFarmaco);
+    const confezione = normalizeApoDisplayValue(source.confezione || source.c || source.confezioneFarmaco);
+    const quantita = normalizeApoDisplayValue(source.quantita || source.quantitaFarmaco || source.dosaggio);
+    const frequenzaUnita = normalizeApoDisplayValue(source.frequenzaUnita || source.frequenza || source.unitaFrequenza);
+    const durataUnitaDb = normalizeApoDisplayValue(source.unita || source.UNITA || source.durataUnita || source.unitaDurata);
+    const durata = parseApoTerapiaDurationParts(
+        normalizeApoDisplayValue(source.durataValore || source.durata || source.numeroDurata),
+        durataUnitaDb
+    );
+    const durataValore = durata.valore;
+    const durataUnita = durataUnitaDb || durata.unita;
+    const dataIns = normalizeApoDisplayValue(source.dataIns || source.data_ins || source.DATA_INS);
+    const dataInsSort = normalizeApoDisplayValue(source.dataInsSort || source.data_ins_sort || source.DATA_INS_SORT);
+    const keyParts = [principioAttivo, farmaco, confezione, quantita, frequenzaUnita, durataValore, durataUnita].filter(function (part) {
+        return !!part;
+    });
+
+    return {
+        id: normalizeApoDisplayValue(source.id) || keyParts.join("|") || ("TERAPIA_" + index),
+        principioAttivo: principioAttivo,
+        farmaco: farmaco,
+        confezione: confezione,
+        quantita: quantita,
+        frequenzaUnita: frequenzaUnita,
+        durataValore: durataValore,
+        durataUnita: durataUnita,
+        dataIns: dataIns,
+        dataInsSort: dataInsSort,
+        utenteInsCognome: utente.cognome,
+        utenteInsNome: utente.nome,
+        utenteInsDescrizione: utente.descrizione
+    };
+}
+
+function parseApoSchedaPazienteTerapieText(value) {
+    return normalizeApoDisplayValue(value).split(/[;\n]+/).map(function (part) {
+        return normalizeApoDisplayValue(part);
+    }).filter(function (part) {
+        return !!part;
+    });
+}
+
+function normalizeApoSchedaPazienteTerapie(items) {
+    let sourceItems = items;
+    if (typeof items === "string") {
+        sourceItems = parseApoSchedaPazienteTerapieText(items);
+    }
+    if (!Array.isArray(sourceItems)) {
+        return [];
+    }
+
+    return sourceItems.map(function (item, index) {
+        return normalizeApoSchedaPazienteTerapia(item, index);
+    }).filter(function (itemData) {
+        return !!itemData.farmaco;
+    });
+}
+
+function dedupeApoSchedaPazienteTerapie(items) {
+    const seen = {};
+    return normalizeApoSchedaPazienteTerapie(items).filter(function (itemData) {
+        const key = makeApoSchedaPazienteTerapiaKey(itemData);
+        if (!key || seen[key]) {
+            return false;
+        }
+        seen[key] = true;
+        return true;
+    });
+}
+
+function getApoSchedaPazienteTerapieFromSource(source) {
+    if (!source || typeof source !== "object") {
+        return [];
+    }
+    if (Array.isArray(source.terapieSelezionate)) {
+        return source.terapieSelezionate;
+    }
+    if (Array.isArray(source.terapieInCorso)) {
+        return source.terapieInCorso;
+    }
+    if (Array.isArray(source.terapie)) {
+        return source.terapie;
+    }
+    return getApoSchedaPazienteField(source, ["terapieInCorso", "terapie", "terapiaInCorso", "terapia"]);
+}
+
+function formatApoTerapiaDurationText(durataValore, durataUnita) {
+    const durataUnitaDb = normalizeApoDisplayValue(durataUnita);
+    const durata = parseApoTerapiaDurationParts(durataValore, durataUnita);
+    return [durata.valore, durataUnitaDb || durata.unita].filter(function (part) {
+        return !!part;
+    }).join(" ");
+}
+
+function formatApoSchedaPazienteTerapia(itemData) {
+    const principioAttivo = normalizeApoDisplayValue(itemData && itemData.principioAttivo);
+    const farmaco = normalizeApoDisplayValue(itemData && itemData.farmaco);
+    const confezione = normalizeApoDisplayValue(itemData && itemData.confezione);
+    const quantita = normalizeApoDisplayValue(itemData && itemData.quantita);
+    const frequenzaUnita = normalizeApoDisplayValue(itemData && itemData.frequenzaUnita);
+    const durata = formatApoTerapiaDurationText(itemData && itemData.durataValore, itemData && itemData.durataUnita);
+    const parts = [];
+
+    if (principioAttivo) {
+        parts.push(principioAttivo);
+    }
+    if (farmaco) {
+        parts.push(farmaco);
+    }
+    if (confezione) {
+        parts.push(confezione);
+    }
+    if (quantita) {
+        parts.push(quantita);
+    }
+    if (frequenzaUnita) {
+        parts.push("al " + frequenzaUnita);
+    }
+    if (durata) {
+        parts.push("per " + durata);
+    }
+
+    return parts.join(" - ");
+}
+
+function formatApoSchedaPazienteTerapiaTitle(itemData) {
+    const principioAttivo = normalizeApoDisplayValue(itemData && itemData.principioAttivo);
+    const farmaco = normalizeApoDisplayValue(itemData && itemData.farmaco);
+    return [principioAttivo, farmaco].filter(function (part) {
+        return !!part;
+    }).join(" - ");
+}
+
+function formatApoSchedaPazienteTerapiaDescription(itemData) {
+    const confezione = normalizeApoDisplayValue(itemData && itemData.confezione);
+    const quantita = normalizeApoDisplayValue(itemData && itemData.quantita);
+    const frequenzaUnita = normalizeApoDisplayValue(itemData && itemData.frequenzaUnita);
+    const durata = formatApoTerapiaDurationText(itemData && itemData.durataValore, itemData && itemData.durataUnita);
+    const doseParts = [];
+
+    if (quantita) {
+        doseParts.push(quantita);
+    }
+    if (frequenzaUnita) {
+        doseParts.push("al " + frequenzaUnita);
+    }
+    if (durata) {
+        doseParts.push("per " + durata);
+    }
+
+    if (confezione && doseParts.length) {
+        return confezione + " - " + doseParts.join(" ");
+    }
+    if (confezione) {
+        return confezione;
+    }
+    return doseParts.join(" ");
+}
+
+function parseApoTerapiaDate(value) {
+    const normalized = normalizeApoDisplayValue(value);
+    let match = normalized.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+    if (match) {
+        return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+    }
+
+    match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+        return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    }
+
+    return null;
+}
+
+function formatApoTerapiaDate(dateValue) {
+    if (!(dateValue instanceof Date) || Number.isNaN(dateValue.getTime())) {
+        return "";
+    }
+
+    return String(dateValue.getDate()).padStart(2, "0") + "/"
+            + String(dateValue.getMonth() + 1).padStart(2, "0") + "/"
+            + dateValue.getFullYear();
+}
+
+function normalizeApoTerapiaDurationUnit(value) {
+    const unit = normalizeApoValue(value);
+    if (!unit) {
+        return "";
+    }
+    if (unit === "G" || unit === "GG") {
+        return "giorni";
+    }
+    if (unit === "S" || unit === "SETT") {
+        return "settimane";
+    }
+    if (unit === "M") {
+        return "mesi";
+    }
+    if (unit.indexOf("GIORN") === 0) {
+        return "giorni";
+    }
+    if (unit.indexOf("SETTIMAN") === 0) {
+        return "settimane";
+    }
+    if (unit.indexOf("MES") === 0) {
+        return "mesi";
+    }
+    return "";
+}
+
+function parseApoTerapiaDurationParts(durataValore, durataUnita) {
+    const value = normalizeApoDisplayValue(durataValore);
+    const explicitUnit = normalizeApoTerapiaDurationUnit(durataUnita);
+    const match = value.match(/^(?:per\s+)?(\d+(?:[,.]\d+)?)\s*[;:,\-]?\s*(giorno|giorni|g|gg|settimana|settimane|sett|s|mese|mesi|m)\b/i);
+    const numberOnlyMatch = value.match(/^(?:per\s+)?(\d+(?:[,.]\d+)?)/i);
+
+    if (match) {
+        return {
+            valore: match[1],
+            unita: normalizeApoTerapiaDurationUnit(match[2]) || explicitUnit
+        };
+    }
+
+    return {
+        valore: numberOnlyMatch ? numberOnlyMatch[1] : value,
+        unita: explicitUnit
+    };
+}
+
+function addApoTerapiaDuration(dateValue, durataValore, durataUnita) {
+    const durata = parseApoTerapiaDurationParts(durataValore, durataUnita);
+    const amount = Number(durata.valore.replace(",", "."));
+    const unit = normalizeApoTerapiaDurationUnit(durata.unita);
+    if (!(dateValue instanceof Date) || Number.isNaN(dateValue.getTime()) || !amount || !unit) {
+        return null;
+    }
+
+    const result = new Date(dateValue.getTime());
+    if (unit.indexOf("settiman") === 0) {
+        result.setDate(result.getDate() + (amount * 7));
+    } else if (unit.indexOf("mes") === 0) {
+        result.setMonth(result.getMonth() + amount);
+    } else if (unit.indexOf("giorn") === 0) {
+        result.setDate(result.getDate() + amount);
+    }
+    return result;
+}
+
+function formatApoSchedaPazienteTerapiaPeriodo(itemData) {
+    return "";
+}
+
+function renderApoSchedaPazienteTerapieSelectedList(list, items, onRemove, emptyText) {
+    if (!list) {
+        return;
+    }
+
+    list.innerHTML = "";
+    if (!items.length) {
+        const emptyItem = document.createElement("li");
+        emptyItem.className = "apo-scheda-paziente-selected-empty";
+        emptyItem.textContent = emptyText || "Nessuna terapia in corso selezionata.";
+        list.appendChild(emptyItem);
+        return;
+    }
+
+    items.forEach(function (itemData) {
+        const listItem = document.createElement("li");
+        listItem.className = "apo-scheda-paziente-terapia-row";
+        const text = document.createElement("span");
+        text.className = "apo-scheda-paziente-selected-text";
+        text.textContent = formatApoSchedaPazienteTerapia(itemData) || "-";
+
+        listItem.appendChild(text);
+        if (typeof onRemove === "function") {
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.className = "apo-scheda-paziente-selected-remove";
+            removeButton.setAttribute("aria-label", "Rimuovi terapia selezionata");
+            removeButton.textContent = "X";
+            removeButton.addEventListener("click", function () {
+                onRemove(itemData);
+            });
+            listItem.appendChild(removeButton);
+        }
+        list.appendChild(listItem);
+    });
+}
+
+function createApoSchedaPazienteTerapieAddControls(onAdd, options) {
+    const config = options && typeof options === "object" ? options : {};
+    const controls = document.createElement("div");
+    controls.className = config.className || "apo-scheda-paziente-terapie-add";
+
+    const lookupRow = document.createElement("div");
+    lookupRow.className = "apo-scheda-paziente-terapie-lookup-row";
+
+    const doseRow = document.createElement("div");
+    doseRow.className = "apo-scheda-paziente-terapie-dose-row";
+
+    function createLookupField(placeholder) {
+        const field = document.createElement("div");
+        field.className = "apo-scheda-paziente-terapie-lookup-field";
+
+        const select = document.createElement("select");
+        select.className = "form-select form-control apo-scheda-paziente-select apo-scheda-paziente-terapie-lookup-select";
+        select.disabled = true;
+
+        field.appendChild(select);
+        return {
+            field: field,
+            select: select,
+            placeholder: placeholder,
+            items: [],
+            requestId: 0
+        };
+    }
+
+    const principioLookup = createLookupField("Principio attivo");
+    const farmacoLookup = createLookupField("Farmaco");
+    const confezioneLookup = createLookupField("Confezione");
+
+    const quantitaInput = document.createElement("input");
+    quantitaInput.type = "text";
+    quantitaInput.className = "form-control apo-scheda-paziente-input";
+    quantitaInput.placeholder = "Quantita'";
+
+    const frequenzaGroup = document.createElement("div");
+    frequenzaGroup.className = "apo-scheda-paziente-terapie-inline";
+    const frequenzaLabel = document.createElement("span");
+    frequenzaLabel.textContent = "al";
+    const frequenzaSelect = createApoSchedaPazienteTerapieSelect(apoSchedaPazienteTerapieFrequenzaOptions, "giorno");
+    frequenzaGroup.appendChild(frequenzaLabel);
+    frequenzaGroup.appendChild(frequenzaSelect);
+
+    const durataGroup = document.createElement("div");
+    durataGroup.className = "apo-scheda-paziente-terapie-inline apo-scheda-paziente-terapie-durata";
+    const durataLabel = document.createElement("span");
+    durataLabel.textContent = "per";
+    const durataInput = document.createElement("input");
+    durataInput.type = "number";
+    durataInput.min = "0";
+    durataInput.step = "1";
+    durataInput.className = "form-control apo-scheda-paziente-input";
+    durataInput.placeholder = "N.";
+    const durataSelect = createApoSchedaPazienteTerapieSelect(apoSchedaPazienteTerapieDurataOptions, "giorni");
+    durataGroup.appendChild(durataLabel);
+    durataGroup.appendChild(durataInput);
+    durataGroup.appendChild(durataSelect);
+
+    const addButton = document.createElement("button");
+    addButton.type = "button";
+    addButton.className = "btn btn-success" + (config.buttonClass ? " " + config.buttonClass : "");
+    addButton.textContent = config.buttonText || "Aggiungi";
+    let adding = false;
+
+    function setAdding(isAdding) {
+        adding = isAdding === true;
+        addButton.disabled = adding;
+        addButton.textContent = adding ? (config.addingText || "Aggiungo...") : (config.buttonText || "Aggiungi");
+    }
+
+    function getLookupValue(lookup) {
+        return normalizeApoDisplayValue(lookup && lookup.select ? lookup.select.value : "");
+    }
+
+    function setLookupOptions(lookup, items, placeholderText, isDisabled) {
+        lookup.items = Array.isArray(items) ? items : [];
+        lookup.select.innerHTML = "";
+
+        const placeholderOption = document.createElement("option");
+        placeholderOption.value = "";
+        placeholderOption.textContent = placeholderText || ("Seleziona " + lookup.placeholder.toLowerCase());
+        placeholderOption.selected = true;
+        lookup.select.appendChild(placeholderOption);
+
+        lookup.items.forEach(function (itemData) {
+            const option = document.createElement("option");
+            option.value = normalizeApoDisplayValue(itemData && itemData.value);
+            option.textContent = normalizeApoDisplayValue(itemData && (itemData.label || itemData.value));
+            lookup.select.appendChild(option);
+        });
+        lookup.select.disabled = isDisabled === true;
+    }
+
+    function resetLookup(lookup, placeholderText, isDisabled) {
+        lookup.requestId += 1;
+        setLookupOptions(lookup, [], placeholderText, isDisabled !== false);
+    }
+
+    async function loadLookupOptions(lookup, lookupConfig) {
+        lookup.requestId += 1;
+        const currentRequestId = lookup.requestId;
+        const guardMessage = typeof lookupConfig.guard === "function" ? lookupConfig.guard() : "";
+
+        if (guardMessage) {
+            setLookupOptions(lookup, [], guardMessage, true);
+            return;
+        }
+
+        const params = new URLSearchParams();
+        if (typeof lookupConfig.params === "function") {
+            lookupConfig.params(params);
+        }
+
+        setLookupOptions(lookup, [], "Caricamento...", true);
+        try {
+            const results = await loadApoSchedaPazienteTerapieLookup(
+                lookupConfig.url,
+                params,
+                lookupConfig.dataKey,
+                lookupConfig.valueKeys,
+                lookupConfig.errorMessage
+            );
+            if (currentRequestId !== lookup.requestId) {
+                return;
+            }
+            setLookupOptions(lookup, results, lookupConfig.placeholderText, false);
+            if (!results.length) {
+                setApoSearchMessage(lookupConfig.emptyText, "warning");
+            }
+        } catch (error) {
+            if (currentRequestId !== lookup.requestId) {
+                return;
+            }
+            setLookupOptions(lookup, [], lookupConfig.errorMessage, true);
+            setApoSearchMessage(error && error.message ? error.message : lookupConfig.errorMessage, "danger");
+        }
+    }
+
+    const principioConfig = {
+        url: apoTerapiePrincipiAttiviUrl,
+        dataKey: "principiAttivi",
+        valueKeys: ["principioAttivo", "pa"],
+        placeholderText: "Seleziona principio attivo",
+        emptyText: "Nessun principio attivo trovato.",
+        errorMessage: "Errore nel caricamento dei principi attivi."
+    };
+    const farmacoConfig = {
+        url: apoTerapieFarmaciUrl,
+        dataKey: "farmaci",
+        valueKeys: ["farmaco", "f"],
+        placeholderText: "Seleziona farmaco",
+        emptyText: "Nessun farmaco trovato.",
+        errorMessage: "Errore nel caricamento dei farmaci.",
+        guard: function () {
+            return getLookupValue(principioLookup) ? "" : "Seleziona prima il principio attivo.";
+        },
+        params: function (params) {
+            params.set("principioAttivo", getLookupValue(principioLookup));
+        }
+    };
+    const confezioneConfig = {
+        url: apoTerapieConfezioniUrl,
+        dataKey: "confezioni",
+        valueKeys: ["confezione", "c"],
+        placeholderText: "Seleziona confezione",
+        emptyText: "Nessuna confezione trovata.",
+        errorMessage: "Errore nel caricamento delle confezioni.",
+        guard: function () {
+            return getLookupValue(farmacoLookup) ? "" : "Seleziona prima il farmaco.";
+        },
+        params: function (params) {
+            params.set("farmaco", getLookupValue(farmacoLookup));
+        }
+    };
+
+    resetLookup(principioLookup, "Caricamento principi attivi...", true);
+    resetLookup(farmacoLookup, "Seleziona prima il principio attivo.", true);
+    resetLookup(confezioneLookup, "Seleziona prima il farmaco.", true);
+
+    void loadLookupOptions(principioLookup, principioConfig);
+
+    principioLookup.select.addEventListener("change", function () {
+        resetLookup(farmacoLookup, "Seleziona farmaco", true);
+        resetLookup(confezioneLookup, "Seleziona prima il farmaco.", true);
+        if (getLookupValue(principioLookup)) {
+            void loadLookupOptions(farmacoLookup, farmacoConfig);
+        }
+    });
+
+    farmacoLookup.select.addEventListener("change", function () {
+        resetLookup(confezioneLookup, "Seleziona confezione", true);
+        if (getLookupValue(farmacoLookup)) {
+            void loadLookupOptions(confezioneLookup, confezioneConfig);
+        }
+    });
+
+    function resetControls() {
+        principioLookup.select.value = "";
+        resetLookup(farmacoLookup, "Seleziona prima il principio attivo.", true);
+        resetLookup(confezioneLookup, "Seleziona prima il farmaco.", true);
+        quantitaInput.value = "";
+        durataInput.value = "";
+        frequenzaSelect.value = "giorno";
+        durataSelect.value = "giorni";
+        principioLookup.select.focus();
+    }
+
+    async function addCurrentTerapia() {
+        if (adding) {
+            return;
+        }
+        const terapia = normalizeApoSchedaPazienteTerapia({
+            principioAttivo: getLookupValue(principioLookup),
+            farmaco: getLookupValue(farmacoLookup),
+            confezione: getLookupValue(confezioneLookup),
+            quantita: quantitaInput.value,
+            frequenzaUnita: frequenzaSelect.value,
+            durataValore: durataInput.value,
+            durataUnita: normalizeApoDisplayValue(durataInput.value) ? durataSelect.value : ""
+        }, 0);
+
+        if (!terapia.farmaco) {
+            setApoSearchMessage("Inserisci un farmaco per aggiungere la terapia.", "warning");
+            farmacoLookup.select.focus();
+            return;
+        }
+
+        setAdding(true);
+        let added = true;
+        try {
+            if (typeof onAdd === "function") {
+                added = await onAdd(terapia);
+            }
+        } finally {
+            setAdding(false);
+        }
+        if (added !== false) {
+            resetControls();
+        }
+    }
+
+    [quantitaInput, frequenzaSelect, durataInput, durataSelect].forEach(function (field) {
+        field.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                void addCurrentTerapia();
+            }
+        });
+    });
+    addButton.addEventListener("click", function () {
+        void addCurrentTerapia();
+    });
+
+    lookupRow.appendChild(principioLookup.field);
+    lookupRow.appendChild(farmacoLookup.field);
+    lookupRow.appendChild(confezioneLookup.field);
+    doseRow.appendChild(quantitaInput);
+    doseRow.appendChild(frequenzaGroup);
+    doseRow.appendChild(durataGroup);
+    doseRow.appendChild(addButton);
+    controls.appendChild(lookupRow);
+    controls.appendChild(doseRow);
+    return controls;
+}
+
+function createApoSchedaPazienteTerapiaOpenButton(accesso) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    const form = document.createElement("form");
+    form.className = "apo-paziente-terapie-add";
+
+    const addButton = document.createElement("button");
+    addButton.type = "submit";
+    addButton.className = "btn btn-success";
+    addButton.textContent = "Aggiungi nuova terapia";
+    addButton.disabled = !codPaz;
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        openApoSchedaPazienteTerapiaModal(accesso);
+    });
+
+    form.appendChild(addButton);
+    return form;
+}
+
+function setApoSchedaPazienteTerapiaSaving(isSaving) {
+    const modal = document.getElementById("apo-terapia-modal");
+    if (!modal) {
+        return;
+    }
+    const addButton = modal.querySelector(".apo-terapia-save-button");
+    if (addButton) {
+        addButton.textContent = isSaving === true ? "Aggiungo..." : "Aggiungi terapia";
+    }
+}
+
+function openApoSchedaPazienteTerapiaModal(accesso) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    const modal = document.getElementById("apo-terapia-modal");
+    const host = document.getElementById("apo-terapia-form-host");
+    if (!modal || !host || !codPaz) {
+        setApoSearchMessage("Codice paziente non disponibile.", "warning");
+        return;
+    }
+
+    apoState.schedaPazienteTerapiaModalLastFocus = document.activeElement;
+    apoState.schedaPazienteTerapiaModalCodPaz = codPaz;
+    apoState.schedaPazienteTerapiaModalAccesso = accesso;
+    modal.dataset.codPaz = codPaz;
+    host.innerHTML = "";
+
+    const controls = createApoSchedaPazienteTerapieAddControls(async function (terapia) {
+        setApoSchedaPazienteTerapiaSaving(true);
+        const saved = await saveApoSchedaPazienteHistoryTerapia(accesso, terapia);
+        setApoSchedaPazienteTerapiaSaving(false);
+        if (saved) {
+            closeApoSchedaPazienteTerapiaModal(true);
+        }
+        return saved;
+    }, {
+        className: "apo-scheda-paziente-terapie-add apo-terapia-modal-controls",
+        buttonClass: "apo-terapia-save-button",
+        buttonText: "Aggiungi terapia",
+        addingText: "Aggiungo..."
+    });
+    host.appendChild(controls);
+
+    setApoSchedaPazienteTerapiaSaving(false);
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+    const firstField = host.querySelector("select:not([disabled]), input:not([disabled])");
+    if (firstField) {
+        firstField.focus();
+    }
+}
+
+function closeApoSchedaPazienteTerapiaModal(restoreFocus) {
+    const modal = document.getElementById("apo-terapia-modal");
+    const host = document.getElementById("apo-terapia-form-host");
+    if (modal) {
+        modal.classList.add("is-hidden");
+        modal.setAttribute("aria-hidden", "true");
+        delete modal.dataset.codPaz;
+    }
+    if (host) {
+        host.innerHTML = "";
+    }
+    apoState.schedaPazienteTerapiaModalCodPaz = "";
+    apoState.schedaPazienteTerapiaModalAccesso = null;
+    setApoSchedaPazienteTerapiaSaving(false);
+
+    if (restoreFocus && apoState.schedaPazienteTerapiaModalLastFocus
+            && typeof apoState.schedaPazienteTerapiaModalLastFocus.focus === "function") {
+        apoState.schedaPazienteTerapiaModalLastFocus.focus();
+    }
+}
+
+function addApoSchedaPazienteTerapiaToList(items, terapia) {
+    const normalized = normalizeApoSchedaPazienteTerapia(terapia, items.length);
+    const key = makeApoSchedaPazienteTerapiaKey(normalized);
+    const exists = items.some(function (selected) {
+        return makeApoSchedaPazienteTerapiaKey(selected) === key;
+    });
+    if (!exists) {
+        items.push(normalized);
+    }
+}
+
+function removeApoSchedaPazienteTerapiaFromList(items, terapia) {
+    const key = makeApoSchedaPazienteTerapiaKey(terapia);
+    return items.filter(function (selected) {
+        return makeApoSchedaPazienteTerapiaKey(selected) !== key;
+    });
 }
 
 function createApoSchedaPazienteHistoryPatologieAddControls(accesso) {
@@ -3981,9 +4909,369 @@ function renderApoSchedaPazienteHistoryPatologie(body, accesso) {
 
         const description = document.createElement("strong");
         description.className = "apo-paziente-history-title";
+        description.textContent = formatApoSchedaPazienteAllergiaHistoryDescription(item) || "-";
+
+        header.appendChild(code);
+        header.appendChild(deleteButton);
+        row.appendChild(header);
+        row.appendChild(description);
+        appendApoSchedaPazienteUtenteIns(row, item, "apo-paziente-history-inseritore");
+        list.appendChild(row);
+    });
+    body.appendChild(list);
+}
+
+function createApoSchedaPazienteHistoryAllergieAddControls(accesso) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    const form = document.createElement("form");
+    form.className = "apo-paziente-patologie-add";
+
+    const field = document.createElement("div");
+    field.className = "apo-paziente-patologie-add-field";
+
+    const input = document.createElement("input");
+    input.type = "search";
+    input.className = "form-control apo-paziente-patologie-add-input";
+    input.placeholder = "Cerca allergia";
+    input.autocomplete = "off";
+
+    const suggestionsList = document.createElement("div");
+    suggestionsList.className = "apo-paziente-patologie-suggestions is-hidden";
+
+    const addButton = document.createElement("button");
+    addButton.type = "submit";
+    addButton.className = "btn btn-success";
+    addButton.textContent = "Aggiungi";
+    addButton.disabled = !codPaz;
+
+    let suggestions = [];
+    let selectedSuggestion = null;
+    let searchTimer = null;
+    let requestId = 0;
+    let adding = false;
+
+    function setAdding(isAdding) {
+        adding = isAdding === true;
+        input.disabled = adding;
+        addButton.disabled = adding || !codPaz;
+        addButton.textContent = adding ? "Aggiungo..." : "Aggiungi";
+    }
+
+    function hideSuggestions() {
+        suggestionsList.classList.add("is-hidden");
+        suggestionsList.innerHTML = "";
+    }
+
+    function renderSuggestions(items, emptyText) {
+        suggestionsList.innerHTML = "";
+        if (!items.length) {
+            const empty = document.createElement("div");
+            empty.className = "apo-paziente-patologie-suggestion-empty";
+            empty.textContent = emptyText || "Nessuna allergia trovata.";
+            suggestionsList.appendChild(empty);
+            suggestionsList.classList.remove("is-hidden");
+            return;
+        }
+
+        items.slice(0, 8).forEach(function (itemData) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "apo-paziente-patologie-suggestion";
+            button.textContent = formatApoSchedaPazienteAllergiaSuggestion(itemData);
+            button.addEventListener("mousedown", function (event) {
+                event.preventDefault();
+            });
+            button.addEventListener("click", function () {
+                selectedSuggestion = itemData;
+                input.value = formatApoSchedaPazienteAllergiaSuggestion(itemData);
+                hideSuggestions();
+                void addSelectedAllergia();
+            });
+            suggestionsList.appendChild(button);
+        });
+        suggestionsList.classList.remove("is-hidden");
+    }
+
+    function filterSuggestions(filterValue, source) {
+        const filtro = normalizeApoValue(filterValue);
+        if (!filtro) {
+            return [];
+        }
+        return source.filter(function (itemData) {
+            return normalizeApoValue(itemData.codice).indexOf(filtro) !== -1
+                || normalizeApoValue(itemData.descrizione).indexOf(filtro) !== -1;
+        });
+    }
+
+    async function searchSuggestions() {
+        const filtro = normalizeApoDisplayValue(input.value);
+        selectedSuggestion = null;
+        requestId += 1;
+        const currentRequestId = requestId;
+
+        if (filtro.length < 2) {
+            suggestions = [];
+            hideSuggestions();
+            return;
+        }
+
+        renderSuggestions([], "Ricerca in corso...");
+        try {
+            const response = await fetch(apoAllergieUrl + "?filtro=" + encodeURIComponent(filtro), {
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+            if (response.status === 401) {
+                window.location.href = apoLoginUrl;
+                return;
+            }
+
+            let payload = null;
+            try {
+                payload = await response.json();
+            } catch (error) {
+                payload = null;
+            }
+            if (!response.ok || !payload || payload.esito !== "ok") {
+                throw new Error(payload && payload.message ? payload.message : "Errore nella ricerca delle allergie.");
+            }
+            if (currentRequestId !== requestId) {
+                return;
+            }
+            const source = normalizeApoSchedaPazienteAllergie(payload.data && payload.data.allergie);
+            suggestions = filterSuggestions(filtro, source);
+            renderSuggestions(suggestions, "Nessuna allergia trovata.");
+        } catch (error) {
+            if (currentRequestId !== requestId) {
+                return;
+            }
+            suggestions = [];
+            renderSuggestions([], error && error.message ? error.message : "Errore nella ricerca delle allergie.");
+        }
+    }
+
+    async function addSelectedAllergia() {
+        if (adding) {
+            return;
+        }
+        const codiceAllergia = selectedSuggestion
+            ? normalizeApoDisplayValue(selectedSuggestion.codice)
+            : getApoSchedaPazienteAllergiaCodeFromInput(input.value, suggestions);
+        if (!codPaz || !codiceAllergia) {
+            setApoSearchMessage("Seleziona un'allergia da aggiungere.", "warning");
+            input.focus();
+            return;
+        }
+
+        setAdding(true);
+        const saved = await saveApoSchedaPazienteHistoryAllergia(accesso, codiceAllergia);
+        setAdding(false);
+        if (saved) {
+            input.value = "";
+            selectedSuggestion = null;
+            suggestions = [];
+            hideSuggestions();
+        }
+    }
+
+    input.addEventListener("input", function () {
+        if (searchTimer) {
+            window.clearTimeout(searchTimer);
+        }
+        searchTimer = window.setTimeout(function () {
+            void searchSuggestions();
+        }, 250);
+    });
+    input.addEventListener("focus", function () {
+        if (suggestions.length) {
+            renderSuggestions(suggestions);
+        }
+    });
+    input.addEventListener("blur", function () {
+        window.setTimeout(hideSuggestions, 150);
+    });
+    input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            if (!selectedSuggestion && suggestions.length) {
+                selectedSuggestion = suggestions[0];
+                input.value = formatApoSchedaPazienteAllergiaSuggestion(selectedSuggestion);
+            }
+            void addSelectedAllergia();
+        }
+    });
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        void addSelectedAllergia();
+    });
+
+    field.appendChild(input);
+    field.appendChild(suggestionsList);
+    form.appendChild(field);
+    form.appendChild(addButton);
+    return form;
+}
+
+function renderApoSchedaPazienteHistoryAllergie(body, accesso) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    if (!codPaz) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.textContent = "Codice paziente non disponibile.";
+        body.appendChild(emptyState);
+        return;
+    }
+
+    body.appendChild(createApoSchedaPazienteHistoryAllergieAddControls(accesso));
+
+    if (apoState.schedaPazienteHistoryAllergieCodPaz !== codPaz && !apoState.schedaPazienteHistoryAllergieLoading) {
+        void loadApoSchedaPazienteAllergieForSelectedPaziente(accesso);
+    }
+
+    if (apoState.schedaPazienteHistoryAllergieLoading || apoState.schedaPazienteHistoryAllergieCodPaz !== codPaz) {
+        body.appendChild(createApoSpinnerLoader("Caricamento allergie...", "apo-storico-loader"));
+        return;
+    }
+
+    if (apoState.schedaPazienteHistoryAllergieError) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.textContent = apoState.schedaPazienteHistoryAllergieError;
+        body.appendChild(emptyState);
+        return;
+    }
+
+    if (!apoState.schedaPazienteHistoryAllergie.length) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.textContent = "Nessuna allergia disponibile.";
+        body.appendChild(emptyState);
+        return;
+    }
+
+    const list = document.createElement("div");
+    list.className = "apo-paziente-history-list";
+    apoState.schedaPazienteHistoryAllergie.forEach(function (item) {
+        const row = document.createElement("article");
+        row.className = "apo-paziente-history-item apo-paziente-history-item-static apo-paziente-patologia-row";
+
+        const header = document.createElement("div");
+        header.className = "apo-paziente-patologia-row-header";
+
+        const code = document.createElement("span");
+        code.className = "apo-paziente-history-date";
+        code.textContent = item.codice || "-";
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "apo-paziente-patologia-delete-button";
+        deleteButton.textContent = "X";
+        deleteButton.title = "Elimina allergia";
+        deleteButton.setAttribute("aria-label", "Elimina allergia " + (item.codice || ""));
+        deleteButton.disabled = !normalizeApoDisplayValue(item.id);
+        deleteButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            deleteButton.disabled = true;
+            void deleteApoSchedaPazienteHistoryAllergia(accesso, item);
+        });
+
+        const description = document.createElement("strong");
+        description.className = "apo-paziente-history-title";
         description.textContent = item.descrizione || "-";
 
         header.appendChild(code);
+        header.appendChild(deleteButton);
+        row.appendChild(header);
+        row.appendChild(description);
+        appendApoSchedaPazienteUtenteIns(row, item, "apo-paziente-history-inseritore");
+        list.appendChild(row);
+    });
+    body.appendChild(list);
+}
+
+function renderApoSchedaPazienteHistoryTerapie(body, accesso) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    if (!codPaz) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.textContent = "Codice paziente non disponibile.";
+        body.appendChild(emptyState);
+        return;
+    }
+
+    body.appendChild(createApoSchedaPazienteTerapiaOpenButton(accesso));
+
+    if (apoState.schedaPazienteHistoryTerapieCodPaz !== codPaz && !apoState.schedaPazienteHistoryTerapieLoading) {
+        void loadApoSchedaPazienteTerapieForSelectedPaziente(accesso);
+    }
+
+    if (apoState.schedaPazienteHistoryTerapieLoading || apoState.schedaPazienteHistoryTerapieCodPaz !== codPaz) {
+        body.appendChild(createApoSpinnerLoader("Caricamento terapie...", "apo-storico-loader"));
+        return;
+    }
+
+    if (apoState.schedaPazienteHistoryTerapieError) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.textContent = apoState.schedaPazienteHistoryTerapieError;
+        body.appendChild(emptyState);
+        return;
+    }
+
+    if (!apoState.schedaPazienteHistoryTerapie.length) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.textContent = "Nessuna terapia in corso disponibile.";
+        body.appendChild(emptyState);
+        return;
+    }
+
+    const list = document.createElement("div");
+    list.className = "apo-paziente-history-list apo-paziente-terapie-list";
+    apoState.schedaPazienteHistoryTerapie.forEach(function (item) {
+        const row = document.createElement("article");
+        row.className = "apo-paziente-history-item apo-paziente-history-item-static apo-paziente-patologia-row apo-paziente-terapia-row";
+
+        const header = document.createElement("div");
+        header.className = "apo-paziente-patologia-row-header";
+
+        const metaBlock = document.createElement("div");
+        metaBlock.className = "apo-paziente-history-meta-block";
+
+        const title = document.createElement("span");
+        title.className = "apo-paziente-history-date";
+        title.textContent = formatApoSchedaPazienteTerapiaTitle(item) || item.farmaco || "-";
+        metaBlock.appendChild(title);
+
+        const periodo = formatApoSchedaPazienteTerapiaPeriodo(item);
+        if (periodo) {
+            const periodoElement = document.createElement("span");
+            periodoElement.className = "apo-paziente-history-inseritore apo-paziente-terapia-periodo";
+            periodoElement.textContent = periodo;
+            metaBlock.appendChild(periodoElement);
+        }
+        appendApoSchedaPazienteUtenteIns(metaBlock, item, "apo-paziente-history-inseritore");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "apo-paziente-patologia-delete-button";
+        deleteButton.textContent = "X";
+        deleteButton.title = "Elimina terapia";
+        deleteButton.setAttribute("aria-label", "Elimina terapia " + (item.farmaco || ""));
+        deleteButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            deleteButton.disabled = true;
+            void deleteApoSchedaPazienteHistoryTerapia(accesso, item);
+        });
+
+        const description = document.createElement("strong");
+        description.className = "apo-paziente-history-title";
+        description.textContent = formatApoSchedaPazienteTerapiaDescription(item) || "-";
+
+        header.appendChild(metaBlock);
         header.appendChild(deleteButton);
         row.appendChild(header);
         row.appendChild(description);
@@ -4018,6 +5306,16 @@ function renderApoSchedaPazienteHistorySection() {
 
     if (activeConfig.id === "patologie-croniche") {
         renderApoSchedaPazienteHistoryPatologie(body, accesso);
+        return;
+    }
+
+    if (activeConfig.id === "allergie") {
+        renderApoSchedaPazienteHistoryAllergie(body, accesso);
+        return;
+    }
+
+    if (activeConfig.id === "terapie") {
+        renderApoSchedaPazienteHistoryTerapie(body, accesso);
         return;
     }
 
@@ -4273,6 +5571,370 @@ async function deleteApoSchedaPazienteHistoryPatologia(accesso, item) {
         return true;
     } catch (error) {
         setApoSearchMessage(error && error.message ? error.message : "Errore nell'eliminazione della patologia cronica.", "danger");
+        renderApoSchedaPazienteHistorySection();
+        return false;
+    }
+}
+
+async function loadApoSchedaPazienteAllergieForSelectedPaziente(accesso) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    if (!codPaz) {
+        clearApoSchedaPazienteHistoryAllergie();
+        renderApoSchedaPazienteHistorySection();
+        return;
+    }
+
+    if (apoState.schedaPazienteHistoryAllergieCodPaz === codPaz
+            && (apoState.schedaPazienteHistoryAllergieLoading
+                || apoState.schedaPazienteHistoryAllergieLoaded
+                || apoState.schedaPazienteHistoryAllergieError)) {
+        renderApoSchedaPazienteHistorySection();
+        return;
+    }
+
+    const requestId = apoState.schedaPazienteHistoryAllergieRequestId + 1;
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+
+    apoState.schedaPazienteHistoryAllergieRequestId = requestId;
+    apoState.schedaPazienteHistoryAllergieCodPaz = codPaz;
+    apoState.schedaPazienteHistoryAllergie = [];
+    apoState.schedaPazienteHistoryAllergieError = "";
+    apoState.schedaPazienteHistoryAllergieLoading = true;
+    apoState.schedaPazienteHistoryAllergieLoaded = false;
+    renderApoSchedaPazienteHistorySection();
+
+    try {
+        const response = await fetch(apoSchedaPazienteAllergieUrl + "?" + params.toString(), {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento delle allergie.");
+        }
+
+        if (apoState.schedaPazienteHistoryAllergieRequestId !== requestId
+                || apoState.schedaPazienteHistoryAllergieCodPaz !== codPaz) {
+            return;
+        }
+
+        apoState.schedaPazienteHistoryAllergie = normalizeApoSchedaPazienteAllergie(payload.data && payload.data.allergie);
+        apoState.schedaPazienteHistoryAllergieError = "";
+        apoState.schedaPazienteHistoryAllergieLoaded = true;
+    } catch (error) {
+        if (apoState.schedaPazienteHistoryAllergieRequestId !== requestId) {
+            return;
+        }
+        apoState.schedaPazienteHistoryAllergie = [];
+        apoState.schedaPazienteHistoryAllergieError = error && error.message ? error.message : "Errore nel caricamento delle allergie.";
+        apoState.schedaPazienteHistoryAllergieLoaded = true;
+    } finally {
+        if (apoState.schedaPazienteHistoryAllergieRequestId === requestId) {
+            apoState.schedaPazienteHistoryAllergieLoading = false;
+            renderApoSchedaPazienteHistorySection();
+        }
+    }
+}
+
+async function saveApoSchedaPazienteHistoryAllergia(accesso, codiceAllergia) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    const codice = normalizeApoDisplayValue(codiceAllergia);
+    if (!codPaz || !codice) {
+        setApoSearchMessage("Codice paziente o allergia non disponibile.", "warning");
+        return false;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codiceAllergia", codice);
+
+    try {
+        const response = await fetch(apoSchedaPazienteAllergieUrl, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            body: params.toString()
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return false;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel salvataggio dell'allergia.");
+        }
+
+        apoState.schedaPazienteHistoryAllergieCodPaz = "";
+        apoState.schedaPazienteHistoryAllergieLoaded = false;
+        apoState.schedaPazienteHistoryAllergieError = "";
+        setApoSearchMessage(payload.message || "Allergia aggiunta correttamente.", "success");
+        void loadApoSchedaPazienteAllergieForSelectedPaziente(accesso);
+        return true;
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nel salvataggio dell'allergia.", "danger");
+        return false;
+    }
+}
+
+async function deleteApoSchedaPazienteHistoryAllergia(accesso, item) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    const idAllergia = normalizeApoDisplayValue(item && item.id);
+    if (!codPaz || !idAllergia) {
+        setApoSearchMessage("ID allergia o codice paziente non disponibile.", "warning");
+        return false;
+    }
+
+    const params = new URLSearchParams();
+    params.set("id", idAllergia);
+    params.set("codPaz", codPaz);
+
+    try {
+        const response = await fetch(apoSchedaPazienteAllergieUrl + "?" + params.toString(), {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return false;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nell'eliminazione dell'allergia.");
+        }
+
+        const deleted = payload.data && Number(payload.data.deleted) > 0;
+        apoState.schedaPazienteHistoryAllergieCodPaz = "";
+        apoState.schedaPazienteHistoryAllergieLoaded = false;
+        apoState.schedaPazienteHistoryAllergieError = "";
+        setApoSearchMessage(payload.message || "Allergia eliminata correttamente.", deleted ? "success" : "warning");
+        void loadApoSchedaPazienteAllergieForSelectedPaziente(accesso);
+        return true;
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nell'eliminazione dell'allergia.", "danger");
+        renderApoSchedaPazienteHistorySection();
+        return false;
+    }
+}
+
+async function loadApoSchedaPazienteTerapieForSelectedPaziente(accesso) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    if (!codPaz) {
+        clearApoSchedaPazienteHistoryTerapie();
+        renderApoSchedaPazienteHistorySection();
+        return;
+    }
+
+    if (apoState.schedaPazienteHistoryTerapieCodPaz === codPaz
+            && (apoState.schedaPazienteHistoryTerapieLoading
+                || apoState.schedaPazienteHistoryTerapieLoaded
+                || apoState.schedaPazienteHistoryTerapieError)) {
+        renderApoSchedaPazienteHistorySection();
+        return;
+    }
+
+    const requestId = apoState.schedaPazienteHistoryTerapieRequestId + 1;
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+
+    apoState.schedaPazienteHistoryTerapieRequestId = requestId;
+    apoState.schedaPazienteHistoryTerapieCodPaz = codPaz;
+    apoState.schedaPazienteHistoryTerapie = [];
+    apoState.schedaPazienteHistoryTerapieError = "";
+    apoState.schedaPazienteHistoryTerapieLoading = true;
+    apoState.schedaPazienteHistoryTerapieLoaded = false;
+    renderApoSchedaPazienteHistorySection();
+
+    try {
+        const response = await fetch(apoSchedaPazienteTerapieUrl + "?" + params.toString(), {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento delle terapie.");
+        }
+
+        if (apoState.schedaPazienteHistoryTerapieRequestId !== requestId
+                || apoState.schedaPazienteHistoryTerapieCodPaz !== codPaz) {
+            return;
+        }
+
+        apoState.schedaPazienteHistoryTerapie = normalizeApoSchedaPazienteTerapie(payload.data && payload.data.terapie);
+        apoState.schedaPazienteHistoryTerapieError = "";
+        apoState.schedaPazienteHistoryTerapieLoaded = true;
+    } catch (error) {
+        if (apoState.schedaPazienteHistoryTerapieRequestId !== requestId) {
+            return;
+        }
+        apoState.schedaPazienteHistoryTerapie = [];
+        apoState.schedaPazienteHistoryTerapieError = error && error.message ? error.message : "Errore nel caricamento delle terapie.";
+        apoState.schedaPazienteHistoryTerapieLoaded = true;
+    } finally {
+        if (apoState.schedaPazienteHistoryTerapieRequestId === requestId) {
+            apoState.schedaPazienteHistoryTerapieLoading = false;
+            renderApoSchedaPazienteHistorySection();
+        }
+    }
+}
+
+async function saveApoSchedaPazienteHistoryTerapia(accesso, terapia, options) {
+    const config = options && typeof options === "object" ? options : {};
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    const item = normalizeApoSchedaPazienteTerapia(terapia, 0);
+    if (!codPaz || !item.farmaco) {
+        setApoSearchMessage("Codice paziente o farmaco non disponibile.", "warning");
+        return false;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("principioAttivo", item.principioAttivo);
+    params.set("farmaco", item.farmaco);
+    params.set("confezione", item.confezione);
+    params.set("quantita", item.quantita);
+    params.set("frequenzaUnita", item.frequenzaUnita);
+    params.set("durataValore", item.durataValore);
+    params.set("durataUnita", item.durataUnita);
+
+    try {
+        const response = await fetch(apoSchedaPazienteTerapieUrl, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            body: params.toString()
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return false;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel salvataggio della terapia.");
+        }
+
+        setApoSearchMessage(payload.message || "Terapia aggiunta correttamente.", "success");
+        if (config.reload !== false) {
+            apoState.schedaPazienteHistoryTerapieCodPaz = "";
+            apoState.schedaPazienteHistoryTerapieLoaded = false;
+            apoState.schedaPazienteHistoryTerapieError = "";
+            void loadApoSchedaPazienteTerapieForSelectedPaziente(accesso);
+        }
+        return true;
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nel salvataggio della terapia.", "danger");
+        return false;
+    }
+}
+
+async function deleteApoSchedaPazienteHistoryTerapia(accesso, terapia) {
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    const item = normalizeApoSchedaPazienteTerapia(terapia, 0);
+    if (!codPaz || !item.farmaco) {
+        setApoSearchMessage("Codice paziente o terapia non disponibile.", "warning");
+        return false;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("id", item.id);
+    params.set("principioAttivo", item.principioAttivo);
+    params.set("farmaco", item.farmaco);
+    params.set("confezione", item.confezione);
+    params.set("quantita", item.quantita);
+    params.set("frequenzaUnita", item.frequenzaUnita);
+    params.set("durataValore", item.durataValore);
+    params.set("durataUnita", item.durataUnita);
+
+    try {
+        const response = await fetch(apoSchedaPazienteTerapieUrl + "?" + params.toString(), {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return false;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nell'eliminazione della terapia.");
+        }
+
+        const deleted = payload.data && Number(payload.data.deleted) > 0;
+        apoState.schedaPazienteHistoryTerapieCodPaz = "";
+        apoState.schedaPazienteHistoryTerapieLoaded = false;
+        apoState.schedaPazienteHistoryTerapieError = "";
+        setApoSearchMessage(payload.message || "Terapia eliminata correttamente.", deleted ? "success" : "warning");
+        void loadApoSchedaPazienteTerapieForSelectedPaziente(accesso);
+        return true;
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nell'eliminazione della terapia.", "danger");
         renderApoSchedaPazienteHistorySection();
         return false;
     }
@@ -6621,6 +8283,48 @@ function getApoNuovoAccessoSelectedTipo() {
     return normalizeApoNuovoAccessoTipo(selectedTipi.length ? selectedTipi[0] : "visita-medica");
 }
 
+function normalizeApoNuovoAccessoPatologia(value) {
+    const normalizedValue = normalizeApoValue(value);
+    if (normalizedValue === "INTERINALE") {
+        return "interinale";
+    }
+    if (normalizedValue === "CHIRURGICA") {
+        return "chirurgica";
+    }
+    return "ortopedica";
+}
+
+function getApoNuovoAccessoPatologiaConfig(value) {
+    const normalizedValue = normalizeApoNuovoAccessoPatologia(value);
+    if (normalizedValue === "interinale") {
+        return {id: "interinale", label: "Interinale"};
+    }
+    if (normalizedValue === "chirurgica") {
+        return {id: "chirurgica", label: "Chirurgica"};
+    }
+    return {id: "ortopedica", label: "Ortopedica"};
+}
+
+function syncApoNuovoAccessoPatologiaButtons() {
+    const selectedPatologia = normalizeApoNuovoAccessoPatologia(apoState.nuovoAccessoPatologia);
+    document.querySelectorAll("[data-new-accesso-patologia]").forEach(function (button) {
+        const patologia = normalizeApoNuovoAccessoPatologia(button.getAttribute("data-new-accesso-patologia"));
+        const isActive = patologia === selectedPatologia;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+}
+
+function resetApoNuovoAccessoPatologia() {
+    apoState.nuovoAccessoPatologia = "ortopedica";
+    syncApoNuovoAccessoPatologiaButtons();
+}
+
+function toggleApoNuovoAccessoPatologia(value) {
+    apoState.nuovoAccessoPatologia = normalizeApoNuovoAccessoPatologia(value);
+    syncApoNuovoAccessoPatologiaButtons();
+}
+
 function syncApoNuovoAccessoTipoHiddenValue() {
     const hiddenInput = document.getElementById("apo-new-accesso-tipo-codice");
     if (!hiddenInput) {
@@ -6700,6 +8404,9 @@ function setApoNuovoAccessoDetailBusy(isBusy) {
     document.querySelectorAll("[data-new-accesso-type]").forEach(function (button) {
         button.disabled = busy;
     });
+    document.querySelectorAll("[data-new-accesso-patologia]").forEach(function (button) {
+        button.disabled = busy;
+    });
 }
 
 function appendApoNuovoAccessoPatientSummaryItem(container, label, value) {
@@ -6764,6 +8471,7 @@ function openApoNuovoAccessoDetailModal() {
     setApoNuovoAccessoDetailBusy(false);
     setApoNuovoAccessoDetailMessage("", "info");
     resetApoNuovoAccessoTipi();
+    resetApoNuovoAccessoPatologia();
     renderApoNuovoAccessoSelectedPatientSummary(selected);
 
     modal.classList.remove("is-hidden");
@@ -6931,15 +8639,20 @@ function createApoSchedaPazienteDiarioItem(source) {
         const row = document.createElement("article");
         row.className = "apo-scheda-paziente-diario-storico-item";
 
+        const dateBlock = document.createElement("div");
+        dateBlock.className = "apo-scheda-paziente-diario-storico-date-block";
+
         const date = document.createElement("span");
         date.className = "apo-scheda-paziente-diario-storico-date";
         date.textContent = itemData.dataDiario || "-";
+        dateBlock.appendChild(date);
+        appendApoSchedaPazienteUtenteIns(dateBlock, itemData, "apo-scheda-paziente-diario-storico-utente");
 
         const description = document.createElement("span");
         description.className = "apo-scheda-paziente-diario-storico-text";
         description.textContent = itemData.descrizione || "-";
 
-        row.appendChild(date);
+        row.appendChild(dateBlock);
         row.appendChild(description);
         list.appendChild(row);
     });
@@ -7130,6 +8843,7 @@ function normalizeApoSchedaPazientePatologia(item, index) {
     const categoria = normalizeApoDisplayValue(source.categoria);
     const codice = normalizeApoDisplayValue(source.codice);
     const descrizione = normalizeApoDisplayValue(source.descrizione || source.patologia);
+    const utente = getApoSchedaPazienteUtenteInsData(source);
     const idParts = [codiceCategoria, codice, descrizione].filter(function (part) {
         return !!part;
     });
@@ -7139,7 +8853,10 @@ function normalizeApoSchedaPazientePatologia(item, index) {
         codiceCategoria: codiceCategoria,
         categoria: categoria,
         codice: codice,
-        descrizione: descrizione
+        descrizione: descrizione,
+        utenteInsCognome: utente.cognome,
+        utenteInsNome: utente.nome,
+        utenteInsDescrizione: utente.descrizione
     };
 }
 
@@ -7241,13 +8958,18 @@ function renderApoSchedaPazientePatologieSelectedList(list, onRemove) {
         const listItem = document.createElement("li");
         const text = document.createElement("span");
         text.className = "apo-scheda-paziente-selected-text";
-        text.textContent = [
+        const selectedDescription = [
             itemData.codice,
             itemData.descrizione,
             itemData.categoria ? "(" + itemData.categoria + ")" : ""
         ].filter(function (part) {
             return !!part;
         }).join(" - ");
+
+        const selectedMain = document.createElement("span");
+        selectedMain.textContent = selectedDescription;
+        text.appendChild(selectedMain);
+        appendApoSchedaPazienteUtenteIns(text, itemData, "apo-scheda-paziente-selected-utente");
 
         const removeButton = document.createElement("button");
         removeButton.type = "button";
@@ -7344,85 +9066,100 @@ function createApoSchedaPazientePatologieGrid(existingPatologie) {
     const filter = document.createElement("input");
     filter.type = "search";
     filter.className = "form-control apo-scheda-paziente-input apo-scheda-paziente-table-filter";
-    filter.placeholder = "Filtra per codice, descrizione o categoria";
+    filter.placeholder = "Cerca per codice, descrizione o categoria";
+    filter.autocomplete = "off";
+
+    const suggestionsList = document.createElement("div");
+    suggestionsList.className = "apo-paziente-patologie-suggestions is-hidden";
 
     const searchButton = document.createElement("button");
     searchButton.type = "button";
     searchButton.className = "btn btn-success";
-    searchButton.textContent = "Cerca";
+    searchButton.textContent = "Aggiungi";
+
+    const field = document.createElement("div");
+    field.className = "apo-scheda-paziente-patologie-field";
+    field.appendChild(filter);
+    field.appendChild(suggestionsList);
 
     const searchControls = document.createElement("div");
     searchControls.className = "apo-scheda-paziente-patologie-search";
-    searchControls.appendChild(filter);
+    searchControls.appendChild(field);
     searchControls.appendChild(searchButton);
 
-    const tableWrap = document.createElement("div");
-    tableWrap.className = "apo-scheda-paziente-table-wrap";
-
-    const table = document.createElement("table");
-    table.className = "table table-sm apo-scheda-paziente-table apo-scheda-paziente-patologie-table";
-    const colgroup = document.createElement("colgroup");
-    ["codice", "descrizione", "categoria"].forEach(function (columnName) {
-        const col = document.createElement("col");
-        col.className = "apo-scheda-paziente-patologie-col-" + columnName;
-        colgroup.appendChild(col);
-    });
-    table.appendChild(colgroup);
-    table.appendChild(createApoSchedaPazienteTableHeader(["Codice", "Descrizione", "Categoria"]));
-
-    const tbody = document.createElement("tbody");
     const selectedList = document.createElement("ul");
     selectedList.className = "apo-scheda-paziente-selected-list";
+    let suggestions = [];
+    let selectedSuggestion = null;
+    let searchTimer = null;
 
-    function renderCurrentPatologieResults(emptyText) {
-        renderApoSchedaPazientePatologieResults(
-            tbody,
-            apoState.schedaPazientePatologieResults,
-            addPatologia,
-            emptyText || "Nessuna patologia cronica trovata."
-        );
+    function hideSuggestions() {
+        suggestionsList.classList.add("is-hidden");
+        suggestionsList.innerHTML = "";
+    }
+
+    function renderSuggestions(items, emptyText) {
+        suggestionsList.innerHTML = "";
+        if (!items.length) {
+            const empty = document.createElement("div");
+            empty.className = "apo-paziente-patologie-suggestion-empty";
+            empty.textContent = emptyText || "Nessuna patologia trovata.";
+            suggestionsList.appendChild(empty);
+            suggestionsList.classList.remove("is-hidden");
+            return;
+        }
+
+        items.slice(0, 8).forEach(function (itemData) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "apo-paziente-patologie-suggestion";
+            button.textContent = formatApoSchedaPazientePatologiaSuggestion(itemData);
+            button.addEventListener("mousedown", function (event) {
+                event.preventDefault();
+            });
+            button.addEventListener("click", function () {
+                addPatologia(itemData);
+                filter.value = "";
+                selectedSuggestion = null;
+                suggestions = [];
+                hideSuggestions();
+                filter.focus();
+            });
+            suggestionsList.appendChild(button);
+        });
+        suggestionsList.classList.remove("is-hidden");
     }
 
     async function searchPatologie() {
         const filtro = normalizeApoDisplayValue(filter.value);
         const requestId = apoState.schedaPazientePatologieRequestId + 1;
         apoState.schedaPazientePatologieRequestId = requestId;
-        if (!filtro) {
-            apoState.schedaPazientePatologieResults = [];
-            renderApoSchedaPazientePatologieResults(tbody, [], addPatologia, "Scrivi nel filtro per cercare.");
-            return;
-        }
+        selectedSuggestion = null;
         if (filtro.length < 2) {
-            apoState.schedaPazientePatologieResults = [];
-            renderApoSchedaPazientePatologieResults(tbody, [], addPatologia, "Inserisci almeno 2 caratteri.");
+            suggestions = [];
+            hideSuggestions();
             return;
         }
 
-        apoState.schedaPazientePatologieResults = [];
         searchButton.disabled = true;
         searchButton.textContent = "Ricerca...";
-        renderApoSchedaPazientePatologieResults(tbody, [], addPatologia, "Ricerca in corso...");
+        renderSuggestions([], "Ricerca in corso...");
 
         const serverResults = await loadApoSchedaPazientePatologieByFiltro(filtro);
         searchButton.disabled = false;
-        searchButton.textContent = "Cerca";
+        searchButton.textContent = "Aggiungi";
         if (requestId !== apoState.schedaPazientePatologieRequestId) {
             return;
         }
         apoState.schedaPazientePatologieSource = serverResults;
-        if (apoState.schedaPazientePatologieLoading && !serverResults.length) {
-            apoState.schedaPazientePatologieResults = [];
-            renderApoSchedaPazientePatologieResults(tbody, [], addPatologia, "Caricamento patologie croniche...");
-            return;
-        }
         if (apoState.schedaPazientePatologieError && !serverResults.length) {
-            apoState.schedaPazientePatologieResults = [];
-            renderApoSchedaPazientePatologieResults(tbody, [], addPatologia, "Errore nel caricamento delle patologie croniche.");
+            suggestions = [];
+            renderSuggestions([], "Errore nel caricamento delle patologie croniche.");
             return;
         }
 
-        apoState.schedaPazientePatologieResults = filterApoSchedaPazientePatologie(filtro);
-        renderCurrentPatologieResults("Nessuna patologia cronica trovata.");
+        suggestions = filterApoSchedaPazientePatologie(filtro);
+        renderSuggestions(suggestions, "Nessuna patologia cronica trovata.");
     }
 
     function addPatologia(itemData) {
@@ -7430,7 +9167,6 @@ function createApoSchedaPazientePatologieGrid(existingPatologie) {
             apoState.schedaPazientePatologieSelected.push(itemData);
         }
         renderApoSchedaPazientePatologieSelectedList(selectedList, removePatologia);
-        renderCurrentPatologieResults("Nessuna patologia cronica trovata.");
     }
 
     function removePatologia(itemData) {
@@ -7438,27 +9174,414 @@ function createApoSchedaPazientePatologieGrid(existingPatologie) {
             return selected.id !== itemData.id;
         });
         renderApoSchedaPazientePatologieSelectedList(selectedList, removePatologia);
-        renderCurrentPatologieResults("Nessuna patologia cronica trovata.");
     }
 
+    function addCurrentPatologia() {
+        const itemData = selectedSuggestion || suggestions[0];
+        if (!itemData) {
+            setApoSearchMessage("Seleziona una patologia cronica da aggiungere.", "warning");
+            filter.focus();
+            return;
+        }
+        addPatologia(itemData);
+        filter.value = "";
+        selectedSuggestion = null;
+        suggestions = [];
+        hideSuggestions();
+        filter.focus();
+    }
+
+    filter.addEventListener("input", function () {
+        if (searchTimer) {
+            window.clearTimeout(searchTimer);
+        }
+        searchTimer = window.setTimeout(function () {
+            void searchPatologie();
+        }, 250);
+    });
+    filter.addEventListener("focus", function () {
+        if (suggestions.length) {
+            renderSuggestions(suggestions);
+        }
+    });
+    filter.addEventListener("blur", function () {
+        window.setTimeout(hideSuggestions, 150);
+    });
     filter.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            void searchPatologie();
+            selectedSuggestion = suggestions[0] || null;
+            addCurrentPatologia();
         }
     });
     searchButton.addEventListener("click", function () {
-        void searchPatologie();
+        addCurrentPatologia();
     });
 
-    renderApoSchedaPazientePatologieResults(tbody, [], addPatologia, "Scrivi nel filtro per cercare.");
     renderApoSchedaPazientePatologieSelectedList(selectedList, removePatologia);
 
-    table.appendChild(tbody);
-    tableWrap.appendChild(table);
     item.appendChild(label);
     item.appendChild(searchControls);
-    item.appendChild(tableWrap);
+    item.appendChild(selectedList);
+    return item;
+}
+
+function dedupeApoSchedaPazienteAllergie(items) {
+    const seen = {};
+    return normalizeApoSchedaPazienteAllergie(items).filter(function (itemData) {
+        const key = normalizeApoValue(itemData.codice) || normalizeApoValue(itemData.id);
+        if (!key || seen[key]) {
+            return false;
+        }
+        seen[key] = true;
+        return true;
+    });
+}
+
+function getApoSchedaPazienteAllergieFromSource(source) {
+    if (!source || typeof source !== "object") {
+        return [];
+    }
+    if (Array.isArray(source.allergieSelezionate)) {
+        return source.allergieSelezionate;
+    }
+    if (Array.isArray(source.allergieScheda)) {
+        return source.allergieScheda;
+    }
+    if (Array.isArray(source.allergie)) {
+        return source.allergie;
+    }
+    return [];
+}
+
+function isApoSchedaPazienteAllergiaSelected(itemData) {
+    return apoState.schedaPazienteAllergieSelected.some(function (selected) {
+        return normalizeApoValue(selected.codice) === normalizeApoValue(itemData && itemData.codice);
+    });
+}
+
+function renderApoSchedaPazienteAllergieSelectedList(list, onRemove) {
+    if (!list) {
+        return;
+    }
+
+    list.innerHTML = "";
+    if (!apoState.schedaPazienteAllergieSelected.length) {
+        const emptyItem = document.createElement("li");
+        emptyItem.className = "apo-scheda-paziente-selected-empty";
+        emptyItem.textContent = "Nessuna allergia selezionata.";
+        list.appendChild(emptyItem);
+        return;
+    }
+
+    apoState.schedaPazienteAllergieSelected.forEach(function (itemData) {
+        const listItem = document.createElement("li");
+        const text = document.createElement("span");
+        text.className = "apo-scheda-paziente-selected-text";
+
+        const selectedMain = document.createElement("span");
+        selectedMain.textContent = formatApoSchedaPazienteAllergiaSuggestion(itemData);
+        text.appendChild(selectedMain);
+        appendApoSchedaPazienteUtenteIns(text, itemData, "apo-scheda-paziente-selected-utente");
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "apo-scheda-paziente-selected-remove";
+        removeButton.setAttribute("aria-label", "Rimuovi allergia selezionata");
+        removeButton.textContent = "X";
+        removeButton.addEventListener("click", function () {
+            if (typeof onRemove === "function") {
+                onRemove(itemData);
+            }
+        });
+
+        listItem.appendChild(text);
+        listItem.appendChild(removeButton);
+        list.appendChild(listItem);
+    });
+}
+
+async function loadApoSchedaPazienteAllergieByFiltro(filterValue) {
+    const filtro = normalizeApoDisplayValue(filterValue);
+    const cacheKey = normalizeApoValue(filtro);
+    if (!cacheKey) {
+        return [];
+    }
+
+    apoState.schedaPazienteAllergieLoading = true;
+    apoState.schedaPazienteAllergieError = "";
+    try {
+        const params = new URLSearchParams();
+        params.set("filtro", filtro);
+        const response = await fetch(apoAllergieUrl + "?" + params.toString(), {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return [];
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message
+                ? payload.message
+                : "Errore nel caricamento delle allergie. Status HTTP " + response.status + ".");
+        }
+
+        const results = normalizeApoSchedaPazienteAllergie(payload.data && payload.data.allergie);
+        apoState.schedaPazienteAllergieSource = results;
+        apoState.schedaPazienteAllergieLoaded = true;
+        return results;
+    } catch (error) {
+        apoState.schedaPazienteAllergieLoaded = false;
+        apoState.schedaPazienteAllergieError = error && error.message ? error.message : "Errore nel caricamento delle allergie.";
+        setApoSearchMessage(apoState.schedaPazienteAllergieError, "danger");
+        return [];
+    } finally {
+        apoState.schedaPazienteAllergieLoading = false;
+    }
+}
+
+function filterApoSchedaPazienteAllergie(filterValue) {
+    const filtro = normalizeApoValue(filterValue);
+    if (!filtro) {
+        return [];
+    }
+
+    return apoState.schedaPazienteAllergieSource.filter(function (itemData) {
+        return normalizeApoValue(itemData.codice).indexOf(filtro) !== -1
+            || normalizeApoValue(itemData.descrizione).indexOf(filtro) !== -1;
+    });
+}
+
+function createApoSchedaPazienteAllergieGrid(existingAllergie) {
+    apoState.schedaPazienteAllergieResults = [];
+    apoState.schedaPazienteAllergieSelected = dedupeApoSchedaPazienteAllergie(existingAllergie);
+
+    const item = document.createElement("div");
+    item.className = "apo-scheda-paziente-item apo-scheda-paziente-item-wide";
+
+    const label = document.createElement("span");
+    label.className = "apo-scheda-paziente-label";
+    label.textContent = "Allergie";
+
+    const filter = document.createElement("input");
+    filter.type = "search";
+    filter.className = "form-control apo-scheda-paziente-input apo-scheda-paziente-table-filter";
+    filter.placeholder = "Cerca allergia";
+    filter.autocomplete = "off";
+
+    const suggestionsList = document.createElement("div");
+    suggestionsList.className = "apo-paziente-patologie-suggestions is-hidden";
+
+    const searchButton = document.createElement("button");
+    searchButton.type = "button";
+    searchButton.className = "btn btn-success";
+    searchButton.textContent = "Aggiungi";
+
+    const field = document.createElement("div");
+    field.className = "apo-scheda-paziente-patologie-field";
+    field.appendChild(filter);
+    field.appendChild(suggestionsList);
+
+    const searchControls = document.createElement("div");
+    searchControls.className = "apo-scheda-paziente-patologie-search";
+    searchControls.appendChild(field);
+    searchControls.appendChild(searchButton);
+
+    const selectedList = document.createElement("ul");
+    selectedList.className = "apo-scheda-paziente-selected-list";
+    let suggestions = [];
+    let selectedSuggestion = null;
+    let searchTimer = null;
+
+    function hideSuggestions() {
+        suggestionsList.classList.add("is-hidden");
+        suggestionsList.innerHTML = "";
+    }
+
+    function renderSuggestions(items, emptyText) {
+        suggestionsList.innerHTML = "";
+        if (!items.length) {
+            const empty = document.createElement("div");
+            empty.className = "apo-paziente-patologie-suggestion-empty";
+            empty.textContent = emptyText || "Nessuna allergia trovata.";
+            suggestionsList.appendChild(empty);
+            suggestionsList.classList.remove("is-hidden");
+            return;
+        }
+
+        items.slice(0, 8).forEach(function (itemData) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "apo-paziente-patologie-suggestion";
+            button.textContent = formatApoSchedaPazienteAllergiaSuggestion(itemData);
+            button.addEventListener("mousedown", function (event) {
+                event.preventDefault();
+            });
+            button.addEventListener("click", function () {
+                addAllergia(itemData);
+                filter.value = "";
+                selectedSuggestion = null;
+                suggestions = [];
+                hideSuggestions();
+                filter.focus();
+            });
+            suggestionsList.appendChild(button);
+        });
+        suggestionsList.classList.remove("is-hidden");
+    }
+
+    async function searchAllergie() {
+        const filtro = normalizeApoDisplayValue(filter.value);
+        const requestId = apoState.schedaPazienteAllergieRequestId + 1;
+        apoState.schedaPazienteAllergieRequestId = requestId;
+        selectedSuggestion = null;
+        if (filtro.length < 2) {
+            suggestions = [];
+            hideSuggestions();
+            return;
+        }
+
+        searchButton.disabled = true;
+        searchButton.textContent = "Ricerca...";
+        renderSuggestions([], "Ricerca in corso...");
+
+        const serverResults = await loadApoSchedaPazienteAllergieByFiltro(filtro);
+        searchButton.disabled = false;
+        searchButton.textContent = "Aggiungi";
+        if (requestId !== apoState.schedaPazienteAllergieRequestId) {
+            return;
+        }
+        apoState.schedaPazienteAllergieSource = serverResults;
+        if (apoState.schedaPazienteAllergieError && !serverResults.length) {
+            suggestions = [];
+            renderSuggestions([], "Errore nel caricamento delle allergie.");
+            return;
+        }
+
+        suggestions = filterApoSchedaPazienteAllergie(filtro);
+        renderSuggestions(suggestions, "Nessuna allergia trovata.");
+    }
+
+    function addAllergia(itemData) {
+        if (!isApoSchedaPazienteAllergiaSelected(itemData)) {
+            apoState.schedaPazienteAllergieSelected.push(itemData);
+        }
+        renderApoSchedaPazienteAllergieSelectedList(selectedList, removeAllergia);
+    }
+
+    function removeAllergia(itemData) {
+        apoState.schedaPazienteAllergieSelected = apoState.schedaPazienteAllergieSelected.filter(function (selected) {
+            return normalizeApoValue(selected.codice) !== normalizeApoValue(itemData && itemData.codice);
+        });
+        renderApoSchedaPazienteAllergieSelectedList(selectedList, removeAllergia);
+    }
+
+    function addCurrentAllergia() {
+        const itemData = selectedSuggestion || suggestions[0];
+        if (!itemData) {
+            setApoSearchMessage("Seleziona un'allergia da aggiungere.", "warning");
+            filter.focus();
+            return;
+        }
+        addAllergia(itemData);
+        filter.value = "";
+        selectedSuggestion = null;
+        suggestions = [];
+        hideSuggestions();
+        filter.focus();
+    }
+
+    filter.addEventListener("input", function () {
+        if (searchTimer) {
+            window.clearTimeout(searchTimer);
+        }
+        searchTimer = window.setTimeout(function () {
+            void searchAllergie();
+        }, 250);
+    });
+    filter.addEventListener("focus", function () {
+        if (suggestions.length) {
+            renderSuggestions(suggestions);
+        }
+    });
+    filter.addEventListener("blur", function () {
+        window.setTimeout(hideSuggestions, 150);
+    });
+    filter.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            selectedSuggestion = suggestions[0] || null;
+            addCurrentAllergia();
+        }
+    });
+    searchButton.addEventListener("click", function () {
+        addCurrentAllergia();
+    });
+
+    renderApoSchedaPazienteAllergieSelectedList(selectedList, removeAllergia);
+
+    item.appendChild(label);
+    item.appendChild(searchControls);
+    item.appendChild(selectedList);
+    return item;
+}
+
+function createApoSchedaPazienteTerapieGrid(existingTerapie, source) {
+    apoState.schedaPazienteTerapieSelected = dedupeApoSchedaPazienteTerapie(existingTerapie);
+    const codPaz = normalizeApoDisplayValue(getApoSchedaPazienteCodPaz(source));
+    const persistImmediately = !!codPaz && !apoState.schedaPazientePendingAccessoPayload;
+
+    const item = document.createElement("div");
+    item.className = "apo-scheda-paziente-item apo-scheda-paziente-item-wide apo-scheda-paziente-terapie-item";
+
+    const label = document.createElement("span");
+    label.className = "apo-scheda-paziente-label";
+    label.textContent = "Terapie in corso";
+
+    const selectedList = document.createElement("ul");
+    selectedList.className = "apo-scheda-paziente-selected-list";
+
+    function renderList() {
+        renderApoSchedaPazienteTerapieSelectedList(
+            selectedList,
+            apoState.schedaPazienteTerapieSelected,
+            function (itemData) {
+                apoState.schedaPazienteTerapieSelected = removeApoSchedaPazienteTerapiaFromList(
+                    apoState.schedaPazienteTerapieSelected,
+                    itemData
+                );
+                renderList();
+            },
+            "Nessuna terapia in corso selezionata."
+        );
+    }
+
+    const controls = createApoSchedaPazienteTerapieAddControls(async function (terapia) {
+        if (persistImmediately) {
+            const saved = await saveApoSchedaPazienteHistoryTerapia({codPaz: codPaz}, terapia, {reload: false});
+            if (!saved) {
+                return false;
+            }
+        }
+        addApoSchedaPazienteTerapiaToList(apoState.schedaPazienteTerapieSelected, terapia);
+        renderList();
+        return true;
+    });
+
+    renderList();
+    item.appendChild(label);
+    item.appendChild(controls);
     item.appendChild(selectedList);
     return item;
 }
@@ -7467,9 +9590,13 @@ function getApoSchedaPazienteCaregiverData(source) {
     const caregiverText = getApoSchedaPazienteField(source, ["caregiver", "careGiver", "nomeCaregiver", "referente", "familiareRiferimento"]);
     let cognome = getApoSchedaPazienteField(source, ["caregiverCognome", "cognomeCaregiver", "referenteCognome", "cognomeReferente"]);
     let nome = getApoSchedaPazienteField(source, ["caregiverNome", "nomeCaregiver", "referenteNome", "nomeReferente"]);
-    const codiceFiscale = getApoSchedaPazienteField(source, ["caregiverCodFiscale", "caregiverCodiceFiscale", "codFiscaleCaregiver", "codiceFiscaleCaregiver", "cfCaregiver"]);
+    let codiceFiscale = getApoSchedaPazienteField(source, ["caregiverCodFiscale", "caregiverCodiceFiscale", "codFiscaleCaregiver", "codiceFiscaleCaregiver", "cfCaregiver"]);
 
-    if ((!cognome || !nome) && caregiverText) {
+    if (!codiceFiscale && caregiverText && /^[A-Z0-9]{11,16}$/.test(normalizeApoValue(caregiverText))) {
+        codiceFiscale = caregiverText;
+    }
+
+    if (!codiceFiscale && (!cognome || !nome) && caregiverText) {
         const parts = caregiverText.split(/\s+/).filter(function (part) {
             return !!part;
         });
@@ -7486,6 +9613,23 @@ function getApoSchedaPazienteCaregiverData(source) {
         nome: nome,
         codiceFiscale: codiceFiscale
     };
+}
+
+function selectApoSchedaPazienteCaregiver(cognomeInput, nomeInput, codiceFiscaleInput, resultsBody, selected) {
+    if (!selected) {
+        return;
+    }
+    if (cognomeInput) {
+        cognomeInput.value = selected.cognome || "";
+    }
+    if (nomeInput) {
+        nomeInput.value = selected.nome || "";
+    }
+    if (codiceFiscaleInput) {
+        codiceFiscaleInput.value = selected.codFiscale || "";
+    }
+    apoState.schedaPazienteCaregiverResults = [];
+    renderApoSchedaPazienteCaregiverResults(resultsBody, [], null, "Caregiver selezionato.");
 }
 
 function renderApoSchedaPazienteCaregiverResults(tbody, results, onSelect, emptyText) {
@@ -7526,7 +9670,8 @@ function renderApoSchedaPazienteCaregiverResults(tbody, results, onSelect, empty
     });
 }
 
-async function searchApoSchedaPazienteCaregiver(cognomeInput, nomeInput, codiceFiscaleInput, resultsBody, searchButton) {
+async function searchApoSchedaPazienteCaregiver(cognomeInput, nomeInput, codiceFiscaleInput, resultsBody, searchButton, options) {
+    const config = options && typeof options === "object" ? options : {};
     const codiceFiscale = normalizeApoDisplayValue(codiceFiscaleInput ? codiceFiscaleInput.value : "");
     const cognome = normalizeApoDisplayValue(cognomeInput ? cognomeInput.value : "");
     const nome = normalizeApoDisplayValue(nomeInput ? nomeInput.value : "");
@@ -7579,18 +9724,18 @@ async function searchApoSchedaPazienteCaregiver(cognomeInput, nomeInput, codiceF
         }
 
         apoState.schedaPazienteCaregiverResults = normalizeApoAnagrafePazienti(payload.data && payload.data.pazienti);
+        if (config.autoSelectFirst && apoState.schedaPazienteCaregiverResults.length) {
+            selectApoSchedaPazienteCaregiver(
+                cognomeInput,
+                nomeInput,
+                codiceFiscaleInput,
+                resultsBody,
+                apoState.schedaPazienteCaregiverResults[0]
+            );
+            return;
+        }
         renderApoSchedaPazienteCaregiverResults(resultsBody, apoState.schedaPazienteCaregiverResults, function (selected) {
-            if (cognomeInput) {
-                cognomeInput.value = selected.cognome || "";
-            }
-            if (nomeInput) {
-                nomeInput.value = selected.nome || "";
-            }
-            if (codiceFiscaleInput) {
-                codiceFiscaleInput.value = selected.codFiscale || "";
-            }
-            apoState.schedaPazienteCaregiverResults = [];
-            renderApoSchedaPazienteCaregiverResults(resultsBody, [], null, "Caregiver selezionato.");
+            selectApoSchedaPazienteCaregiver(cognomeInput, nomeInput, codiceFiscaleInput, resultsBody, selected);
         }, "Nessun caregiver trovato.");
     } catch (error) {
         apoState.schedaPazienteCaregiverResults = [];
@@ -7681,6 +9826,18 @@ function createApoSchedaPazienteCaregiverItem(source) {
     searchButton.addEventListener("click", searchCaregiver);
 
     renderApoSchedaPazienteCaregiverResults(tbody, [], null, "Nessun caregiver da visualizzare.");
+    if (normalizeApoDisplayValue(caregiver.codiceFiscale)) {
+        window.setTimeout(function () {
+            void searchApoSchedaPazienteCaregiver(
+                cognomeInput,
+                nomeInput,
+                codiceFiscaleInput,
+                tbody,
+                searchButton,
+                {autoSelectFirst: true}
+            );
+        }, 0);
+    }
 
     controls.appendChild(cognomeInput);
     controls.appendChild(nomeInput);
@@ -7737,16 +9894,8 @@ function renderApoSchedaPaziente(patient) {
         getApoSchedaPazienteField(source, ["massIndex", "bodyMassIndex", "bmi", "indiceMassaCorporea", "imc"])
     ));
     fattoriRischio.grid.appendChild(createApoSchedaPazientePatologieGrid(getApoSchedaPazientePatologieFromSource(source)));
-    fattoriRischio.grid.appendChild(createApoSchedaPazienteTextareaItem(
-        "Allergie",
-        getApoSchedaPazienteField(source, ["allergie", "allergia", "allergieNote"]),
-        "allergie"
-    ));
-    fattoriRischio.grid.appendChild(createApoSchedaPazienteTextareaItem(
-        "Terapie in corso",
-        getApoSchedaPazienteField(source, ["terapieInCorso", "terapie", "terapiaInCorso", "terapia"]),
-        "terapie"
-    ));
+    fattoriRischio.grid.appendChild(createApoSchedaPazienteAllergieGrid(getApoSchedaPazienteAllergieFromSource(source)));
+    fattoriRischio.grid.appendChild(createApoSchedaPazienteTerapieGrid(getApoSchedaPazienteTerapieFromSource(source), source));
     body.appendChild(fattoriRischio.section);
 
     body.appendChild(createApoSchedaPazienteDiarioItem(source));
@@ -7786,6 +9935,48 @@ function collectApoSchedaPazientePatologieCodes() {
     return codes.join("|");
 }
 
+function collectApoSchedaPazienteAllergieCodes() {
+    const codes = [];
+    apoState.schedaPazienteAllergieSelected.forEach(function (itemData) {
+        const codice = normalizeApoDisplayValue(itemData && itemData.codice);
+        if (codice && codes.indexOf(codice) === -1) {
+            codes.push(codice);
+        }
+    });
+    return codes.join("|");
+}
+
+function collectApoSchedaPazienteAllergieText() {
+    return apoState.schedaPazienteAllergieSelected.map(function (itemData) {
+        return formatApoSchedaPazienteAllergiaSuggestion(itemData);
+    }).filter(function (description) {
+        return !!description;
+    }).join("; ");
+}
+
+function collectApoSchedaPazienteTerapieText() {
+    return apoState.schedaPazienteTerapieSelected.map(function (itemData) {
+        return formatApoSchedaPazienteTerapia(itemData);
+    }).filter(function (description) {
+        return !!description;
+    }).join("; ");
+}
+
+function collectApoSchedaPazienteTerapieJson() {
+    return JSON.stringify(apoState.schedaPazienteTerapieSelected.map(function (itemData) {
+        const terapia = normalizeApoSchedaPazienteTerapia(itemData, 0);
+        return {
+            principioAttivo: terapia.principioAttivo,
+            farmaco: terapia.farmaco,
+            confezione: terapia.confezione,
+            quantita: terapia.quantita,
+            frequenzaUnita: terapia.frequenzaUnita,
+            durataValore: terapia.durataValore,
+            durataUnita: terapia.durataUnita
+        };
+    }));
+}
+
 function collectApoSchedaPazientePayload() {
     return {
         schedaPaziente: "1",
@@ -7795,8 +9986,10 @@ function collectApoSchedaPazientePayload() {
         schedaIbm: getApoSchedaPazienteInputValue("ibm"),
         schedaIbmKg: getApoSchedaPazienteInputValue("ibmKg"),
         schedaIbmCm: getApoSchedaPazienteInputValue("ibmCm"),
-        schedaAllergie: getApoSchedaPazienteInputValue("allergie"),
-        schedaTerapie: getApoSchedaPazienteInputValue("terapie"),
+        schedaAllergie: collectApoSchedaPazienteAllergieText(),
+        schedaAllergieCodes: collectApoSchedaPazienteAllergieCodes(),
+        schedaTerapie: collectApoSchedaPazienteTerapieText(),
+        schedaTerapieJson: collectApoSchedaPazienteTerapieJson(),
         schedaCaregiver: getApoSchedaPazienteInputValue("caregiver"),
         schedaDiario: getApoSchedaPazienteInputValue("diario"),
         schedaPatologie: collectApoSchedaPazientePatologieCodes()
@@ -7886,6 +10079,7 @@ async function hydrateApoSchedaPazienteModal(patient, requestId) {
 function openApoSchedaPazienteModal(patient) {
     const modal = document.getElementById("apo-scheda-paziente-modal");
     const okButton = document.getElementById("apo-scheda-paziente-ok");
+    const backButton = document.getElementById("apo-scheda-paziente-back");
     if (!modal) {
         return;
     }
@@ -7895,12 +10089,27 @@ function openApoSchedaPazienteModal(patient) {
     apoState.schedaPazienteLastFocus = document.activeElement;
     renderApoSchedaPaziente(patient);
     setApoSchedaPazienteSaving(false);
+    if (backButton) {
+        backButton.classList.toggle("is-hidden", !apoState.schedaPazientePendingAccessoPayload);
+    }
     modal.classList.remove("is-hidden");
     modal.setAttribute("aria-hidden", "false");
     void hydrateApoSchedaPazienteModal(patient, requestId);
     if (okButton) {
         okButton.focus();
     }
+}
+
+function openApoSelectedSchedaPazienteModal() {
+    const accesso = getApoSelectedAccesso();
+    if (!accesso || !normalizeApoDisplayValue(accesso.codPaz)) {
+        setApoSearchMessage("Seleziona un paziente per aprire la scheda.", "warning");
+        return;
+    }
+
+    apoState.schedaPazientePendingAccessoPayload = null;
+    apoState.schedaPazientePendingPatient = null;
+    openApoSchedaPazienteModal(accesso);
 }
 
 function closeApoSchedaPazienteModal(restoreFocus) {
@@ -7926,6 +10135,38 @@ function closeApoSchedaPazienteModal(restoreFocus) {
         }
     }
     apoState.schedaPazienteLastFocus = null;
+}
+
+function backToApoSchedaPazientePreviousModal() {
+    const pendingPayload = apoState.schedaPazientePendingAccessoPayload;
+    const pendingPatient = apoState.schedaPazientePendingPatient;
+    const detailModal = document.getElementById("apo-new-accesso-detail-modal");
+    const dataOra = document.getElementById("apo-new-accesso-data-ora");
+    const diagnosi = document.getElementById("apo-new-accesso-diagnosi");
+    const confirmButton = document.getElementById("apo-new-accesso-confirm-add");
+
+    closeApoSchedaPazienteModal(false);
+    if (!pendingPayload || !pendingPatient || !detailModal) {
+        return;
+    }
+
+    setApoNuovoAccessoDetailBusy(false);
+    setApoNuovoAccessoDetailMessage("", "info");
+    renderApoNuovoAccessoSelectedPatientSummary(pendingPatient);
+    if (dataOra) {
+        dataOra.value = normalizeApoDisplayValue(pendingPayload.dataOra);
+    }
+    if (diagnosi) {
+        diagnosi.value = normalizeApoDisplayValue(pendingPayload.diagnosi);
+    }
+    toggleApoNuovoAccessoTipo(pendingPayload.tipoAccesso);
+    toggleApoNuovoAccessoPatologia(pendingPayload.patologia);
+
+    detailModal.classList.remove("is-hidden");
+    detailModal.setAttribute("aria-hidden", "false");
+    if (confirmButton) {
+        confirmButton.focus();
+    }
 }
 
 function backToApoNuovoAccessoSearchModal() {
@@ -7964,6 +10205,7 @@ function handleApoNuovoAccessoDetailSubmit(event) {
     const dataOra = document.getElementById("apo-new-accesso-data-ora");
     const diagnosi = document.getElementById("apo-new-accesso-diagnosi");
     const tipoConfig = getApoNuovoAccessoTipoConfig(getApoNuovoAccessoSelectedTipo());
+    const patologiaConfig = getApoNuovoAccessoPatologiaConfig(apoState.nuovoAccessoPatologia);
     const dataOraValue = normalizeApoDisplayValue(dataOra ? dataOra.value : "");
 
     if (!selected) {
@@ -7991,6 +10233,7 @@ function handleApoNuovoAccessoDetailSubmit(event) {
         tipoAccesso: tipoConfig.id,
         tipoAccessoLabel: tipoConfig.label,
         tipoAccessoValue: tipoConfig.code,
+        patologia: patologiaConfig.label,
         codComuneRes: selected.codComuneRes
     };
 
@@ -8048,7 +10291,7 @@ async function saveApoSchedaPaziente() {
 
     const pendingPayload = apoState.schedaPazientePendingAccessoPayload;
     if (!pendingPayload) {
-        setApoSearchMessage("Dati del nuovo accesso non disponibili.", "danger");
+        await saveApoSchedaPazienteForSelectedPatient();
         return;
     }
 
@@ -8065,6 +10308,62 @@ async function saveApoSchedaPaziente() {
     apoState.schedaPazientePendingAccessoPayload = null;
     apoState.schedaPazientePendingPatient = null;
     closeApoSchedaPazienteModal(true);
+}
+
+async function saveApoSchedaPazienteForSelectedPatient() {
+    const accesso = getApoSelectedAccesso();
+    const codPaz = normalizeApoDisplayValue(accesso && accesso.codPaz);
+    if (!codPaz) {
+        setApoSearchMessage("Codice paziente non disponibile.", "warning");
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    const payload = collectApoSchedaPazientePayload();
+    Object.keys(payload).forEach(function (key) {
+        params.set(key, normalizeApoDisplayValue(payload[key]));
+    });
+
+    setApoSchedaPazienteSaving(true);
+    try {
+        const response = await fetch(apoSchedaPazienteUrl, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            body: params.toString()
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        let responsePayload = null;
+        try {
+            responsePayload = await response.json();
+        } catch (error) {
+            responsePayload = null;
+        }
+
+        if (!response.ok || !responsePayload || responsePayload.esito !== "ok") {
+            throw new Error(responsePayload && responsePayload.message ? responsePayload.message : "Errore nel salvataggio della scheda paziente.");
+        }
+
+        clearApoSchedaPazienteDiario();
+        clearApoSchedaPazienteHistoryPatologie();
+        clearApoSchedaPazienteHistoryAllergie();
+        clearApoSchedaPazienteHistoryTerapie();
+        closeApoSchedaPazienteModal(true);
+        setApoSearchMessage(responsePayload.message || "Scheda paziente salvata correttamente.", "success");
+        renderApoSchedaPazienteHistorySection();
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nel salvataggio della scheda paziente.", "danger");
+    } finally {
+        setApoSchedaPazienteSaving(false);
+    }
 }
 
 async function searchApoNuovoAccessoPazienti() {
@@ -8522,9 +10821,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const newAccessoDetailClose = document.getElementById("apo-new-accesso-detail-close");
     const schedaPazienteModal = document.getElementById("apo-scheda-paziente-modal");
     const schedaPazienteOk = document.getElementById("apo-scheda-paziente-ok");
+    const schedaPazienteBack = document.getElementById("apo-scheda-paziente-back");
+    const schedaPazienteClose = document.getElementById("apo-scheda-paziente-close");
+    const selectedSchedaButton = document.getElementById("apo-selected-scheda-button");
     const diarioModal = document.getElementById("apo-diario-modal");
     const diarioForm = document.getElementById("apo-diario-form");
     const diarioClose = document.getElementById("apo-diario-close");
+    const terapiaModal = document.getElementById("apo-terapia-modal");
+    const terapiaClose = document.getElementById("apo-terapia-close");
     const logoutButton = document.getElementById("logout-button");
     const detailCloseButton = document.getElementById("apo-detail-close-button");
     const detailConsensoButton = document.getElementById("apo-detail-consenso-button");
@@ -8712,6 +11016,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 toggleApoNuovoAccessoTipo(typeButton.getAttribute("data-new-accesso-type"));
                 return;
             }
+            const patologiaButton = event.target.closest("[data-new-accesso-patologia]");
+            if (patologiaButton) {
+                toggleApoNuovoAccessoPatologia(patologiaButton.getAttribute("data-new-accesso-patologia"));
+                return;
+            }
         });
 
         newAccessoDetailModal.addEventListener("keydown", function (event) {
@@ -8725,6 +11034,35 @@ document.addEventListener("DOMContentLoaded", function () {
     if (schedaPazienteOk) {
         schedaPazienteOk.addEventListener("click", function () {
             void saveApoSchedaPaziente();
+        });
+    }
+
+    if (schedaPazienteBack) {
+        schedaPazienteBack.addEventListener("click", backToApoSchedaPazientePreviousModal);
+    }
+
+    if (schedaPazienteClose) {
+        schedaPazienteClose.addEventListener("click", function () {
+            apoState.schedaPazientePendingAccessoPayload = null;
+            apoState.schedaPazientePendingPatient = null;
+            closeApoSchedaPazienteModal(true);
+        });
+
+        schedaPazienteClose.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+
+            event.preventDefault();
+            apoState.schedaPazientePendingAccessoPayload = null;
+            apoState.schedaPazientePendingPatient = null;
+            closeApoSchedaPazienteModal(true);
+        });
+    }
+
+    if (selectedSchedaButton) {
+        selectedSchedaButton.addEventListener("click", function () {
+            openApoSelectedSchedaPazienteModal();
         });
     }
 
@@ -8763,6 +11101,30 @@ document.addEventListener("DOMContentLoaded", function () {
             if (event.key === "Escape") {
                 event.preventDefault();
                 closeApoSchedaPazienteDiarioModal(true);
+            }
+        });
+    }
+
+    if (terapiaClose) {
+        terapiaClose.addEventListener("click", function () {
+            closeApoSchedaPazienteTerapiaModal(true);
+        });
+
+        terapiaClose.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+
+            event.preventDefault();
+            closeApoSchedaPazienteTerapiaModal(true);
+        });
+    }
+
+    if (terapiaModal) {
+        terapiaModal.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                closeApoSchedaPazienteTerapiaModal(true);
             }
         });
     }
