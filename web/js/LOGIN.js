@@ -152,6 +152,21 @@ function renderLoginServices(services, username) {
     select.value = hasCurrentValue ? currentValue : "";
 }
 
+function toggleLoginPasswordVisibility() {
+    const passwordInput = document.getElementById("login-password");
+    const toggleButton = document.getElementById("login-password-toggle");
+    if (!passwordInput || !toggleButton) {
+        return;
+    }
+
+    const shouldShow = passwordInput.type === "password";
+    passwordInput.type = shouldShow ? "text" : "password";
+    toggleButton.classList.toggle("is-visible", shouldShow);
+    toggleButton.setAttribute("aria-pressed", shouldShow ? "true" : "false");
+    toggleButton.setAttribute("aria-label", shouldShow ? "Nascondi password" : "Mostra password");
+    toggleButton.title = shouldShow ? "Nascondi password" : "Mostra password";
+}
+
 async function loadLoginServicesForUser(username) {
     const normalizedUsername = normalizeLoginValue(username);
     const userInput = document.getElementById("login-user");
@@ -171,15 +186,18 @@ async function loadLoginServicesForUser(username) {
     loginServicesAbortController = currentController;
 
     try {
-        const response = await fetch(
-                loginServicesUrl + "?username=" + encodeURIComponent(normalizedUsername),
-                {
-                    headers: {
-                        "Accept": "application/json"
-                    },
-                    signal: currentController.signal
-                }
-        );
+        const params = new URLSearchParams();
+        params.set("username", normalizedUsername);
+        const response = await fetch(loginServicesUrl, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: params.toString(),
+            signal: currentController.signal
+        });
 
         if (!response.ok) {
             throw new Error("Servizi non disponibili");
@@ -247,7 +265,8 @@ async function submitLogin(form) {
             method: "POST",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "X-Requested-With": "XMLHttpRequest"
             },
             body: payload.toString()
         });
@@ -271,6 +290,7 @@ async function submitLogin(form) {
 document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.querySelector(".login-form");
     const userInput = document.getElementById("login-user");
+    const passwordToggle = document.getElementById("login-password-toggle");
 
     resetLoginServiceSelect("", false);
 
@@ -288,5 +308,9 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
             void submitLogin(loginForm);
         });
+    }
+
+    if (passwordToggle) {
+        passwordToggle.addEventListener("click", toggleLoginPasswordVisibility);
     }
 });

@@ -60,6 +60,9 @@ const apoAslSuggestUrl = buildApoUrl("api/paziente/asl");
 const apoPrestazioniInfermieristicheUrl = buildApoUrl("api/paziente/prestazioni-infermieristiche");
 const apoPrestazioniInfCategorieUrl = buildApoUrl("api/paziente/prestazioni-infermieristiche/categorie");
 const apoPrestazioniInfSottocategorieUrl = buildApoUrl("api/paziente/prestazioni-infermieristiche/sottocategorie");
+const apoRichiestaPrestazioniUrl = buildApoUrl("api/paziente/richiesta-prestazioni");
+const apoRichiestaPrestazioniCategorieUrl = buildApoUrl("api/paziente/richiesta-prestazioni/categorie");
+const apoRichiestaPrestazioniSottocategorieUrl = buildApoUrl("api/paziente/richiesta-prestazioni/sottocategorie");
 const apoPatologieCronicheIcd10Url = buildApoUrl("api/paziente/icd10/patologie-croniche");
 const apoAllergieUrl = buildApoUrl("api/paziente/allergie");
 const apoTerapiePrincipiAttiviUrl = buildApoUrl("api/paziente/terapie/principi-attivi");
@@ -76,7 +79,16 @@ const apoPianiTerapeuticiUrl = buildApoUrl("api/paziente/piani-terapeutici");
 const apoAllegatoMUrl = buildApoUrl("api/paziente/allegato-m");
 const apoNewAccessoUrl = buildApoUrl("api/accessi/new");
 const apoDeleteAccessoUrl = buildApoUrl("api/accessi/delete");
+const apoStatisticheReportsUrl = buildApoUrl("api/statistiche/reports");
+const apoStatisticheExportUrl = buildApoUrl("api/statistiche/export");
 const apoLoginUrl = buildApoUrl("Login");
+const apoQuestionariMammografiaUrl = buildApoUrl("api/questionari/mammo");
+const apoQuestionariFascia65Url = buildApoUrl("api/questionari/fascia65");
+const apoQuestionariFascia625Url = buildApoUrl("api/questionari/fascia6-25");
+const apoQuestionariFascia2664Url = buildApoUrl("api/questionari/fascia26-64");
+const apoTelevisitaUrl = "https://televisita.alisa.liguria.it/login-m.html";
+const apoQuestionariPazienteTemporaneamenteDisabilitati = false;
+const apoQuestionarioMammografiaTemporaneamenteDisabilitato = true;
 const apoRicettaDematerializzataUrl = "https://pvtopric.asl5sp.int/Ricette2026/";
 const apoRicettaFarmaciUrl = "https://pvtopric.asl5sp.int/Top_Ricetta/RicettaFarmaci";
 const apoCertificatoMalattiaUrl = "https://sistemats1.sanita.finanze.it/portale/area-riservata-operatore";
@@ -85,11 +97,21 @@ const apoConsensoDseInvokeUrl = "http://consenso-dse/Invoke";
 
 const apoState = {
     sessionData: null,
+    csrfToken: "",
     apoServices: [],
     apoServicesLoading: false,
     apoServicesLoaded: false,
     apoServicesError: "",
     apoServiceSwitching: false,
+    statisticheReports: [],
+    statisticheStructures: [],
+    statisticheLoading: false,
+    statisticheLoaded: false,
+    statisticheError: "",
+    statisticheCurrentYear: new Date().getFullYear(),
+    statisticheSelectedReportId: "",
+    statisticheModalLastFocus: null,
+    statisticheExporting: false,
     accessi: [],
     filteredAccessi: [],
     storicoAccessi: [],
@@ -120,6 +142,28 @@ const apoState = {
     prestazioniInfMessage: "",
     prestazioniInfMessageType: "info",
     prestazioniInfSaving: false,
+    richiestaPrestazioniCategorie: [],
+    richiestaPrestazioniCategorieCodServizio: "",
+    richiestaPrestazioniCategorieLoading: false,
+    richiestaPrestazioniCategorieLoaded: false,
+    richiestaPrestazioniCategorieError: "",
+    richiestaPrestazioniSottocategorie: [],
+    richiestaPrestazioniSottocategorieKey: "",
+    richiestaPrestazioniSottocategorieLoading: false,
+    richiestaPrestazioniSottocategorieLoaded: false,
+    richiestaPrestazioniSottocategorieError: "",
+    richiestaPrestazioniCategoriaId: "",
+    richiestaPrestazioniCategoria: "",
+    richiestaPrestazioniSottocategorieSelezionate: [],
+    richiestaPrestazioniPrecedenti: [],
+    richiestaPrestazioniPrecedentiKey: "",
+    richiestaPrestazioniPrecedentiLoading: false,
+    richiestaPrestazioniPrecedentiLoaded: false,
+    richiestaPrestazioniPrecedentiError: "",
+    richiestaPrestazioniPrecedentiRequestId: 0,
+    richiestaPrestazioniMessage: "",
+    richiestaPrestazioniMessageType: "info",
+    richiestaPrestazioniSaving: false,
     ricetteFarmaci: [],
     ricetteFarmaciCodiceFiscale: "",
     ricetteFarmaciLoading: false,
@@ -174,6 +218,36 @@ const apoState = {
     nuovoAccessoLastFocus: null,
     nuovoAccessoDetailLastFocus: null,
     schedaPazienteLastFocus: null,
+    questionariPazienteLastFocus: null,
+    questionariPazienteRequestId: 0,
+    questionariPazienteStorico: [],
+    questionariPazienteStoricoCodPaz: "",
+    questionariPazienteStoricoLoading: false,
+    questionariPazienteStoricoRequestId: 0,
+    questionarioMammografiaRequestId: 0,
+    questionarioMammografiaSaving: false,
+    questionarioMammografiaReadOnly: false,
+    questionarioMammografiaAvailabilityCodPaz: "",
+    questionarioMammografiaCanCompile: null,
+    questionarioFascia65RequestId: 0,
+    questionarioFascia65Saving: false,
+    questionarioFascia65ReadOnly: false,
+    questionarioFascia65AvailabilityCodPaz: "",
+    questionarioFascia65CanCompile: null,
+    questionarioFascia625RequestId: 0,
+    questionarioFascia625Saving: false,
+    questionarioFascia625ReadOnly: false,
+    questionarioFascia625AvailabilityCodPaz: "",
+    questionarioFascia625CanCompile: null,
+    questionarioFascia2664RequestId: 0,
+    questionarioFascia2664Saving: false,
+    questionarioFascia2664ReadOnly: false,
+    questionarioFascia2664AvailabilityCodPaz: "",
+    questionarioFascia2664CanCompile: null,
+    questionarioRifiutoMedicoTipo: "",
+    questionarioRifiutoMedicoSaving: false,
+    questionarioRifiutoMedicoLastFocus: null,
+    nuovoPazienteQuestionariId: "",
     schedaPazienteDiarioModalLastFocus: null,
     schedaPazienteDiarioModalCodPaz: "",
     schedaPazienteExistingRequestId: 0,
@@ -243,6 +317,95 @@ const apoState = {
     censimentoAslLoaded: false,
     censimentoAslLoading: false
 };
+
+const apoNativeFetch = window.fetch.bind(window);
+
+function getApoCsrfToken() {
+    return normalizeApoDisplayValue(apoState.csrfToken || (apoState.sessionData && apoState.sessionData.csrfToken));
+}
+
+function isApoSameOriginUrl(url) {
+    try {
+        return new URL(String(url || ""), window.location.href).origin === window.location.origin;
+    } catch (error) {
+        return false;
+    }
+}
+
+function apoSecureFetch(input, init) {
+    const requestUrl = input && typeof input.url === "string" ? input.url : String(input || "");
+    const requestMethod = String((init && init.method) || (input && input.method) || "GET").toUpperCase();
+
+    if (!isApoSameOriginUrl(requestUrl)) {
+        return apoNativeFetch(input, init);
+    }
+
+    const headers = new Headers((init && init.headers) || (input && input.headers) || undefined);
+    headers.set("X-Requested-With", "XMLHttpRequest");
+    if (requestMethod !== "GET" && requestMethod !== "HEAD") {
+        const csrfToken = getApoCsrfToken();
+        if (csrfToken) {
+            headers.set("X-CSRF-Token", csrfToken);
+        }
+    }
+
+    return apoNativeFetch(input, Object.assign({}, init || {}, {headers: headers}));
+}
+
+window.fetch = apoSecureFetch;
+
+function buildApoFormParams(params, requestMode) {
+    const formParams = params instanceof URLSearchParams
+        ? new URLSearchParams(params.toString())
+        : new URLSearchParams();
+    if (requestMode) {
+        formParams.set("_requestMode", requestMode);
+    }
+    return formParams;
+}
+
+function postApoFormRequest(url, params, requestMode) {
+    const body = buildApoFormParams(params, requestMode);
+    return fetch(url, {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        },
+        body: body.toString()
+    });
+}
+
+function openApoPostPopup(url, params, targetName) {
+    const form = document.createElement("form");
+    const requestTarget = targetName || "APOPopup";
+    form.method = "POST";
+    form.action = url;
+    form.target = requestTarget;
+    form.style.display = "none";
+
+    buildApoFormParams(params).forEach(function (value, key) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+    });
+
+    const csrfToken = getApoCsrfToken();
+    if (csrfToken) {
+        const csrfInput = document.createElement("input");
+        csrfInput.type = "hidden";
+        csrfInput.name = "_csrf";
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+    }
+
+    document.body.appendChild(form);
+    window.open("", requestTarget);
+    form.submit();
+    document.body.removeChild(form);
+}
 
 const apoStoricoTabs = [
     {id: "accessi", label: "Storico accessi"},
@@ -503,6 +666,8 @@ function setApoSearchBusy(isBusy) {
     const clearButton = document.getElementById("apo-clear-button");
     const sortField = document.getElementById("apo-sort-field");
     const sortDirection = document.getElementById("apo-sort-direction");
+    const accessiLoader = document.getElementById("apo-accessi-loader");
+    const tableWrap = document.getElementById("apo-accessi-table-wrap");
     const busy = isBusy === true;
 
     apoState.isLoading = busy;
@@ -519,6 +684,12 @@ function setApoSearchBusy(isBusy) {
     }
     if (sortDirection) {
         sortDirection.disabled = busy;
+    }
+    if (accessiLoader) {
+        accessiLoader.hidden = !busy;
+    }
+    if (tableWrap) {
+        tableWrap.setAttribute("aria-busy", busy ? "true" : "false");
     }
 }
 
@@ -550,6 +721,7 @@ function getApoAccessiParams() {
     const cognome = getApoFilterValue("apo-filter-paziente-cognome");
     const nome = getApoFilterValue("apo-filter-paziente-nome");
     const codiceFiscale = getApoFilterValue("apo-filter-codice-fiscale");
+    const operatore = getApoFilterValue("apo-filter-operatore");
     const accettazione = urlParams.get("accettazione");
 
     if (filterDate) {
@@ -565,6 +737,9 @@ function getApoAccessiParams() {
     if (codiceFiscale) {
         params.set("codiceFiscale", codiceFiscale);
     }
+    if (operatore) {
+        params.set("operatore", operatore);
+    }
     if (accettazione) {
         params.set("consulenza", accettazione);
     }
@@ -577,7 +752,7 @@ function normalizeApoAccesso(item, index) {
     const cognome = normalizeApoDisplayValue(source.cognome);
     const nome = normalizeApoDisplayValue(source.nome);
     const paziente = normalizeApoDisplayValue(source.paziente || (cognome + " " + nome).trim());
-    const eta = normalizeApoDisplayValue(source.eta);
+    const eta = normalizeApoDisplayValue(source.ETA || source.eta);
 
     return {
         id: normalizeApoDisplayValue(source.id || ("ROW_" + index)),
@@ -600,6 +775,7 @@ function normalizeApoAccesso(item, index) {
         patologia: normalizeApoDisplayValue(source.patologia),
         note: normalizeApoDisplayValue(source.note),
         eta: eta,
+        sesso: normalizeApoDisplayValue(source.SESSO || source.sesso),
         codPaz: normalizeApoDisplayValue(source.codPaz),
         pin: normalizeApoDisplayValue(source.pin),
         modUtente: normalizeApoDisplayValue(source.modUtente),
@@ -622,7 +798,7 @@ function normalizeApoAccessi(items) {
 function normalizeApoAnagrafePaziente(item, index) {
     const source = item && typeof item === "object" ? item : {};
     const codFiscale = normalizeApoDisplayValue(source.codFiscale);
-    const eta = normalizeApoDisplayValue(source.eta);
+    const eta = normalizeApoDisplayValue(source.ETA || source.eta);
     const paziente = {
         id: "ANAGRAFE_" + index,
         cognome: normalizeApoDisplayValue(source.cognome),
@@ -630,7 +806,7 @@ function normalizeApoAnagrafePaziente(item, index) {
         paziente: normalizeApoDisplayValue(source.paziente),
         dataNascita: formatApoAnagrafeDate(source.dataNascita, eta),
         codFiscale: codFiscale,
-        sesso: normalizeApoDisplayValue(source.sesso),
+        sesso: normalizeApoDisplayValue(source.SESSO || source.sesso),
         eta: eta,
         codComuneRes: normalizeApoDisplayValue(source.codComuneRes || source.codComRes || source.codComumeRes),
         codPaz: normalizeApoDisplayValue(source.codPaz),
@@ -697,6 +873,25 @@ function normalizeApoPrestazioniInfCategorie(items) {
     });
 }
 
+function normalizeApoRichiestaPrestazioniCategorie(items) {
+    if (!Array.isArray(items)) {
+        return [];
+    }
+
+    return items.map(function (item, index) {
+        const source = item && typeof item === "object" ? item : {};
+        const categoria = normalizeApoDisplayValue(source.categoria || item);
+        const id = normalizeApoDisplayValue(source.id || categoria || ("CATEGORIA_" + index));
+        return {
+            id: id,
+            categoria: categoria,
+            label: categoria || id
+        };
+    }).filter(function (item) {
+        return item.id !== "" || item.categoria !== "";
+    });
+}
+
 function normalizeApoPrestazioniInfSottocategorie(items) {
     if (!Array.isArray(items)) {
         return [];
@@ -704,8 +899,8 @@ function normalizeApoPrestazioniInfSottocategorie(items) {
 
     return items.map(function (item, index) {
         const source = item && typeof item === "object" ? item : {};
-        const id = normalizeApoDisplayValue(source.id || ("SOTTOCATEGORIA_" + index));
-        const sottoCategoria = normalizeApoDisplayValue(source.sottoCategoria || source.sottocategoria || source.sotto_categoria);
+        const id = normalizeApoDisplayValue(source.iden_esame || source.id || ("SOTTOCATEGORIA_" + index));
+        const sottoCategoria = normalizeApoDisplayValue(source.sottoCategoria || source.sottocategoria || source.sotto_categoria || source.descrizione);
         return {
             id: id,
             sottoCategoria: sottoCategoria
@@ -944,7 +1139,7 @@ function getApoLoggedUserInfo(payload) {
 
     return {
         fullName: fullName,
-        identifier: (matricola ? "Matricola: " : "") + userCode,
+        identifier: (matricola ? "" : "") + userCode,
         initials: initials
     };
 }
@@ -985,6 +1180,7 @@ function applyApoSessionData(response) {
     const logoutButton = document.getElementById("logout-button");
 
     apoState.sessionData = payload;
+    apoState.csrfToken = normalizeApoDisplayValue(payload.csrfToken);
     if (Array.isArray(payload.apoServices)) {
         apoState.apoServices = normalizeApoServiceOptions(payload.apoServices);
         apoState.apoServicesLoaded = true;
@@ -994,6 +1190,7 @@ function applyApoSessionData(response) {
     updateApoHiddenSessionValues(payload);
     renderApoLoggedUserCard(payload);
     syncApoPazienteMenuForUser();
+    syncApoNavigationForUser();
     if (apoState.activeSection === "paziente") {
         renderApoPazienteBody();
     }
@@ -1002,6 +1199,7 @@ function applyApoSessionData(response) {
         label.textContent = formatApoLoggedService(payload);
     }
     renderApoServiceSelect();
+    renderApoStatisticheModalFilters();
     if (!apoState.apoServicesLoaded && !apoState.apoServicesLoading) {
         void loadApoServiceOptions();
     }
@@ -1163,6 +1361,474 @@ async function switchApoService(serviceCode) {
     }
 }
 
+const apoStatisticheMonths = [
+    {value: "1", label: "Gennaio"},
+    {value: "2", label: "Febbraio"},
+    {value: "3", label: "Marzo"},
+    {value: "4", label: "Aprile"},
+    {value: "5", label: "Maggio"},
+    {value: "6", label: "Giugno"},
+    {value: "7", label: "Luglio"},
+    {value: "8", label: "Agosto"},
+    {value: "9", label: "Settembre"},
+    {value: "10", label: "Ottobre"},
+    {value: "11", label: "Novembre"},
+    {value: "12", label: "Dicembre"}
+];
+
+function getApoStatisticheSelectedReport() {
+    const reportId = normalizeApoDisplayValue(apoState.statisticheSelectedReportId);
+    if (!reportId) {
+        return null;
+    }
+
+    for (let index = 0; index < apoState.statisticheReports.length; index += 1) {
+        const report = apoState.statisticheReports[index];
+        if (normalizeApoDisplayValue(report.id) === reportId) {
+            return report;
+        }
+    }
+
+    return null;
+}
+
+function setApoStatisticheMessage(message, type) {
+    const wrapper = document.getElementById("apo-statistiche-message");
+    if (!wrapper) {
+        return;
+    }
+
+    const text = normalizeApoDisplayValue(message);
+    wrapper.className = "alert";
+    if (!text) {
+        wrapper.classList.add("d-none");
+        wrapper.textContent = "";
+        return;
+    }
+
+    wrapper.classList.add(type === "danger" ? "alert-danger" : type === "warning" ? "alert-warning" : "alert-info");
+    wrapper.textContent = text;
+}
+
+function setApoStatisticheModalMessage(message, type) {
+    const wrapper = document.getElementById("apo-statistiche-modal-message");
+    if (!wrapper) {
+        return;
+    }
+
+    const text = normalizeApoDisplayValue(message);
+    wrapper.className = "alert";
+    if (!text) {
+        wrapper.classList.add("d-none");
+        wrapper.textContent = "";
+        return;
+    }
+
+    wrapper.classList.add(type === "danger" ? "alert-danger" : type === "warning" ? "alert-warning" : "alert-info");
+    wrapper.textContent = text;
+}
+
+function buildApoStatisticheYearOptions() {
+    const currentYear = Number(apoState.statisticheCurrentYear || new Date().getFullYear());
+    const years = [];
+    for (let offset = 0; offset <= 10; offset += 1) {
+        years.push(String(currentYear - offset));
+    }
+    return years;
+}
+
+function getApoStatisticheCheckedValues(container) {
+    if (!container) {
+        return [];
+    }
+
+    return Array.prototype.slice.call(container.querySelectorAll("input[type=\"checkbox\"]"))
+        .filter(function (input) {
+            return input.checked;
+        })
+        .map(function (input) {
+            return normalizeApoDisplayValue(input.value);
+        })
+        .filter(function (value) {
+            return !!value;
+        });
+}
+
+function createApoStatisticheCheckboxOption(name, value, label, checked) {
+    const option = document.createElement("label");
+    option.className = "apo-statistiche-checkbox-option" + (checked ? " is-selected" : "");
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.name = name;
+    input.value = value;
+    input.checked = !!checked;
+
+    const text = document.createElement("span");
+    text.textContent = label;
+
+    option.appendChild(input);
+    option.appendChild(text);
+    return option;
+}
+
+function syncApoStatisticheCheckboxVisualState(container) {
+    if (!container) {
+        return;
+    }
+
+    Array.prototype.slice.call(container.querySelectorAll(".apo-statistiche-checkbox-option")).forEach(function (option) {
+        const input = option.querySelector("input[type=\"checkbox\"]");
+        option.classList.toggle("is-selected", !!(input && input.checked));
+    });
+}
+
+function setApoStatisticheCheckedState(container, checked) {
+    if (!container) {
+        return;
+    }
+
+    Array.prototype.slice.call(container.querySelectorAll("input[type=\"checkbox\"]")).forEach(function (input) {
+        input.checked = !!checked;
+    });
+    syncApoStatisticheCheckboxVisualState(container);
+}
+
+function syncApoStatisticheToggleLabel(toggleButton, container, singularLabel, pluralLabel) {
+    if (!toggleButton || !container) {
+        return;
+    }
+
+    const totalCount = container.querySelectorAll("input[type=\"checkbox\"]").length;
+    const selectedCount = getApoStatisticheCheckedValues(container).length;
+    const label = totalCount > 1 ? pluralLabel : singularLabel;
+    toggleButton.textContent = totalCount > 0 && selectedCount === totalCount
+        ? "Deseleziona " + label
+        : "Seleziona " + label;
+}
+
+function renderApoStatisticheStructureSelect() {
+    const container = document.getElementById("apo-statistiche-struttura");
+    if (!container) {
+        return;
+    }
+
+    const currentService = getApoCurrentServiceData();
+    const currentCode = normalizeApoDisplayValue(currentService.codServizio);
+    const currentDescription = formatApoServiceSelectLabel(currentService.descrizione, currentCode);
+    const services = normalizeApoServiceOptions(apoState.statisticheStructures);
+    const seen = {};
+    container.innerHTML = "";
+
+    services.forEach(function (service) {
+        const code = normalizeApoDisplayValue(service.codServizio);
+        if (!code || seen[code]) {
+            return;
+        }
+        seen[code] = true;
+        container.appendChild(createApoStatisticheCheckboxOption(
+            "struttura",
+            code,
+            formatApoServiceSelectLabel(service.descrizione, code),
+            false
+        ));
+    });
+
+    if (currentCode && !seen[currentCode]) {
+        container.appendChild(createApoStatisticheCheckboxOption(
+            "struttura",
+            currentCode,
+            currentDescription || currentCode,
+            false
+        ));
+    }
+    syncApoStatisticheCheckboxVisualState(container);
+}
+
+function renderApoStatisticheMonths() {
+    const container = document.getElementById("apo-statistiche-mese");
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = "";
+    apoStatisticheMonths.forEach(function (month) {
+        container.appendChild(createApoStatisticheCheckboxOption("mese", month.value, month.label, false));
+    });
+    syncApoStatisticheCheckboxVisualState(container);
+}
+
+function renderApoStatisticheModalFilters() {
+    const yearSelect = document.getElementById("apo-statistiche-anno");
+    const description = document.getElementById("apo-statistiche-modal-description");
+    const monthsToggle = document.getElementById("apo-statistiche-months-toggle");
+    const structuresToggle = document.getElementById("apo-statistiche-structures-toggle");
+    const report = getApoStatisticheSelectedReport();
+
+    if (description) {
+        description.textContent = report && report.descrizione
+            ? report.descrizione
+            : "Imposta i filtri e scarica il report in Excel.";
+    }
+
+    if (yearSelect) {
+        yearSelect.innerHTML = "";
+        buildApoStatisticheYearOptions().forEach(function (year) {
+            const option = document.createElement("option");
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        });
+        yearSelect.value = String(apoState.statisticheCurrentYear || new Date().getFullYear());
+    }
+    renderApoStatisticheMonths();
+    renderApoStatisticheStructureSelect();
+    syncApoStatisticheToggleLabel(monthsToggle, document.getElementById("apo-statistiche-mese"), "il mese", "tutti i mesi");
+    syncApoStatisticheToggleLabel(structuresToggle, document.getElementById("apo-statistiche-struttura"), "la struttura", "tutte le strutture");
+}
+
+function renderApoStatisticheSection() {
+    const host = document.getElementById("apo-statistiche-reports");
+    if (!host) {
+        return;
+    }
+
+    host.innerHTML = "";
+
+    if (apoState.statisticheLoading) {
+        host.innerHTML = "<div class=\"empty-state\">Caricamento report in corso...</div>";
+        return;
+    }
+
+    if (apoState.statisticheError) {
+        host.innerHTML = "<div class=\"empty-state\">Impossibile caricare i report.</div>";
+        return;
+    }
+
+    if (!apoState.statisticheReports.length) {
+        host.innerHTML = "<div class=\"empty-state\">Nessun report disponibile.</div>";
+        return;
+    }
+
+    apoState.statisticheReports.forEach(function (report) {
+        const card = document.createElement("article");
+        card.className = "apo-statistiche-report-card";
+
+        const title = document.createElement("h3");
+        title.className = "apo-statistiche-report-title";
+        title.textContent = normalizeApoDisplayValue(report.titolo) || "Report";
+
+        const reportDescription = document.createElement("p");
+        reportDescription.className = "apo-statistiche-report-description";
+        reportDescription.textContent = normalizeApoDisplayValue(report.descrizione) || "Nessuna descrizione disponibile.";
+
+        const actions = document.createElement("div");
+        actions.className = "apo-statistiche-report-actions";
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "btn btn-success apo-statistiche-download-button";
+        button.setAttribute("data-statistica-report-id", normalizeApoDisplayValue(report.id));
+        button.textContent = "Scarica Excel";
+
+        actions.appendChild(button);
+        card.appendChild(title);
+        card.appendChild(reportDescription);
+        card.appendChild(actions);
+        host.appendChild(card);
+    });
+}
+
+async function loadApoStatisticheReports(forceReload) {
+    if (apoState.statisticheLoading) {
+        return;
+    }
+    if (apoState.statisticheLoaded && !forceReload) {
+        renderApoStatisticheSection();
+        return;
+    }
+
+    apoState.statisticheLoading = true;
+    apoState.statisticheError = "";
+    setApoStatisticheMessage("", "");
+    renderApoStatisticheSection();
+
+    try {
+        const response = await fetch(apoStatisticheReportsUrl, {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        const payload = await response.json();
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento dei report.");
+        }
+
+        apoState.statisticheReports = Array.isArray(payload.data && payload.data.reports)
+            ? payload.data.reports.map(function (report) {
+                return {
+                    id: normalizeApoDisplayValue(report.id),
+                    titolo: normalizeApoDisplayValue(report.titolo),
+                    descrizione: normalizeApoDisplayValue(report.descrizione)
+                };
+            })
+            : [];
+        apoState.statisticheStructures = normalizeApoServiceOptions(payload.data && payload.data.structures);
+        apoState.statisticheCurrentYear = Number(payload.data && payload.data.currentYear) || new Date().getFullYear();
+        apoState.statisticheLoaded = true;
+    } catch (error) {
+        apoState.statisticheReports = [];
+        apoState.statisticheStructures = [];
+        apoState.statisticheError = error && error.message ? error.message : "Errore nel caricamento dei report.";
+        setApoStatisticheMessage(apoState.statisticheError, "danger");
+    } finally {
+        apoState.statisticheLoading = false;
+        renderApoStatisticheSection();
+    }
+}
+
+function openApoStatisticheModal(reportId, trigger) {
+    const modal = document.getElementById("apo-statistiche-modal");
+    const normalizedId = normalizeApoDisplayValue(reportId);
+    if (!modal || !normalizedId) {
+        return;
+    }
+
+    apoState.statisticheSelectedReportId = normalizedId;
+    apoState.statisticheModalLastFocus = trigger || document.activeElement;
+    apoState.statisticheExporting = false;
+    renderApoStatisticheModalFilters();
+    setApoStatisticheModalMessage("", "");
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+
+    const firstMonthCheckbox = modal.querySelector("#apo-statistiche-mese input[type=\"checkbox\"]");
+    if (firstMonthCheckbox) {
+        firstMonthCheckbox.focus();
+    }
+}
+
+function closeApoStatisticheModal(restoreFocus) {
+    const modal = document.getElementById("apo-statistiche-modal");
+    if (modal) {
+        modal.classList.add("is-hidden");
+        modal.setAttribute("aria-hidden", "true");
+    }
+    setApoStatisticheModalMessage("", "");
+
+    if (restoreFocus && apoState.statisticheModalLastFocus && typeof apoState.statisticheModalLastFocus.focus === "function") {
+        apoState.statisticheModalLastFocus.focus();
+    }
+}
+
+function extractApoFilenameFromDisposition(contentDisposition) {
+    const value = normalizeApoDisplayValue(contentDisposition);
+    if (!value) {
+        return "report.xls";
+    }
+
+    let match = value.match(/filename\*=UTF-8''([^;]+)/i);
+    if (match && match[1]) {
+        return decodeURIComponent(match[1]);
+    }
+
+    match = value.match(/filename=\"?([^\";]+)\"?/i);
+    if (match && match[1]) {
+        return match[1];
+    }
+
+    return "report.xls";
+}
+
+async function downloadApoStatisticheExcel(event) {
+    if (event) {
+        event.preventDefault();
+    }
+    if (apoState.statisticheExporting) {
+        return;
+    }
+
+    const report = getApoStatisticheSelectedReport();
+    if (!report) {
+        setApoStatisticheModalMessage("Report non selezionato.", "danger");
+        return;
+    }
+
+    const yearSelect = document.getElementById("apo-statistiche-anno");
+    const monthContainer = document.getElementById("apo-statistiche-mese");
+    const structureContainer = document.getElementById("apo-statistiche-struttura");
+    const submitButton = document.getElementById("apo-statistiche-submit");
+    const params = new URLSearchParams();
+    params.set("reportId", report.id);
+
+    if (yearSelect && yearSelect.value) {
+        params.set("anno", yearSelect.value);
+    }
+    getApoStatisticheCheckedValues(monthContainer).forEach(function (monthValue) {
+        params.append("mese", monthValue);
+    });
+
+    getApoStatisticheCheckedValues(structureContainer).forEach(function (structureValue) {
+        params.append("struttura", structureValue);
+    });
+
+    apoState.statisticheExporting = true;
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Preparazione...";
+    }
+    setApoStatisticheModalMessage("Preparazione del file Excel in corso...", "info");
+
+    try {
+        const response = await fetch(apoStatisticheExportUrl, {
+            method: "POST",
+            headers: {
+                "Accept": "application/vnd.ms-excel, application/json, text/plain",
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            body: params.toString()
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(normalizeApoDisplayValue(errorText) || "Errore nella generazione del report Excel.");
+        }
+
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = extractApoFilenameFromDisposition(response.headers.get("Content-Disposition"));
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(downloadUrl);
+        closeApoStatisticheModal(true);
+    } catch (error) {
+        setApoStatisticheModalMessage(
+            error && error.message ? error.message : "Errore nella generazione del report Excel.",
+            "danger"
+        );
+    } finally {
+        apoState.statisticheExporting = false;
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Scarica Excel";
+        }
+    }
+}
+
 async function loadApoSessionState() {
     try {
         const response = await fetch(apoSessionUrl, {
@@ -1297,8 +1963,20 @@ function getApoLoggedRoleValue(fieldName, hiddenId) {
 }
 
 function isApoLoggedInfermiere() {
-    return getApoLoggedRoleValue("codQualifica", "qualifica") === "INF"
-        && getApoLoggedRoleValue("codGruppo", "gruppo_utente") === "INF";
+    return getApoLoggedRoleValue("codQualifica", "qualifica") === "INF";
+}
+
+function isApoLoggedMedico() {
+    return getApoLoggedRoleValue("codQualifica", "qualifica") === "MED";
+}
+
+function canApoCompileQuestionari() {
+    return getApoLoggedRoleValue("codGruppo", "gruppo_utente") === "MED"
+        && getApoLoggedRoleValue("codQualifica", "qualifica") === "MED";
+}
+
+function canApoViewStatistiche() {
+    return getApoLoggedRoleValue("codGruppo", "gruppo_utente") === "AMM";
 }
 
 function isApoMainConsulenzaSelected() {
@@ -1329,7 +2007,7 @@ function isApoPazienteSectionVisible(sectionId) {
             || normalizedId === "elimina-consulenza"
             || normalizedId === "cruscotto-consenso";
     }
-    return true;
+    return isApoLoggedMedico();
 }
 
 function isApoPazienteSectionAllowed(sectionId) {
@@ -1472,8 +2150,49 @@ function syncApoPazienteMenuForUser() {
             button.removeAttribute("title");
         }
     });
+    syncApoPazienteTelevisitaButton();
     syncApoPazienteMenuLoader();
     updateApoPazienteMenuActiveState(apoState.activePazienteSection);
+}
+
+function isApoTelevisitaAccesso(accesso) {
+    if (!accesso) {
+        return false;
+    }
+    return [accesso.valore, accesso.codPrestazioneNote].some(function (value) {
+        const normalizedValue = normalizeApoValue(value);
+        return normalizedValue === "TELEVISITA" || normalizedValue === "TVIS_AM2";
+    });
+}
+
+function syncApoPazienteTelevisitaButton() {
+    const button = document.getElementById("apo-paziente-televisita-button");
+    if (!button) {
+        return;
+    }
+    const isVisible = isApoTelevisitaAccesso(getApoSelectedAccesso());
+    button.classList.toggle("is-hidden", !isVisible);
+    button.setAttribute("aria-hidden", isVisible ? "false" : "true");
+    button.disabled = !isVisible;
+}
+
+function syncApoNavigationForUser() {
+    const statisticheButton = document.getElementById("nav-statistiche-button");
+    const statisticheLayout = document.getElementById("apo-statistiche-layout");
+    const isStatisticsVisible = canApoViewStatistiche();
+
+    if (statisticheButton) {
+        statisticheButton.classList.toggle("is-hidden", !isStatisticsVisible);
+        statisticheButton.setAttribute("aria-hidden", isStatisticsVisible ? "false" : "true");
+    }
+
+    if (!isStatisticsVisible && apoState.activeSection === "statistiche") {
+        apoState.activeSection = "accessi";
+    }
+
+    if (statisticheLayout) {
+        statisticheLayout.classList.toggle("is-hidden", apoState.activeSection !== "statistiche" || !isStatisticsVisible);
+    }
 }
 
 function renderApoPazienteBody() {
@@ -1570,10 +2289,7 @@ function renderApoPazienteBody() {
     }
 
     if (config.id === "richiesta-prestazioni") {
-        const emptyState = document.createElement("div");
-        emptyState.className = "empty-state";
-        emptyState.textContent = "Funzionalità ancora non disponibile.";
-        sheet.appendChild(emptyState);
+        renderApoRichiestaPrestazioniSheet(sheet);
         stage.appendChild(sheet);
         body.appendChild(stage);
         return;
@@ -1612,14 +2328,29 @@ function getApoPrestazioniInfSottocategorieKey(codServizio, categoria) {
     return normalizeApoValue(codServizio) + "|" + normalizeApoValue(categoria);
 }
 
+function getApoRichiestaPrestazioniSottocategorieKey(codServizio, idCategoria) {
+    return normalizeApoValue(codServizio) + "|" + normalizeApoValue(idCategoria);
+}
+
 function isApoPrestazioniInfSectionActive() {
     return apoState.activeSection === "paziente"
         && apoState.activePazienteSection === "prestazioni-infermieristiche";
 }
 
+function isApoRichiestaPrestazioniSectionActive() {
+    return apoState.activeSection === "paziente"
+        && apoState.activePazienteSection === "richiesta-prestazioni";
+}
+
 function setApoPrestazioniInfMessage(message, type) {
     apoState.prestazioniInfMessage = "";
     apoState.prestazioniInfMessageType = normalizeApoDisplayValue(type) || "info";
+    setApoSearchMessage(message, type);
+}
+
+function setApoRichiestaPrestazioniMessage(message, type) {
+    apoState.richiestaPrestazioniMessage = "";
+    apoState.richiestaPrestazioniMessageType = normalizeApoDisplayValue(type) || "info";
     setApoSearchMessage(message, type);
 }
 
@@ -1731,11 +2462,7 @@ async function loadApoPrestazioniInfSottocategorie(categoria) {
     }
 
     try {
-        const response = await fetch(apoPrestazioniInfSottocategorieUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoPrestazioniInfSottocategorieUrl, params, "load");
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
             return;
@@ -1769,6 +2496,240 @@ async function loadApoPrestazioniInfSottocategorie(categoria) {
     }
 }
 
+async function loadApoRichiestaPrestazioniCategorie() {
+    const codServizio = getApoLoggedServiceCode();
+    const normalizedCodServizio = normalizeApoValue(codServizio);
+
+    if (!normalizedCodServizio) {
+        apoState.richiestaPrestazioniCategorie = [];
+        apoState.richiestaPrestazioniCategorieCodServizio = "";
+        apoState.richiestaPrestazioniCategorieError = "Servizio loggato non disponibile.";
+        apoState.richiestaPrestazioniCategorieLoaded = true;
+        apoState.richiestaPrestazioniCategorieLoading = false;
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            renderApoPazienteBody();
+        }
+        return;
+    }
+
+    if (apoState.richiestaPrestazioniCategorieCodServizio === normalizedCodServizio
+            && (apoState.richiestaPrestazioniCategorieLoading
+                || apoState.richiestaPrestazioniCategorieLoaded
+                || apoState.richiestaPrestazioniCategorieError)) {
+        return;
+    }
+
+    apoState.richiestaPrestazioniCategorieCodServizio = normalizedCodServizio;
+    apoState.richiestaPrestazioniCategorie = [];
+    apoState.richiestaPrestazioniCategorieError = "";
+    apoState.richiestaPrestazioniCategorieLoading = true;
+    apoState.richiestaPrestazioniCategorieLoaded = false;
+    if (isApoRichiestaPrestazioniSectionActive()) {
+        renderApoPazienteBody();
+    }
+
+    try {
+        const response = await fetch(apoRichiestaPrestazioniCategorieUrl, {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento delle categorie.");
+        }
+
+        apoState.richiestaPrestazioniCategorie = normalizeApoRichiestaPrestazioniCategorie(payload.data && payload.data.categorie);
+        apoState.richiestaPrestazioniCategorieError = "";
+        apoState.richiestaPrestazioniCategorieLoaded = true;
+    } catch (error) {
+        apoState.richiestaPrestazioniCategorie = [];
+        apoState.richiestaPrestazioniCategorieError = error && error.message ? error.message : "Errore nel caricamento delle categorie.";
+        apoState.richiestaPrestazioniCategorieLoaded = true;
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            setApoRichiestaPrestazioniMessage(apoState.richiestaPrestazioniCategorieError, "danger");
+        }
+    } finally {
+        apoState.richiestaPrestazioniCategorieLoading = false;
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            renderApoPazienteBody();
+        }
+    }
+}
+
+async function loadApoRichiestaPrestazioniSottocategorie(categoria) {
+    const codServizio = getApoLoggedServiceCode();
+    const normalizedCategoria = normalizeApoDisplayValue(categoria);
+    const key = getApoRichiestaPrestazioniSottocategorieKey(codServizio, normalizedCategoria);
+
+    if (!normalizeApoValue(codServizio) || !normalizedCategoria) {
+        apoState.richiestaPrestazioniSottocategorie = [];
+        apoState.richiestaPrestazioniSottocategorieKey = "";
+        apoState.richiestaPrestazioniSottocategorieError = "";
+        apoState.richiestaPrestazioniSottocategorieLoaded = false;
+        apoState.richiestaPrestazioniSottocategorieLoading = false;
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            renderApoPazienteBody();
+        }
+        return;
+    }
+
+    if (apoState.richiestaPrestazioniSottocategorieKey === key
+            && (apoState.richiestaPrestazioniSottocategorieLoading
+                || apoState.richiestaPrestazioniSottocategorieLoaded
+                || apoState.richiestaPrestazioniSottocategorieError)) {
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("categoria", normalizedCategoria);
+
+    apoState.richiestaPrestazioniSottocategorieKey = key;
+    apoState.richiestaPrestazioniSottocategorie = [];
+    apoState.richiestaPrestazioniSottocategorieError = "";
+    apoState.richiestaPrestazioniSottocategorieLoading = true;
+    apoState.richiestaPrestazioniSottocategorieLoaded = false;
+    if (isApoRichiestaPrestazioniSectionActive()) {
+        renderApoPazienteBody();
+    }
+
+    try {
+        const response = await postApoFormRequest(apoRichiestaPrestazioniSottocategorieUrl, params, "load");
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento delle sottocategorie.");
+        }
+
+        apoState.richiestaPrestazioniSottocategorie = normalizeApoPrestazioniInfSottocategorie(payload.data && payload.data.sottocategorie);
+        apoState.richiestaPrestazioniSottocategorieError = "";
+        apoState.richiestaPrestazioniSottocategorieLoaded = true;
+    } catch (error) {
+        apoState.richiestaPrestazioniSottocategorie = [];
+        apoState.richiestaPrestazioniSottocategorieError = error && error.message ? error.message : "Errore nel caricamento delle sottocategorie.";
+        apoState.richiestaPrestazioniSottocategorieLoaded = true;
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            setApoRichiestaPrestazioniMessage(apoState.richiestaPrestazioniSottocategorieError, "danger");
+        }
+    } finally {
+        apoState.richiestaPrestazioniSottocategorieLoading = false;
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            renderApoPazienteBody();
+        }
+    }
+}
+
+function getApoRichiestaPrestazioniPrecedentiKey(accesso) {
+    const codConsulenza = normalizeApoValue(getApoAccessoCodConsulenza(accesso));
+    const codiceFiscale = normalizeApoValue(accesso && accesso.codFiscale);
+    if (!codConsulenza || !codiceFiscale) {
+        return "";
+    }
+    return codConsulenza + "|" + codiceFiscale;
+}
+
+async function loadApoRichiestaPrestazioniPrecedentiForSelectedConsulenza(accesso) {
+    const selectedAccesso = accesso || getApoSelectedAccesso();
+    const codiceFiscale = normalizeApoDisplayValue(selectedAccesso && selectedAccesso.codFiscale);
+    const codConsulenza = getApoAccessoCodConsulenza(selectedAccesso);
+    const key = getApoRichiestaPrestazioniPrecedentiKey(selectedAccesso);
+
+    if (!selectedAccesso || !codiceFiscale || !codConsulenza) {
+        apoState.richiestaPrestazioniPrecedenti = [];
+        apoState.richiestaPrestazioniPrecedentiKey = "";
+        apoState.richiestaPrestazioniPrecedentiError = "";
+        apoState.richiestaPrestazioniPrecedentiLoading = false;
+        apoState.richiestaPrestazioniPrecedentiLoaded = false;
+        apoState.richiestaPrestazioniPrecedentiRequestId += 1;
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            renderApoPazienteBody();
+        }
+        return;
+    }
+
+    if (apoState.richiestaPrestazioniPrecedentiKey === key
+            && (apoState.richiestaPrestazioniPrecedentiLoading
+                || apoState.richiestaPrestazioniPrecedentiLoaded
+                || apoState.richiestaPrestazioniPrecedentiError)) {
+        return;
+    }
+
+    const requestId = apoState.richiestaPrestazioniPrecedentiRequestId + 1;
+    const params = new URLSearchParams();
+    params.set("codiceFiscale", codiceFiscale);
+    params.set("codConsulenza", codConsulenza);
+
+    apoState.richiestaPrestazioniPrecedentiRequestId = requestId;
+    apoState.richiestaPrestazioniPrecedentiKey = key;
+    apoState.richiestaPrestazioniPrecedenti = [];
+    apoState.richiestaPrestazioniPrecedentiError = "";
+    apoState.richiestaPrestazioniPrecedentiLoading = true;
+    apoState.richiestaPrestazioniPrecedentiLoaded = false;
+    if (isApoRichiestaPrestazioniSectionActive()) {
+        renderApoPazienteBody();
+    }
+
+    try {
+        const response = await postApoFormRequest(apoRichiestaPrestazioniUrl, params, "load");
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento delle richieste precedenti.");
+        }
+
+        if (apoState.richiestaPrestazioniPrecedentiRequestId !== requestId
+                || apoState.richiestaPrestazioniPrecedentiKey !== key) {
+            return;
+        }
+
+        apoState.richiestaPrestazioniPrecedenti = normalizeApoPrestazioniInfermieristiche(payload.data && payload.data.richieste);
+        apoState.richiestaPrestazioniPrecedentiError = "";
+        apoState.richiestaPrestazioniPrecedentiLoaded = true;
+    } catch (error) {
+        if (apoState.richiestaPrestazioniPrecedentiRequestId !== requestId) {
+            return;
+        }
+        apoState.richiestaPrestazioniPrecedenti = [];
+        apoState.richiestaPrestazioniPrecedentiError = error && error.message ? error.message : "Errore nel caricamento delle richieste precedenti.";
+        apoState.richiestaPrestazioniPrecedentiLoaded = true;
+    } finally {
+        if (apoState.richiestaPrestazioniPrecedentiRequestId === requestId) {
+            apoState.richiestaPrestazioniPrecedentiLoading = false;
+        }
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            renderApoPazienteBody();
+        }
+    }
+}
+
 function buildApoRicettaDematerializzataUrl() {
     const accesso = getApoSelectedAccesso();
     const codiceFiscale = normalizeApoDisplayValue(accesso && accesso.codFiscale);
@@ -1788,10 +2749,10 @@ function buildApoRicettaDematerializzataUrl() {
 
     const url = new URL(apoRicettaDematerializzataUrl);
     url.searchParams.set("id_cod_fiscale", codiceFiscale);
-    url.searchParams.set("id_medico", username);
+    url.searchParams.set("id_medico", username.toUpperCase());
     url.searchParams.set("servizio", codServizio);
     url.searchParams.set("invalidate", "YES");
-    url.searchParams.set("user", username);
+    url.searchParams.set("user", username.toUpperCase());
     url.searchParams.set("demat", "SI");
     url.searchParams.set("censisciRossa", "SI");
     url.searchParams.set("evento", codConsulenza);
@@ -1819,10 +2780,11 @@ function buildApoRicettaFarmaciUrl() {
 
     const url = new URL(apoRicettaFarmaciUrl);
     url.searchParams.set("id_cod_fiscale", codiceFiscale);
-    url.searchParams.set("utente", username);
+    url.searchParams.set("utente", username.toUpperCase());
     url.searchParams.set("servizio", codServizio);
-    url.searchParams.set("MENU", "RicettaFarmaciDM");
-    url.searchParams.set("id_titolare", username);
+    url.searchParams.set("MENU", "RicettaFarmaci2026");
+//    url.searchParams.set("MENU", "RicettaFarmaciDM");
+    url.searchParams.set("id_titolare", username.toUpperCase());
     url.searchParams.set("evento", codConsulenza);
 
     return {url: url.toString(), message: ""};
@@ -1841,7 +2803,8 @@ function buildApoRepositoryRefertiUrl() {
     }
 
     const url = new URL(apoRepositoryRefertiUrl);
-    url.searchParams.set("utente", username);
+    //url.searchParams.set("utente", username);
+	url.searchParams.set("utente", 'TOPAMB');
     url.searchParams.set("postazione", username);
     url.searchParams.set("pagina", "VISDOC");
     url.searchParams.set("idPatient", pinAzienda);
@@ -1852,15 +2815,19 @@ function buildApoRepositoryRefertiUrl() {
 function buildApoConsensoDseWindowUrl() {
     const accesso = getApoSelectedAccesso();
     const codiceFiscale = normalizeApoDisplayValue(accesso && accesso.codFiscale);
+    const codUtente = getApoLoggedUsername();
 
     if (!codiceFiscale) {
         return {url: "", message: "Seleziona un paziente prima di aprire il cruscotto consenso."};
+    }
+    if (!codUtente) {
+        return {url: "", message: "Utente loggato non disponibile."};
     }
 
     const url = new URL(apoConsensoDseInvokeUrl);
     url.searchParams.set("SISTEMA", "TOPAMB");
     url.searchParams.set("PASSWORD", "nhb0vfa9SC");
-    url.searchParams.set("UTENTE", "m.manzotti");
+    url.searchParams.set("UTENTE", codUtente);
     url.searchParams.set("COD_FISCALE", codiceFiscale);
 
     return {url: url.toString(), message: ""};
@@ -2090,6 +3057,26 @@ function handleApoPrestazioniInfCategoriaChange(value) {
     }
 }
 
+function handleApoRichiestaPrestazioniCategoriaChange(value) {
+    const idCategoria = normalizeApoDisplayValue(value);
+    const categoriaSelezionata = apoState.richiestaPrestazioniCategorie.filter(function (categoria) {
+        return categoria.id === idCategoria;
+    })[0];
+    apoState.richiestaPrestazioniCategoriaId = idCategoria;
+    apoState.richiestaPrestazioniCategoria = categoriaSelezionata ? categoriaSelezionata.categoria : "";
+    apoState.richiestaPrestazioniSottocategorieSelezionate = [];
+    apoState.richiestaPrestazioniSottocategorie = [];
+    apoState.richiestaPrestazioniSottocategorieKey = "";
+    apoState.richiestaPrestazioniSottocategorieLoaded = false;
+    apoState.richiestaPrestazioniSottocategorieError = "";
+    apoState.richiestaPrestazioniMessage = "";
+    if (apoState.richiestaPrestazioniCategoria) {
+        void loadApoRichiestaPrestazioniSottocategorie(apoState.richiestaPrestazioniCategoria);
+    } else {
+        renderApoPazienteBody();
+    }
+}
+
 async function handleApoPrestazioniInfAggiungi() {
     if (!apoState.prestazioniInfCategoria) {
         setApoPrestazioniInfMessage("Seleziona una categoria.", "warning");
@@ -2175,6 +3162,173 @@ async function handleApoPrestazioniInfAggiungi() {
     }
 }
 
+async function handleApoRichiestaPrestazioniAggiungi() {
+    if (!apoState.richiestaPrestazioniCategoriaId) {
+        setApoRichiestaPrestazioniMessage("Seleziona una categoria.", "warning");
+        return;
+    }
+    if (!apoState.richiestaPrestazioniSottocategorieSelezionate.length) {
+        setApoRichiestaPrestazioniMessage("Seleziona almeno una sottocategoria.", "warning");
+        return;
+    }
+
+    if (apoState.richiestaPrestazioniSaving) {
+        return;
+    }
+
+    const accesso = getApoSelectedAccesso();
+    const codiceFiscale = normalizeApoDisplayValue(accesso && accesso.codFiscale);
+    const codConsulenza = getApoAccessoCodConsulenza(accesso);
+    const selectedIds = apoState.richiestaPrestazioniSottocategorieSelezionate.filter(function (id) {
+        return normalizeApoDisplayValue(id) !== "";
+    });
+    const params = new URLSearchParams();
+
+    if (!accesso || !codiceFiscale || !codConsulenza) {
+        setApoRichiestaPrestazioniMessage("Consulenza o paziente selezionato non disponibile.", "danger");
+        return;
+    }
+    if (!selectedIds.length) {
+        setApoRichiestaPrestazioniMessage("Seleziona almeno una sottocategoria valida.", "warning");
+        return;
+    }
+
+    params.set("codiceFiscale", codiceFiscale);
+    params.set("codConsulenza", codConsulenza);
+    selectedIds.forEach(function (idCategoria) {
+        params.append("idCategoria", idCategoria);
+    });
+
+    apoState.richiestaPrestazioniSaving = true;
+    apoState.richiestaPrestazioniMessage = "";
+    apoState.richiestaPrestazioniMessageType = "info";
+    setApoSearchMessage("", "info");
+    renderApoPazienteBody();
+
+    try {
+        const response = await fetch(apoRichiestaPrestazioniUrl, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            body: params.toString()
+        });
+
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel salvataggio della richiesta prestazioni.");
+        }
+
+        apoState.richiestaPrestazioniSottocategorieSelezionate = [];
+        setApoRichiestaPrestazioniMessage(payload.message || "Richiesta prestazioni aggiunta correttamente.", "success");
+        apoState.richiestaPrestazioniPrecedentiKey = "";
+        apoState.richiestaPrestazioniPrecedentiLoaded = false;
+        void loadApoRichiestaPrestazioniPrecedentiForSelectedConsulenza(accesso);
+    } catch (error) {
+        setApoRichiestaPrestazioniMessage(error && error.message ? error.message : "Errore nel salvataggio della richiesta prestazioni.", "danger");
+    } finally {
+        apoState.richiestaPrestazioniSaving = false;
+        if (isApoRichiestaPrestazioniSectionActive()) {
+            renderApoPazienteBody();
+        }
+    }
+}
+
+function renderApoRichiestaPrestazioniPrecedentiPanel() {
+    const panel = document.createElement("section");
+    panel.className = "apo-richiesta-prestazioni-previous";
+
+    const title = document.createElement("div");
+    title.className = "apo-richiesta-prestazioni-previous-title";
+    title.textContent = "Richieste precedenti";
+    panel.appendChild(title);
+
+    const body = document.createElement("div");
+    body.className = "apo-richiesta-prestazioni-previous-body";
+
+    if (apoState.richiestaPrestazioniPrecedentiLoading) {
+        const placeholder = document.createElement("div");
+        placeholder.className = "apo-richiesta-prestazioni-previous-empty";
+        placeholder.textContent = "Caricamento richieste precedenti...";
+        body.appendChild(placeholder);
+        panel.appendChild(body);
+        return panel;
+    }
+
+    if (apoState.richiestaPrestazioniPrecedentiError) {
+        const placeholder = document.createElement("div");
+        placeholder.className = "apo-richiesta-prestazioni-previous-empty";
+        placeholder.textContent = apoState.richiestaPrestazioniPrecedentiError;
+        body.appendChild(placeholder);
+        panel.appendChild(body);
+        return panel;
+    }
+
+    if (!apoState.richiestaPrestazioniPrecedenti.length) {
+        const placeholder = document.createElement("div");
+        placeholder.className = "apo-richiesta-prestazioni-previous-empty";
+        placeholder.textContent = "Nessuna richiesta precedente per questa consulenza.";
+        body.appendChild(placeholder);
+        panel.appendChild(body);
+        return panel;
+    }
+
+    apoState.richiestaPrestazioniPrecedenti.forEach(function (richiesta) {
+        const row = document.createElement("article");
+        row.className = "apo-richiesta-prestazioni-previous-row";
+
+        const date = document.createElement("div");
+        date.className = "apo-richiesta-prestazioni-previous-date";
+
+        const dateValue = document.createElement("div");
+        dateValue.textContent = richiesta.dataIns || "-";
+
+        const consulenza = document.createElement("div");
+        consulenza.className = "apo-richiesta-prestazioni-previous-consulenza";
+        consulenza.textContent = richiesta.idConsulenza || "-";
+
+        date.appendChild(dateValue);
+        date.appendChild(consulenza);
+
+        const texts = document.createElement("div");
+        texts.className = "apo-richiesta-prestazioni-previous-texts";
+
+        const categoria = document.createElement("div");
+        categoria.className = "apo-richiesta-prestazioni-previous-category";
+        categoria.textContent = richiesta.categoria || "Senza categoria";
+
+        const sottocategoria = document.createElement("div");
+        sottocategoria.className = "apo-richiesta-prestazioni-previous-subcategory";
+        sottocategoria.textContent = richiesta.sottoCategoria || "-";
+
+        const richiedente = document.createElement("div");
+        richiedente.className = "apo-richiesta-prestazioni-previous-requester";
+        richiedente.textContent = richiesta.descOperatore || "-";
+
+        texts.appendChild(categoria);
+        texts.appendChild(sottocategoria);
+        row.appendChild(date);
+        row.appendChild(texts);
+        row.appendChild(richiedente);
+        body.appendChild(row);
+    });
+
+    panel.appendChild(body);
+    return panel;
+}
+
 function renderApoPrestazioniInfermieristicheSheet(sheet) {
     sheet.classList.add("apo-prestazioni-inf-sheet");
 
@@ -2199,14 +3353,14 @@ function renderApoPrestazioniInfermieristicheSheet(sheet) {
     }
 
     const form = document.createElement("form");
-    form.className = "apo-prestazioni-inf-form";
+    form.className = "apo-prestazioni-inf-form apo-richiesta-prestazioni-form";
     form.addEventListener("submit", function (event) {
         event.preventDefault();
         void handleApoPrestazioniInfAggiungi();
     });
 
     const fields = document.createElement("div");
-    fields.className = "apo-prestazioni-inf-grid";
+    fields.className = "apo-prestazioni-inf-grid apo-richiesta-prestazioni-controls";
 
     const categoriaSelect = document.createElement("select");
     categoriaSelect.className = "form-select form-control";
@@ -2220,7 +3374,7 @@ function renderApoPrestazioniInfermieristicheSheet(sheet) {
     });
 
     const sottocategoriaList = document.createElement("div");
-    sottocategoriaList.className = "apo-prestazioni-inf-multiselect";
+    sottocategoriaList.className = "apo-prestazioni-inf-multiselect apo-multiselect-scrollable";
     sottocategoriaList.setAttribute("role", "listbox");
     sottocategoriaList.setAttribute("aria-multiselectable", "true");
 
@@ -2290,6 +3444,117 @@ function renderApoPrestazioniInfermieristicheSheet(sheet) {
 
     form.appendChild(fields);
     form.appendChild(noteField);
+    form.appendChild(actions);
+    sheet.appendChild(form);
+}
+
+function renderApoRichiestaPrestazioniSheet(sheet) {
+    sheet.classList.add("apo-prestazioni-inf-sheet");
+
+    if (!getApoLoggedServiceCode()) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.textContent = "Servizio loggato non disponibile.";
+        sheet.appendChild(emptyState);
+        return;
+    }
+
+    if (!apoState.richiestaPrestazioniCategorieLoading
+            && !apoState.richiestaPrestazioniCategorieLoaded
+            && !apoState.richiestaPrestazioniCategorieError) {
+        void loadApoRichiestaPrestazioniCategorie();
+    }
+    const richiestePrecedentiKey = getApoRichiestaPrestazioniPrecedentiKey(getApoSelectedAccesso());
+    if (apoState.richiestaPrestazioniPrecedentiKey !== richiestePrecedentiKey
+            || (!apoState.richiestaPrestazioniPrecedentiLoading
+                && !apoState.richiestaPrestazioniPrecedentiLoaded
+                && !apoState.richiestaPrestazioniPrecedentiError)) {
+        void loadApoRichiestaPrestazioniPrecedentiForSelectedConsulenza();
+    }
+    if (apoState.richiestaPrestazioniCategoriaId
+            && !apoState.richiestaPrestazioniSottocategorieLoading
+            && !apoState.richiestaPrestazioniSottocategorieLoaded
+            && !apoState.richiestaPrestazioniSottocategorieError) {
+        void loadApoRichiestaPrestazioniSottocategorie(apoState.richiestaPrestazioniCategoria);
+    }
+
+    const form = document.createElement("form");
+    form.className = "apo-prestazioni-inf-form";
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        void handleApoRichiestaPrestazioniAggiungi();
+    });
+
+    const fields = document.createElement("div");
+    fields.className = "apo-prestazioni-inf-grid";
+
+    const categoriaSelect = document.createElement("select");
+    categoriaSelect.className = "form-select form-control";
+    categoriaSelect.disabled = apoState.richiestaPrestazioniCategorieLoading || apoState.richiestaPrestazioniSaving;
+    appendApoPrestazioniInfOption(categoriaSelect, "", apoState.richiestaPrestazioniCategorieLoading ? "Caricamento..." : "Seleziona categoria", !apoState.richiestaPrestazioniCategoriaId);
+    apoState.richiestaPrestazioniCategorie.forEach(function (categoria) {
+        appendApoPrestazioniInfOption(categoriaSelect, categoria.id, categoria.label, categoria.id === apoState.richiestaPrestazioniCategoriaId);
+    });
+    categoriaSelect.addEventListener("change", function () {
+        handleApoRichiestaPrestazioniCategoriaChange(categoriaSelect.value);
+    });
+
+    const sottocategoriaList = document.createElement("div");
+    sottocategoriaList.className = "apo-prestazioni-inf-multiselect apo-multiselect-scrollable";
+    sottocategoriaList.setAttribute("role", "listbox");
+    sottocategoriaList.setAttribute("aria-multiselectable", "true");
+
+    if (apoState.richiestaPrestazioniSottocategorieLoading || !apoState.richiestaPrestazioniSottocategorie.length) {
+        const placeholder = document.createElement("div");
+        placeholder.className = "apo-prestazioni-inf-multiselect-placeholder";
+        placeholder.textContent = apoState.richiestaPrestazioniSottocategorieLoading ? "Caricamento..." : "Seleziona categoria";
+        sottocategoriaList.appendChild(placeholder);
+    }
+
+    apoState.richiestaPrestazioniSottocategorie.forEach(function (item) {
+        const option = document.createElement("button");
+        const selected = apoState.richiestaPrestazioniSottocategorieSelezionate.indexOf(item.id) !== -1;
+        option.type = "button";
+        option.className = "apo-prestazioni-inf-choice" + (selected ? " is-selected" : "");
+        option.value = item.id;
+        option.dataset.id = item.id;
+        option.setAttribute("value", item.id);
+        option.setAttribute("role", "option");
+        option.setAttribute("aria-selected", selected ? "true" : "false");
+        option.disabled = apoState.richiestaPrestazioniSaving;
+        option.textContent = item.sottoCategoria || item.id;
+        option.addEventListener("click", function () {
+            if (apoState.richiestaPrestazioniSaving) {
+                return;
+            }
+            const currentIndex = apoState.richiestaPrestazioniSottocategorieSelezionate.indexOf(item.id);
+            const shouldSelect = currentIndex === -1;
+            if (shouldSelect) {
+                apoState.richiestaPrestazioniSottocategorieSelezionate.push(item.id);
+            } else {
+                apoState.richiestaPrestazioniSottocategorieSelezionate.splice(currentIndex, 1);
+            }
+            apoState.richiestaPrestazioniMessage = "";
+            option.classList.toggle("is-selected", shouldSelect);
+            option.setAttribute("aria-selected", shouldSelect ? "true" : "false");
+        });
+        sottocategoriaList.appendChild(option);
+    });
+
+    fields.appendChild(createApoPrestazioniInfSelectField("Categoria", categoriaSelect));
+    fields.appendChild(createApoPrestazioniInfSelectField("Sottocategoria", sottocategoriaList));
+
+    const actions = document.createElement("div");
+    actions.className = "apo-prestazioni-inf-actions";
+    const addButton = document.createElement("button");
+    addButton.type = "submit";
+    addButton.className = "btn btn-success";
+    addButton.disabled = apoState.richiestaPrestazioniSaving;
+    addButton.textContent = apoState.richiestaPrestazioniSaving ? "Salvataggio..." : "Aggiungi";
+    actions.appendChild(addButton);
+
+    form.appendChild(renderApoRichiestaPrestazioniPrecedentiPanel());
+    form.appendChild(fields);
     form.appendChild(actions);
     sheet.appendChild(form);
 }
@@ -2736,6 +4001,7 @@ function renderApoAllegatoMSheet(sheet, accesso) {
         && apoState.allegatoM
         && typeof apoState.allegatoM === "object";
     const allegato = hasCurrentAllegato ? apoState.allegatoM : {};
+    const canEdit = canShowApoAllegatoMSaveButton(allegatoMKey, allegato);
 
     const form = document.createElement("div");
     form.className = "apo-allegato-m-form";
@@ -2822,7 +4088,7 @@ function renderApoAllegatoMSheet(sheet, accesso) {
 
     const actions = document.createElement("div");
     actions.className = "apo-allegato-actions";
-    if (canShowApoAllegatoMSaveButton(allegatoMKey, allegato)) {
+    if (canEdit) {
         const saveButton = createApoAllegatoButton("Salva", "save");
         saveButton.addEventListener("click", function () {
             void saveApoAllegatoM(accesso, form, saveButton);
@@ -2848,6 +4114,12 @@ function renderApoAllegatoMSheet(sheet, accesso) {
     form.appendChild(esito);
     form.appendChild(nonDifferibile);
     form.appendChild(actions);
+    if (!canEdit) {
+        form.classList.add("is-readonly");
+        form.querySelectorAll("input, textarea, select").forEach(function (field) {
+            field.disabled = true;
+        });
+    }
     sheet.appendChild(form);
 }
 
@@ -3066,11 +4338,7 @@ async function loadApoConsensoDseForSelectedPaziente(accesso) {
     syncApoPazienteMenuForUser();
 
     try {
-        const response = await fetch(apoConsensoDseUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoConsensoDseUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -3139,11 +4407,7 @@ async function loadApoMedicoCuranteForSelectedPaziente(accesso) {
     renderApoSelectedPaziente();
 
     try {
-        const response = await fetch(apoMedicoCuranteUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoMedicoCuranteUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -3187,11 +4451,17 @@ async function loadApoMedicoCuranteForSelectedPaziente(accesso) {
 function renderApoSelectedPaziente() {
     const body = document.getElementById("apo-paziente-selected-body");
     const schedaButton = document.getElementById("apo-selected-scheda-button");
+    const questionariButton = document.getElementById("apo-selected-questionari-button");
     const accesso = getApoSelectedAccesso();
 
     updateApoSelectedConsulenzaHiddenFields(accesso);
+    const canOpenPatientActions = !!accesso && !!normalizeApoDisplayValue(accesso.codPaz);
     if (schedaButton) {
-        schedaButton.disabled = !accesso || !normalizeApoDisplayValue(accesso.codPaz);
+        schedaButton.disabled = !canOpenPatientActions;
+    }
+    if (questionariButton) {
+        questionariButton.disabled = apoQuestionariPazienteTemporaneamenteDisabilitati
+            || !canOpenPatientActions || !hasApoQuestionariPazienteStorico(accesso);
     }
 
     if (!body) {
@@ -3221,6 +4491,7 @@ function renderApoSelectedPaziente() {
         clearApoSchedaPazienteHistoryPatologie();
         clearApoSchedaPazienteHistoryAllergie();
         clearApoSchedaPazienteHistoryTerapie();
+        clearApoQuestionariPazienteStorico();
         renderApoStoricoAccessi();
         return;
     }
@@ -3242,6 +4513,7 @@ function renderApoSelectedPaziente() {
     void loadApoRicetteDematerializzateForSelectedPaziente(accesso);
     void loadApoPianiTerapeuticiForSelectedPaziente(accesso);
     void loadApoAllegatoMForSelectedAccesso(accesso);
+    void loadApoQuestionariPazienteStorico(accesso, false);
 }
 
 function clearApoStoricoAccessi() {
@@ -3796,12 +5068,7 @@ async function deleteApoSchedaPazienteDiario(accesso, item) {
     params.set("codPaz", codPaz);
 
     try {
-        const response = await fetch(apoSchedaPazienteDiarioUrl + "?" + params.toString(), {
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoSchedaPazienteDiarioUrl, params, "delete");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -3925,12 +5192,7 @@ function normalizeApoSchedaPazienteTerapieLookupItems(items, valueKeys) {
 }
 
 async function loadApoSchedaPazienteTerapieLookup(url, params, dataKey, valueKeys, errorMessage) {
-    const queryString = params.toString();
-    const response = await fetch(queryString ? url + "?" + queryString : url, {
-        headers: {
-            "Accept": "application/json"
-        }
-    });
+    const response = await postApoFormRequest(url, params, "load");
     if (response.status === 401) {
         window.location.href = apoLoginUrl;
         return [];
@@ -4747,11 +6009,9 @@ function createApoSchedaPazienteHistoryPatologieAddControls(accesso) {
 
         renderSuggestions([], "Ricerca in corso...");
         try {
-            const response = await fetch(apoPatologieCronicheIcd10Url + "?filtro=" + encodeURIComponent(filtro), {
-                headers: {
-                    "Accept": "application/json"
-                }
-            });
+            const params = new URLSearchParams();
+            params.set("filtro", filtro);
+            const response = await postApoFormRequest(apoPatologieCronicheIcd10Url, params, "load");
             if (response.status === 401) {
                 window.location.href = apoLoginUrl;
                 return;
@@ -5017,11 +6277,9 @@ function createApoSchedaPazienteHistoryAllergieAddControls(accesso) {
 
         renderSuggestions([], "Ricerca in corso...");
         try {
-            const response = await fetch(apoAllergieUrl + "?filtro=" + encodeURIComponent(filtro), {
-                headers: {
-                    "Accept": "application/json"
-                }
-            });
+            const params = new URLSearchParams();
+            params.set("filtro", filtro);
+            const response = await postApoFormRequest(apoAllergieUrl, params, "load");
             if (response.status === 401) {
                 window.location.href = apoLoginUrl;
                 return;
@@ -5357,11 +6615,7 @@ async function loadApoSchedaPazienteDiarioForSelectedPaziente(accesso) {
     renderApoSchedaPazienteHistorySection();
 
     try {
-        const response = await fetch(apoSchedaPazienteDiarioUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoSchedaPazienteDiarioUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -5431,11 +6685,7 @@ async function loadApoSchedaPazientePatologieForSelectedPaziente(accesso) {
     renderApoSchedaPazienteHistorySection();
 
     try {
-        const response = await fetch(apoSchedaPazientePatologieUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoSchedaPazientePatologieUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -5539,12 +6789,7 @@ async function deleteApoSchedaPazienteHistoryPatologia(accesso, item) {
     params.set("codPaz", codPaz);
 
     try {
-        const response = await fetch(apoSchedaPazientePatologieUrl + "?" + params.toString(), {
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoSchedaPazientePatologieUrl, params, "delete");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -5605,11 +6850,7 @@ async function loadApoSchedaPazienteAllergieForSelectedPaziente(accesso) {
     renderApoSchedaPazienteHistorySection();
 
     try {
-        const response = await fetch(apoSchedaPazienteAllergieUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoSchedaPazienteAllergieUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -5713,12 +6954,7 @@ async function deleteApoSchedaPazienteHistoryAllergia(accesso, item) {
     params.set("codPaz", codPaz);
 
     try {
-        const response = await fetch(apoSchedaPazienteAllergieUrl + "?" + params.toString(), {
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoSchedaPazienteAllergieUrl, params, "delete");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -5779,11 +7015,7 @@ async function loadApoSchedaPazienteTerapieForSelectedPaziente(accesso) {
     renderApoSchedaPazienteHistorySection();
 
     try {
-        const response = await fetch(apoSchedaPazienteTerapieUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoSchedaPazienteTerapieUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -5903,12 +7135,7 @@ async function deleteApoSchedaPazienteHistoryTerapia(accesso, terapia) {
     params.set("durataUnita", item.durataUnita);
 
     try {
-        const response = await fetch(apoSchedaPazienteTerapieUrl + "?" + params.toString(), {
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoSchedaPazienteTerapieUrl, params, "delete");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -6060,11 +7287,7 @@ async function loadApoStoricoAccessiForSelectedPaziente(accesso) {
     renderApoStoricoAccessi();
 
     try {
-        const response = await fetch(apoAccessiUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoAccessiUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -6138,11 +7361,7 @@ async function loadApoPrestazioniInfermieristicheForSelectedPaziente(accesso) {
     renderApoStoricoAccessi();
 
     try {
-        const response = await fetch(apoPrestazioniInfermieristicheUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoPrestazioniInfermieristicheUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -6215,11 +7434,7 @@ async function loadApoRicetteFarmaciForSelectedPaziente(accesso) {
     renderApoStoricoAccessi();
 
     try {
-        const response = await fetch(apoRicetteFarmaciStoricoUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoRicetteFarmaciStoricoUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -6292,11 +7507,7 @@ async function loadApoRicetteDematerializzateForSelectedPaziente(accesso) {
     renderApoStoricoAccessi();
 
     try {
-        const response = await fetch(apoRicetteDematerializzateStoricoUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoRicetteDematerializzateStoricoUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -6378,11 +7589,7 @@ async function loadApoPianiTerapeuticiForSelectedPaziente(accesso) {
     }
 
     try {
-        const response = await fetch(apoPianiTerapeuticiUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoPianiTerapeuticiUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -6464,11 +7671,7 @@ async function loadApoAllegatoMForSelectedAccesso(accesso) {
     }
 
     try {
-        const response = await fetch(apoAllegatoMUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoAllegatoMUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -7363,9 +8566,9 @@ function getApoSelectedConsulenzaCodServizio() {
     return normalizeApoDisplayValue(input ? input.value : "");
 }
 
-function buildApoAllegatoMReportUrl(item, useSelectedCodServizio) {
+function buildApoAllegatoMReportRequest(item, useSelectedCodServizio) {
     if (!item) {
-        return {url: "", message: "Impossibile aprire il report Allegato M."};
+        return {url: "", params: null, message: "Impossibile aprire il report Allegato M."};
     }
 
     const codConsulenza = normalizeApoDisplayValue(item.codConsulenze || item.codConsulenza || item.consulenza);
@@ -7374,25 +8577,25 @@ function buildApoAllegatoMReportUrl(item, useSelectedCodServizio) {
         : normalizeApoDisplayValue(item.codServizio);
 
     if (!codConsulenza || !codServizio) {
-        return {url: "", message: "Parametri insufficienti per l'apertura del report (Codice Consulenza o Codice Servizio mancante)."};
+        return {url: "", params: null, message: "Parametri insufficienti per l'apertura del report (Codice Consulenza o Codice Servizio mancante)."};
     }
 
     const params = new URLSearchParams();
     params.set("COD_CONSULENZA", codConsulenza);
     params.set("COD_SERVIZIO", codServizio);
 
-    return {url: buildApoUrl("StampaReport") + "?" + params.toString(), message: ""};
+    return {url: buildApoUrl("StampaReport"), params: params, message: ""};
 }
 
 function openApoAllegatoMReport(item, useSelectedCodServizio) {
-    const result = buildApoAllegatoMReportUrl(item, useSelectedCodServizio);
+    const result = buildApoAllegatoMReportRequest(item, useSelectedCodServizio);
 
-    if (!result.url) {
+    if (!result.url || !result.params) {
         window.alert(result.message || "Impossibile aprire il report Allegato M.");
         return;
     }
 
-    openApoBrowserPopup(result.url, "APOReportAllegatoM");
+    openApoPostPopup(result.url, result.params, "APOReportAllegatoM");
 }
 
 function setApoPazienteSection(sectionId) {
@@ -8126,11 +9329,7 @@ async function calculateApoCensimentoCodiceFiscale() {
     setApoCensimentoMessage("", "info");
 
     try {
-        const response = await fetch(apoCodiceFiscaleUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoCodiceFiscaleUrl, params, "load");
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
             return;
@@ -8199,6 +9398,7 @@ async function saveApoCensimentoPaziente(payload) {
         }
 
         const created = normalizeApoAnagrafePaziente(payloadResponse.data && payloadResponse.data.paziente, 0);
+        apoState.nuovoPazienteQuestionariId = created.id || created.codFiscale || "";
         apoState.nuovoAccessoResults = created.codFiscale ? [created] : [];
         apoState.nuovoAccessoSelectedId = created.id || "";
         renderApoNuovoAccessoResults();
@@ -8258,7 +9458,10 @@ function getApoCurrentDateTimeLocal() {
 }
 
 function normalizeApoNuovoAccessoTipo(tipo) {
-    return tipo === "certificazioni" ? "certificazioni" : "visita-medica";
+    if (tipo === "certificazioni" || tipo === "televisita") {
+        return tipo;
+    }
+    return "visita-medica";
 }
 
 function getApoNuovoAccessoTipoConfig(tipo) {
@@ -8268,6 +9471,13 @@ function getApoNuovoAccessoTipoConfig(tipo) {
             id: "certificazioni",
             label: "Certificazioni",
             code: "CERT_AM2"
+        };
+    }
+    if (normalizedTipo === "televisita") {
+        return {
+            id: "televisita",
+            label: "Televisita",
+            code: "TVIS_AM2"
         };
     }
 
@@ -9000,11 +10210,7 @@ async function loadApoSchedaPazientePatologieByFiltro(filterValue) {
     try {
         const params = new URLSearchParams();
         params.set("filtro", filtro);
-        const response = await fetch(apoPatologieCronicheIcd10Url + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoPatologieCronicheIcd10Url, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -9313,11 +10519,7 @@ async function loadApoSchedaPazienteAllergieByFiltro(filterValue) {
     try {
         const params = new URLSearchParams();
         params.set("filtro", filtro);
-        const response = await fetch(apoAllergieUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoAllergieUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -9701,11 +10903,7 @@ async function searchApoSchedaPazienteCaregiver(cognomeInput, nomeInput, codiceF
     renderApoSchedaPazienteCaregiverResults(resultsBody, [], null, "Ricerca in corso...");
 
     try {
-        const response = await fetch(apoAnagrafeSearchUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoAnagrafeSearchUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -10023,11 +11221,7 @@ async function loadApoSchedaPazienteExisting(codPaz) {
 
     const params = new URLSearchParams();
     params.set("codPaz", normalizedCodPaz);
-    const response = await fetch(apoSchedaPazienteUrl + "?" + params.toString(), {
-        headers: {
-            "Accept": "application/json"
-        }
-    });
+    const response = await postApoFormRequest(apoSchedaPazienteUrl, params, "load");
 
     if (response.status === 401) {
         window.location.href = apoLoginUrl;
@@ -10098,6 +11292,1863 @@ function openApoSchedaPazienteModal(patient) {
     if (okButton) {
         okButton.focus();
     }
+
+}
+
+function getApoQuestionarioMammografiaEta(dataNascita) {
+    const value = normalizeApoDisplayValue(dataNascita);
+    const match = value.match(/^(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{4})(?:\s.*)?$/)
+        || value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T].*)?$/);
+    if (!match) {
+        return "";
+    }
+    const isIso = match[1].length === 4;
+    const year = Number.parseInt(isIso ? match[1] : match[3], 10);
+    const month = Number.parseInt(isIso ? match[2] : match[2], 10);
+    const day = Number.parseInt(isIso ? match[3] : match[1], 10);
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+        return "";
+    }
+    return String(getApoAgeForDate(year, month, day));
+}
+
+const apoQuestionarioFascia625Domande = [
+    {name: "q1_lavoro_pianificato", text: "Non riesco a fare un lavoro pianificato a causa dell'utilizzo del cellulare"},
+    {name: "q2_concentrazione", text: "Ho difficoltà di concentrazione in classe, mentre si fanno i compiti o mentre si sta lavorando, a causa dell'utilizzo del cellulare"},
+    {name: "q3_dolore", text: "Sento dolore ai polsi, alla schiena o al collo mentre uso il cellulare"},
+    {name: "q4_resistere_senza", text: "Non sarei capace di resistere senza il cellulare"},
+    {name: "q5_impaziente_irritabile", text: "Mi sento impaziente ed irritabile quando non ho con me il cellulare"},
+    {name: "q6_cellulare_mente", text: "Ho il mio cellulare in mente anche quando non Io sto usando"},
+    {name: "q7_non_rinuncia", text: "Non rinuncerei mai all'uso del cellulare dal momento che la mia vita quotidiana è molto influenzata da esso"},
+    {name: "q8_controllo_costante", text: "Controllo costantemente il mio cellulare in modo da non perdere le conversazioni tra le altre persone sulle messaggistiche social"},
+    {name: "q9_uso_piu_lungo", text: "So di usare il mio cellulare più a lungo di quanto dovrei"},
+    {name: "q10_persone_dicono_troppo", text: "Le persone intorno a me dicono che uso troppo il mio cellulare"}
+];
+
+const apoQuestionarioFascia625Scala = [
+    {value: "1", text: "Non sono per nulla d’accordo"},
+    {value: "2", text: "Non sono d’accordo"},
+    {value: "3", text: "Non sono molto d'accordo"},
+    {value: "4", text: "Sono poco d’accordo"},
+    {value: "5", text: "Sono d’accordo"},
+    {value: "6", text: "Sono molto d’accordo"}
+];
+
+function renderApoQuestionarioFascia625Domande() {
+    const host = document.getElementById("apo-questionario-fascia625-domande");
+    if (!host || host.dataset.rendered === "true") {
+        return;
+    }
+    apoQuestionarioFascia625Domande.forEach(function (domanda, index) {
+        const question = document.createElement("div");
+        const questionLine = document.createElement("div");
+        const number = document.createElement("div");
+        const text = document.createElement("div");
+        const scale = document.createElement("div");
+        question.className = "mammo-question";
+        questionLine.className = "mammo-question-line";
+        number.className = "mammo-number";
+        number.textContent = String(index + 1) + ")";
+        text.className = "mammo-question-text";
+        text.textContent = domanda.text;
+        scale.className = "mammo-under fascia625-scale";
+        scale.setAttribute("role", "radiogroup");
+        scale.setAttribute("aria-label", "Risposta domanda " + String(index + 1));
+        apoQuestionarioFascia625Scala.forEach(function (valore) {
+            const label = document.createElement("label");
+            const input = document.createElement("input");
+            const content = document.createElement("span");
+            label.className = "mammo-choice-inline";
+            label.dataset.value = valore.value;
+            input.type = "radio";
+            input.name = domanda.name;
+            input.value = valore.value;
+            input.required = true;
+            content.textContent = valore.text;
+            label.appendChild(input);
+            label.appendChild(content);
+            scale.appendChild(label);
+        });
+        questionLine.appendChild(number);
+        questionLine.appendChild(text);
+        question.appendChild(questionLine);
+        question.appendChild(scale);
+        host.appendChild(question);
+    });
+    host.dataset.rendered = "true";
+}
+function syncApoQuestionarioMammografiaRifiuto() {
+    const form = document.getElementById("questionarioMammografia");
+    if (!form) {
+        return;
+    }
+    const readOnly = form.dataset.readOnly === "true";
+    const refusal = form.elements.rifiuta_compilazione;
+    const rifiuta = refusal && normalizeApoValue(refusal.value) === "SI";
+    form.classList.toggle("is-questionario-rifiutato", rifiuta);
+    form.querySelectorAll("input, textarea, select, button").forEach(function (field) {
+        if (field.tagName === "BUTTON") {
+            return;
+        }
+        field.disabled = readOnly || (field.name !== "rifiuta_compilazione" && rifiuta);
+    });
+    form.querySelectorAll(".mammo-actions button").forEach(function (button) {
+        button.disabled = false;
+    });
+}
+
+function setApoQuestionarioFascia65ContinuaDisponibile(form, canContinue) {
+    if (!form) {
+        return;
+    }
+    form.dataset.canContinue = canContinue ? "true" : "false";
+    syncApoQuestionarioFascia65Rifiuto();
+}
+
+function setApoQuestionarioMammografiaReadOnly(form, readOnly) {
+    if (!form) {
+        return;
+    }
+    const isReadOnly = !!readOnly;
+    apoState.questionarioMammografiaReadOnly = isReadOnly;
+    form.dataset.readOnly = isReadOnly ? "true" : "false";
+    form.classList.toggle("is-questionario-readonly", isReadOnly);
+    form.querySelectorAll(".mammo-actions").forEach(function (actions) {
+        actions.classList.toggle("is-hidden", isReadOnly);
+        actions.setAttribute("aria-hidden", isReadOnly ? "true" : "false");
+    });
+    syncApoQuestionarioMammografiaRifiuto();
+}
+function isApoQuestionarioMammografiaDisponibile(patient) {
+    const source = patient && typeof patient === "object" ? patient : {};
+    const sesso = normalizeApoValue(source.sesso || source.SESSO);
+    const codiceFiscale = normalizeApoValue(source.codFiscale || source.codiceFiscale || source.cf);
+    const giornoCodiceFiscale = Number.parseInt(codiceFiscale.substring(9, 11), 10);
+    const sessoFemmina = sesso === "F" || sesso === "FEMMINA" || sesso === "FEMMINILE"
+        || (!sesso && Number.isFinite(giornoCodiceFiscale) && giornoCodiceFiscale > 40 && giornoCodiceFiscale <= 71);
+    const eta = Number.parseFloat(String(source.eta || "").replace(",", "."));
+    return sessoFemmina && Number.isFinite(eta) && eta >= 50 && eta <= 70;
+}
+
+function getApoQuestionarioMammografiaCodPaz(patient) {
+    const source = patient && typeof patient === "object" ? patient : {};
+    return normalizeApoDisplayValue(source.codPaz || source.cod_paz || source.COD_PAZ || source.codicePaziente);
+}
+
+function getApoQuestionarioMammografiaDisponibilitaCache(patient) {
+    const codPaz = normalizeApoValue(getApoQuestionarioMammografiaCodPaz(patient));
+    return codPaz && codPaz === apoState.questionarioMammografiaAvailabilityCodPaz
+        ? apoState.questionarioMammografiaCanCompile
+        : null;
+}
+
+function clearApoQuestionarioMammografiaDisponibilitaCache(codPaz) {
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!normalizedCodPaz || normalizedCodPaz === apoState.questionarioMammografiaAvailabilityCodPaz) {
+        apoState.questionarioMammografiaAvailabilityCodPaz = "";
+        apoState.questionarioMammografiaCanCompile = null;
+    }
+}
+
+async function getApoQuestionarioMammografiaDisponibilita(patient, forceReload) {
+    const codPaz = getApoQuestionarioMammografiaCodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!codPaz || !codConsulenza) {
+        return false;
+    }
+    const cached = getApoQuestionarioMammografiaDisponibilitaCache(patient);
+    if (!forceReload && cached !== null) {
+        return cached;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codConsulenza", codConsulenza);
+    const response = await postApoFormRequest(apoQuestionariMammografiaUrl, params, "availability");
+    if (response.status === 401) {
+        window.location.href = apoLoginUrl;
+        return false;
+    }
+    let payload = null;
+    try {
+        payload = await response.json();
+    } catch (error) {
+        payload = null;
+    }
+    if (!response.ok || !payload || payload.esito !== "ok") {
+        throw new Error(payload && payload.message ? payload.message : "Errore nella verifica del questionario mammografia.");
+    }
+    const canCompile = !(payload.data && payload.data.canCompile === false);
+    if (normalizeApoValue(getApoQuestionarioMammografiaCodPaz(patient)) === normalizedCodPaz) {
+        apoState.questionarioMammografiaAvailabilityCodPaz = normalizedCodPaz;
+        apoState.questionarioMammografiaCanCompile = canCompile;
+    }
+    return canCompile;
+}
+
+function collectApoQuestionarioMammografiaFields(form) {
+    const fields = {};
+    if (!form) {
+        return fields;
+    }
+
+    form.querySelectorAll("input[name], textarea[name], select[name]").forEach(function (field) {
+        const name = field.name;
+        if (field.type === "radio") {
+            if (!Object.prototype.hasOwnProperty.call(fields, name)) {
+                fields[name] = "";
+            }
+            if (field.checked) {
+                fields[name] = field.value;
+            }
+            return;
+        }
+        if (field.type === "checkbox") {
+            if (!Array.isArray(fields[name])) {
+                fields[name] = [];
+            }
+            if (field.checked) {
+                fields[name].push(field.value);
+            }
+            return;
+        }
+        fields[name] = field.value || "";
+    });
+    return fields;
+}
+
+function applyApoQuestionarioMammografiaFields(form, savedPayload) {
+    if (!form || !savedPayload || typeof savedPayload !== "object") {
+        return;
+    }
+    const fields = savedPayload.fields && typeof savedPayload.fields === "object"
+        ? savedPayload.fields
+        : savedPayload;
+    form.querySelectorAll("input[name], textarea[name], select[name]").forEach(function (field) {
+        const name = field.name;
+        if (!Object.prototype.hasOwnProperty.call(fields, name)) {
+            return;
+        }
+        const value = fields[name];
+        if (field.type === "radio") {
+            field.checked = String(value || "") === String(field.value || "");
+        } else if (field.type === "checkbox") {
+            const values = Array.isArray(value) ? value : [value];
+            field.checked = values.map(function (item) {
+                return String(item || "");
+            }).indexOf(String(field.value || "")) !== -1;
+        } else {
+            field.value = value === null || value === undefined ? "" : String(value);
+        }
+    });
+}
+
+function resetApoQuestionarioMammografiaForm(form, patient, userInfo) {
+    if (!form) {
+        return;
+    }
+    form.reset();
+    form.querySelectorAll("input, textarea, select, button").forEach(function (field) {
+        if (field.name !== "rifiuta_compilazione") {
+            field.disabled = false;
+        }
+    });
+    const dateInput = form.elements.data;
+    const etaInput = form.elements.eta;
+    const operatoreInput = form.elements.operatore;
+    if (dateInput) {
+        dateInput.value = getApoCurrentDate();
+    }
+    if (etaInput) {
+        etaInput.value = getApoQuestionarioMammografiaEta(patient && patient.dataNascita);
+    }
+    if (operatoreInput) {
+        operatoreInput.value = (userInfo && userInfo.fullName) || getApoLoggedUsername();
+    }
+    syncApoQuestionarioMammografiaRifiuto();
+}
+
+async function loadApoQuestionarioMammografia(patient, form, requestId, idQuestionario) {
+    const codPaz = getApoQuestionarioMammografiaCodPaz(patient);
+    if (!codPaz || !form) {
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    if (idQuestionario) {
+        params.set("idQuestionario", idQuestionario);
+    }
+    try {
+        const response = await postApoFormRequest(apoQuestionariMammografiaUrl, params, "load");
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        // Un paziente senza questionario è una condizione normale: si apre il form vuoto.
+        if (response.status === 404) {
+            return;
+        }
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento del questionario mammografia.");
+        }
+        if (apoState.questionarioMammografiaRequestId !== requestId) {
+            return;
+        }
+        if (payload.data && payload.data.canCompile === false) {
+            apoState.questionarioMammografiaAvailabilityCodPaz = normalizeApoValue(codPaz);
+            apoState.questionarioMammografiaCanCompile = false;
+            updateApoQuestionariPazienteDisponibili();
+            const modal = document.getElementById("apo-questionario-mammografia-modal");
+            if (modal) {
+                modal.classList.add("is-hidden");
+                modal.setAttribute("aria-hidden", "true");
+            }
+            return;
+        }
+        const saved = payload.data && payload.data.found ? payload.data.questionario : null;
+        if (!saved) {
+            return;
+        }
+        let savedPayload = saved.questionario;
+        if (typeof savedPayload === "string") {
+            try {
+                savedPayload = JSON.parse(savedPayload);
+            } catch (error) {
+                throw new Error("I dati salvati del questionario non sono leggibili.");
+            }
+        }
+        applyApoQuestionarioMammografiaFields(form, savedPayload);
+        syncApoQuestionarioMammografiaRifiuto();
+    } catch (error) {
+        if (apoState.questionarioMammografiaRequestId === requestId) {
+            setApoSearchMessage(error && error.message ? error.message : "Errore nel caricamento del questionario mammografia.", "danger");
+        }
+    }
+}
+
+function buildApoQuestionarioMammografiaPayload(form, patient) {
+    return {
+        version: 1,
+        codPaz: getApoQuestionarioMammografiaCodPaz(patient),
+        fields: collectApoQuestionarioMammografiaFields(form)
+    };
+}
+
+async function saveApoQuestionarioMammografia(form) {
+    if (!form || !canApoCompileQuestionari() || apoState.questionarioMammografiaSaving || form.dataset.readOnly === "true") {
+        return;
+    }
+    const patient = getApoSelectedAccesso() || getApoAccessoById(apoState.mainAccessoId);
+    const codPaz = getApoQuestionarioMammografiaCodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    if (!codPaz || !codConsulenza) {
+        setApoSearchMessage("Codice paziente o codice consulenza non disponibile: impossibile salvare il questionario.", "warning");
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codConsulenza", codConsulenza);
+    params.set("questionario", JSON.stringify(buildApoQuestionarioMammografiaPayload(form, patient)));
+    apoState.questionarioMammografiaRequestId += 1;
+    apoState.questionarioMammografiaSaving = true;
+    const submitButton = form.querySelector("button[type=submit]");
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
+    try {
+        const response = await postApoFormRequest(apoQuestionariMammografiaUrl, params);
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel salvataggio del questionario mammografia.");
+        }
+        clearApoQuestionarioMammografiaDisponibilitaCache(codPaz);
+        setApoSearchMessage(payload.message || "Questionario salvato correttamente.", "success");
+        const modal = document.getElementById("apo-questionario-mammografia-modal");
+        if (modal) {
+            modal.classList.add("is-hidden");
+            modal.setAttribute("aria-hidden", "true");
+        }
+        closeApoQuestionariPazienteModal(false);
+        void loadApoQuestionariPazienteStorico(patient, true);
+        if (apoState.activeSection === "paziente") {
+            void openApoQuestionarioFascia65Diretto();
+        }
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nel salvataggio del questionario mammografia.", "danger");
+    } finally {
+        apoState.questionarioMammografiaSaving = false;
+        if (submitButton) {
+            submitButton.disabled = false;
+        }
+    }
+}
+
+function hasApoQuestionariPazienteStorico(patient) {
+    const codPaz = normalizeApoValue(getApoQuestionarioMammografiaCodPaz(patient));
+    return !!codPaz
+        && codPaz === apoState.questionariPazienteStoricoCodPaz
+        && apoState.questionariPazienteStorico.length > 0;
+}
+
+function formatApoQuestionarioStoricoDate(value) {
+    const rawValue = normalizeApoDisplayValue(value);
+    if (!rawValue) {
+        return "";
+    }
+    const date = new Date(rawValue);
+    if (Number.isNaN(date.getTime())) {
+        return rawValue;
+    }
+    return date.toLocaleDateString("it-IT");
+}
+
+function renderApoQuestionariPazienteStorico() {
+    const body = document.getElementById("apo-questionari-paziente-list");
+    if (!body) {
+        return;
+    }
+    while (body.firstChild) {
+        body.removeChild(body.firstChild);
+    }
+    apoState.questionariPazienteStorico.forEach(function (questionario) {
+        const row = document.createElement("tr");
+        const dateCell = document.createElement("td");
+        const typeCell = document.createElement("td");
+        const actionCell = document.createElement("td");
+        const button = document.createElement("button");
+        const tipo = normalizeApoValue(questionario && questionario.tipo);
+        const date = formatApoQuestionarioStoricoDate(questionario && questionario.dataInserimento);
+        button.type = "button";
+        button.className = "btn btn-primary apo-questionari-paziente-view-button";
+        button.dataset.questionarioId = normalizeApoDisplayValue(questionario && questionario.idQuestionario);
+        button.dataset.questionarioTipo = tipo || "MAMMO";
+        button.textContent = "Visualizza";
+        dateCell.textContent = date || "-";
+        typeCell.textContent = tipo === "MAMMO"
+            ? "MAMMOGRAFIA"
+            : tipo === "FASCIA65"
+                ? "FASCIA A PARTIRE DAI 65 ANNI"
+                : tipo === "FASCIA625"
+                    ? "FASCIA DI ETÀ 6-25 ANNI"
+                    : tipo === "FASCIA2664"
+                        ? "FASCIA DI ETÀ 26-64 ANNI"
+                        : (tipo || "-");
+        actionCell.appendChild(button);
+        row.appendChild(dateCell);
+        row.appendChild(typeCell);
+        row.appendChild(actionCell);
+        body.appendChild(row);
+    });
+}
+
+function clearApoQuestionariPazienteStorico() {
+    apoState.questionariPazienteStorico = [];
+    apoState.questionariPazienteStoricoCodPaz = "";
+    apoState.questionariPazienteStoricoLoading = false;
+    apoState.questionariPazienteStoricoRequestId += 1;
+    renderApoQuestionariPazienteStorico();
+    updateApoQuestionariPazienteDisponibili();
+}
+
+async function loadApoQuestionariPazienteStorico(patient, forceReload) {
+    const codPaz = getApoQuestionarioMammografiaCodPaz(patient);
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!codPaz) {
+        clearApoQuestionariPazienteStorico();
+        return [];
+    }
+    if (!forceReload && normalizedCodPaz === apoState.questionariPazienteStoricoCodPaz) {
+        return apoState.questionariPazienteStorico;
+    }
+
+    const requestId = apoState.questionariPazienteStoricoRequestId + 1;
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    apoState.questionariPazienteStoricoRequestId = requestId;
+    apoState.questionariPazienteStoricoCodPaz = normalizedCodPaz;
+    apoState.questionariPazienteStoricoLoading = true;
+    apoState.questionariPazienteStorico = [];
+    updateApoQuestionariPazienteDisponibili();
+    try {
+        const response = await postApoFormRequest(apoQuestionariMammografiaUrl, params, "history");
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return [];
+        }
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento dei questionari compilati.");
+        }
+        if (apoState.questionariPazienteStoricoRequestId !== requestId) {
+            return [];
+        }
+        apoState.questionariPazienteStorico = Array.isArray(payload.data && payload.data.questionari)
+            ? payload.data.questionari
+            : [];
+        renderApoQuestionariPazienteStorico();
+        return apoState.questionariPazienteStorico;
+    } catch (error) {
+        if (apoState.questionariPazienteStoricoRequestId === requestId) {
+            apoState.questionariPazienteStorico = [];
+            renderApoQuestionariPazienteStorico();
+            setApoSearchMessage(error && error.message ? error.message : "Errore nel caricamento dei questionari compilati.", "danger");
+        }
+        return [];
+    } finally {
+        if (apoState.questionariPazienteStoricoRequestId === requestId) {
+            apoState.questionariPazienteStoricoLoading = false;
+            updateApoQuestionariPazienteDisponibili();
+        }
+    }
+}
+
+function updateApoQuestionariPazienteDisponibili() {
+    const selectedButton = document.getElementById("apo-selected-questionari-button");
+    const hasStorico = hasApoQuestionariPazienteStorico(getApoSelectedAccesso());
+    if (selectedButton) {
+        selectedButton.disabled = apoQuestionariPazienteTemporaneamenteDisabilitati || !hasStorico;
+    }
+    return hasStorico;
+}
+
+function openApoQuestionarioMammografiaModal(patient, options) {
+    const config = options && typeof options === "object" ? options : {};
+    const modal = document.getElementById("apo-questionario-mammografia-modal");
+    const form = document.getElementById("questionarioMammografia");
+    if (!modal || !form || !patient) {
+        return;
+    }
+    const mandatory = !!config.mandatory;
+    const readOnly = !!config.readOnly;
+    const backButton = document.getElementById("apo-questionario-mammografia-back");
+    const closeButton = document.getElementById("apo-questionario-mammografia-close");
+    modal.dataset.readOnly = readOnly ? "true" : "false";
+    if (backButton) {
+        backButton.textContent = readOnly ? "Torna ai questionari" : "Torna agli accessi";
+    }
+    if (backButton) {
+        const showBackButton = mandatory || readOnly;
+        backButton.classList.toggle("is-hidden", !showBackButton);
+        backButton.setAttribute("aria-hidden", showBackButton ? "false" : "true");
+    }
+    if (closeButton) {
+        closeButton.classList.toggle("is-hidden", mandatory);
+        closeButton.setAttribute("aria-hidden", mandatory ? "true" : "false");
+    }
+    modal.dataset.mandatory = mandatory ? "true" : "false";
+    if (config.fromHistory) {
+        closeApoQuestionariPazienteModal(false);
+    }
+    const patientTitle = document.getElementById("apo-questionario-mammografia-paziente");
+    const sessionData = getApoSessionData();
+    const userInfo = getApoLoggedUserInfo(sessionData);
+    const cognome = normalizeApoDisplayValue(patient.cognome);
+    const nome = normalizeApoDisplayValue(patient.nome);
+    const patientName = normalizeApoDisplayValue(patient.paziente) || [cognome, nome].filter(Boolean).join(" ");
+    if (patientTitle) {
+        patientTitle.textContent = patientName ? "- " + patientName : "";
+    }
+    setApoQuestionarioMammografiaReadOnly(form, false);
+    resetApoQuestionarioMammografiaForm(form, patient, userInfo);
+    setApoQuestionarioMammografiaReadOnly(form, readOnly);
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+    const requestId = apoState.questionarioMammografiaRequestId + 1;
+    apoState.questionarioMammografiaRequestId = requestId;
+    if (!config.startEmpty) {
+        void loadApoQuestionarioMammografia(patient, form, requestId, config.idQuestionario || "");
+    }
+}
+
+async function openApoQuestionarioMammografiaDiretto() {
+    if (!canApoCompileQuestionari() || apoQuestionariPazienteTemporaneamenteDisabilitati || apoQuestionarioMammografiaTemporaneamenteDisabilitato) {
+        return false;
+    }
+    const patient = getApoSelectedAccesso();
+    if (!isApoQuestionarioMammografiaDisponibile(patient)) {
+        return false;
+    }
+    const requestId = apoState.questionariPazienteRequestId + 1;
+    apoState.questionariPazienteRequestId = requestId;
+    try {
+        const canCompile = await getApoQuestionarioMammografiaDisponibilita(patient, true);
+        if (apoState.questionariPazienteRequestId !== requestId || !canCompile) {
+            return false;
+        }
+        openApoQuestionarioMammografiaModal(patient, {readOnly: false, mandatory: true, startEmpty: true});
+        return true;
+    } catch (error) {
+        if (apoState.questionariPazienteRequestId === requestId) {
+            setApoSearchMessage(error && error.message ? error.message : "Errore nella verifica del questionario mammografia.", "danger");
+        }
+        return false;
+    }
+}
+
+function getApoQuestionarioFasciaRifiutoMedicoConfig(tipo) {
+    switch (normalizeApoValue(tipo)) {
+        case "FASCIA65":
+            return {
+                modalId: "apo-questionario-fascia65-modal",
+                url: apoQuestionariFascia65Url,
+                getCodPaz: getApoQuestionarioFascia65CodPaz,
+                clearDisponibilita: clearApoQuestionarioFascia65DisponibilitaCache
+            };
+        case "FASCIA625":
+            return {
+                modalId: "apo-questionario-fascia625-modal",
+                url: apoQuestionariFascia625Url,
+                getCodPaz: getApoQuestionarioFascia625CodPaz,
+                clearDisponibilita: clearApoQuestionarioFascia625DisponibilitaCache
+            };
+        case "FASCIA2664":
+            return {
+                modalId: "apo-questionario-fascia2664-modal",
+                url: apoQuestionariFascia2664Url,
+                getCodPaz: getApoQuestionarioFascia2664CodPaz,
+                clearDisponibilita: clearApoQuestionarioFascia2664DisponibilitaCache
+            };
+        default:
+            return null;
+    }
+}
+
+function setApoQuestionarioRifiutoMedicoMessage(message, type) {
+    const box = document.getElementById("apo-questionario-rifiuto-medico-message");
+    if (!box) {
+        return;
+    }
+    const text = String(message || "").trim();
+    box.className = "alert d-none";
+    box.textContent = "";
+    if (!text) {
+        return;
+    }
+    box.textContent = text;
+    box.className = "alert " + (type === "danger" ? "alert-danger" : "alert-warning");
+}
+
+function setApoQuestionarioRifiutoMedicoBusy(isBusy) {
+    const busy = isBusy === true;
+    const confirmButton = document.getElementById("apo-questionario-rifiuto-medico-confirm");
+    const cancelButton = document.getElementById("apo-questionario-rifiuto-medico-cancel");
+    apoState.questionarioRifiutoMedicoSaving = busy;
+    if (confirmButton) {
+        confirmButton.disabled = busy;
+        confirmButton.textContent = busy ? "Registrazione..." : "Conferma";
+    }
+    if (cancelButton) {
+        cancelButton.disabled = busy;
+    }
+}
+
+function closeApoQuestionarioFasciaModal(tipo) {
+    const config = getApoQuestionarioFasciaRifiutoMedicoConfig(tipo);
+    const modal = config ? document.getElementById(config.modalId) : null;
+    if (modal) {
+        modal.classList.add("is-hidden");
+        modal.setAttribute("aria-hidden", "true");
+    }
+    const questionariButton = document.getElementById("apo-selected-questionari-button");
+    if (questionariButton && !questionariButton.disabled) {
+        questionariButton.focus();
+    }
+}
+
+function hideApoQuestionarioRifiutoMedicoModal(restoreFocus) {
+    const modal = document.getElementById("apo-questionario-rifiuto-medico-modal");
+    if (modal) {
+        modal.classList.add("is-hidden");
+        modal.setAttribute("aria-hidden", "true");
+    }
+    setApoQuestionarioRifiutoMedicoBusy(false);
+    setApoQuestionarioRifiutoMedicoMessage("", "warning");
+    const focusTarget = apoState.questionarioRifiutoMedicoLastFocus;
+    apoState.questionarioRifiutoMedicoTipo = "";
+    apoState.questionarioRifiutoMedicoLastFocus = null;
+    if (restoreFocus && focusTarget && typeof focusTarget.focus === "function") {
+        focusTarget.focus();
+    }
+}
+
+function showApoQuestionarioRifiutoMedicoModal(tipo, focusTarget) {
+    const config = getApoQuestionarioFasciaRifiutoMedicoConfig(tipo);
+    const modal = document.getElementById("apo-questionario-rifiuto-medico-modal");
+    const confirmButton = document.getElementById("apo-questionario-rifiuto-medico-confirm");
+    if (!config || !modal || apoState.questionarioRifiutoMedicoSaving) {
+        return;
+    }
+    apoState.questionarioRifiutoMedicoTipo = normalizeApoValue(tipo);
+    apoState.questionarioRifiutoMedicoLastFocus = focusTarget || document.activeElement;
+    setApoQuestionarioRifiutoMedicoBusy(false);
+    setApoQuestionarioRifiutoMedicoMessage("", "warning");
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+    if (confirmButton) {
+        confirmButton.focus();
+    }
+}
+
+function requestApoQuestionarioFasciaClose(tipo, focusTarget) {
+    const config = getApoQuestionarioFasciaRifiutoMedicoConfig(tipo);
+    const modal = config ? document.getElementById(config.modalId) : null;
+    if (!modal) {
+        return;
+    }
+    if (modal.dataset.readOnly === "true" || !canApoCompileQuestionari()) {
+        closeApoQuestionarioFasciaModal(tipo);
+        return;
+    }
+    showApoQuestionarioRifiutoMedicoModal(tipo, focusTarget);
+}
+
+async function confirmApoQuestionarioRifiutoMedico() {
+    const tipo = apoState.questionarioRifiutoMedicoTipo;
+    const config = getApoQuestionarioFasciaRifiutoMedicoConfig(tipo);
+    if (!config || apoState.questionarioRifiutoMedicoSaving) {
+        return;
+    }
+    const patient = getApoSelectedAccesso() || getApoAccessoById(apoState.mainAccessoId);
+    const codPaz = config.getCodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    if (!codPaz || !codConsulenza) {
+        setApoQuestionarioRifiutoMedicoMessage("Codice paziente o codice consulenza non disponibile.", "warning");
+        return;
+    }
+    setApoQuestionarioRifiutoMedicoBusy(true);
+    try {
+        const params = new URLSearchParams();
+        params.set("codPaz", codPaz);
+        params.set("codConsulenza", codConsulenza);
+        const response = await postApoFormRequest(config.url, params, "rifiuto-medico");
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        const payload = await response.json().catch(function () { return null; });
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nella registrazione della rinuncia del medico.");
+        }
+        config.clearDisponibilita(codPaz);
+        setApoSearchMessage(payload.message || "Rinuncia del medico registrata correttamente.", "success");
+        hideApoQuestionarioRifiutoMedicoModal(false);
+        closeApoQuestionarioFasciaModal(tipo);
+        closeApoQuestionariPazienteModal(false);
+        void loadApoQuestionariPazienteStorico(patient, true);
+    } catch (error) {
+        setApoQuestionarioRifiutoMedicoMessage(error && error.message ? error.message : "Errore nella registrazione della rinuncia del medico.", "danger");
+    } finally {
+        if (apoState.questionarioRifiutoMedicoSaving) {
+            setApoQuestionarioRifiutoMedicoBusy(false);
+        }
+    }
+}
+
+function isApoQuestionarioFasciaSalvabile(form) {
+    if (!form) {
+        return false;
+    }
+    const motiviClinici = form.elements.impossibile_somministrare_motivi_clinici;
+    const negaAdesione = form.elements.nega_adesione_progetto;
+    const haFlag = !!((motiviClinici && motiviClinici.checked) || (negaAdesione && negaAdesione.checked));
+    return haFlag || form.checkValidity();
+}
+
+function syncApoQuestionarioFasciaSalvataggio(form, readOnly) {
+    if (!form) {
+        return;
+    }
+    const submitButton = form.querySelector("button[type=submit]");
+    if (submitButton) {
+        submitButton.disabled = !!readOnly || !isApoQuestionarioFasciaSalvabile(form);
+    }
+}
+
+function syncApoQuestionarioFascia65Rifiuto() {
+    const form = document.getElementById("questionarioFascia65");
+    if (!form) {
+        return;
+    }
+    const readOnly = form.dataset.readOnly === "true";
+    const motiviClinici = form.elements.impossibile_somministrare_motivi_clinici;
+    const negaAdesione = form.elements.nega_adesione_progetto;
+    const rifiuta = !!((motiviClinici && motiviClinici.checked) || (negaAdesione && negaAdesione.checked));
+    const continuaDisponibile = form.dataset.canContinue === "true";
+    const continueButton = document.getElementById("apo-questionario-fascia65-continue");
+    form.classList.toggle("is-questionario-rifiutato", rifiuta);
+    form.querySelectorAll("input, textarea, select, button").forEach(function (field) {
+        if (field.tagName === "BUTTON") {
+            return;
+        }
+        field.disabled = readOnly || (field.name !== "impossibile_somministrare_motivi_clinici"
+            && field.name !== "nega_adesione_progetto" && rifiuta);
+    });
+    form.querySelectorAll(".mammo-actions button").forEach(function (button) {
+        if (button === continueButton) {
+            const showContinue = !readOnly && rifiuta && continuaDisponibile;
+            button.classList.toggle("is-hidden", !showContinue);
+            button.setAttribute("aria-hidden", showContinue ? "false" : "true");
+            button.disabled = !showContinue;
+            return;
+        }
+        syncApoQuestionarioFasciaSalvataggio(form, readOnly);
+    });
+}
+
+function setApoQuestionarioFascia65ReadOnly(form, readOnly) {
+    if (!form) {
+        return;
+    }
+    const isReadOnly = !!readOnly;
+    apoState.questionarioFascia65ReadOnly = isReadOnly;
+    form.dataset.readOnly = isReadOnly ? "true" : "false";
+    form.classList.toggle("is-questionario-readonly", isReadOnly);
+    form.querySelectorAll(".mammo-actions").forEach(function (actions) {
+        actions.classList.toggle("is-hidden", isReadOnly);
+        actions.setAttribute("aria-hidden", isReadOnly ? "true" : "false");
+    });
+    syncApoQuestionarioFascia65Rifiuto();
+}
+
+function isApoQuestionarioFascia65Disponibile(patient) {
+    const source = patient && typeof patient === "object" ? patient : {};
+    const etaAccesso = Number.parseFloat(String(source.eta || "").replace(",", "."));
+    const eta = Number.isFinite(etaAccesso)
+        ? etaAccesso
+        : Number.parseFloat(getApoQuestionarioMammografiaEta(source.dataNascita));
+    return Number.isFinite(eta) && eta >= 65;
+}
+
+function getApoQuestionarioFascia65CodPaz(patient) {
+    return getApoQuestionarioMammografiaCodPaz(patient);
+}
+
+function getApoQuestionarioFascia65DisponibilitaCache(patient) {
+    const codPaz = normalizeApoValue(getApoQuestionarioFascia65CodPaz(patient));
+    return codPaz && codPaz === apoState.questionarioFascia65AvailabilityCodPaz
+        ? apoState.questionarioFascia65CanCompile
+        : null;
+}
+
+function clearApoQuestionarioFascia65DisponibilitaCache(codPaz) {
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!normalizedCodPaz || normalizedCodPaz === apoState.questionarioFascia65AvailabilityCodPaz) {
+        apoState.questionarioFascia65AvailabilityCodPaz = "";
+        apoState.questionarioFascia65CanCompile = null;
+    }
+}
+
+async function getApoQuestionarioFascia65Disponibilita(patient, forceReload) {
+    const codPaz = getApoQuestionarioFascia65CodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!codPaz || !codConsulenza) {
+        return false;
+    }
+    const cached = getApoQuestionarioFascia65DisponibilitaCache(patient);
+    if (!forceReload && cached !== null) {
+        return cached;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codConsulenza", codConsulenza);
+    const response = await postApoFormRequest(apoQuestionariFascia65Url, params, "availability");
+    if (response.status === 401) {
+        window.location.href = apoLoginUrl;
+        return false;
+    }
+    let payload = null;
+    try {
+        payload = await response.json();
+    } catch (error) {
+        payload = null;
+    }
+    if (!response.ok || !payload || payload.esito !== "ok") {
+        throw new Error(payload && payload.message ? payload.message : "Errore nella verifica del questionario fascia dai 65 anni.");
+    }
+    const canCompile = !(payload.data && payload.data.canCompile === false);
+    if (normalizeApoValue(getApoQuestionarioFascia65CodPaz(patient)) === normalizedCodPaz) {
+        apoState.questionarioFascia65AvailabilityCodPaz = normalizedCodPaz;
+        apoState.questionarioFascia65CanCompile = canCompile;
+    }
+    return canCompile;
+}
+
+function resetApoQuestionarioFascia65Form(form, patient, userInfo) {
+    if (!form) {
+        return;
+    }
+    form.reset();
+    setApoQuestionarioFascia65ContinuaDisponibile(form, false);
+    form.querySelectorAll("input, textarea, select, button").forEach(function (field) {
+        if (field.name !== "impossibile_somministrare_motivi_clinici" && field.name !== "nega_adesione_progetto") {
+            field.disabled = false;
+        }
+    });
+    const dateInput = form.elements.data;
+    const etaInput = form.elements.eta;
+    const operatoreInput = form.elements.operatore;
+    if (dateInput) {
+        dateInput.value = getApoCurrentDate();
+    }
+    if (etaInput) {
+        etaInput.value = getApoQuestionarioMammografiaEta(patient && patient.dataNascita);
+    }
+    if (operatoreInput) {
+        operatoreInput.value = (userInfo && userInfo.fullName) || getApoLoggedUsername();
+    }
+    syncApoQuestionarioFascia65Rifiuto();
+}
+
+function applyApoQuestionarioFascia65Fields(form, savedPayload) {
+    if (!form || !savedPayload || typeof savedPayload !== "object") {
+        return;
+    }
+    applyApoQuestionarioMammografiaFields(form, savedPayload);
+    const fields = savedPayload.fields && typeof savedPayload.fields === "object"
+        ? savedPayload.fields
+        : savedPayload;
+    const hasNuoviFlag = Object.prototype.hasOwnProperty.call(fields, "impossibile_somministrare_motivi_clinici")
+        || Object.prototype.hasOwnProperty.call(fields, "nega_adesione_progetto");
+    if (!hasNuoviFlag && normalizeApoValue(fields.rifiuta_compilazione) === "SI" && form.elements.nega_adesione_progetto) {
+        form.elements.nega_adesione_progetto.checked = true;
+    }
+}
+
+async function loadApoQuestionarioFascia65(patient, form, requestId, idQuestionario) {
+    const codPaz = getApoQuestionarioFascia65CodPaz(patient);
+    if (!codPaz || !form) {
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    if (idQuestionario) {
+        params.set("idQuestionario", idQuestionario);
+    }
+    try {
+        const response = await postApoFormRequest(apoQuestionariFascia65Url, params, "load");
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        if (response.status === 404) {
+            return;
+        }
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento del questionario fascia dai 65 anni.");
+        }
+        if (apoState.questionarioFascia65RequestId !== requestId) {
+            return;
+        }
+        if (payload.data && payload.data.canCompile === false) {
+            apoState.questionarioFascia65AvailabilityCodPaz = normalizeApoValue(codPaz);
+            apoState.questionarioFascia65CanCompile = false;
+            setApoQuestionarioFascia65ContinuaDisponibile(form, false);
+            const modal = document.getElementById("apo-questionario-fascia65-modal");
+            if (modal) {
+                modal.classList.add("is-hidden");
+                modal.setAttribute("aria-hidden", "true");
+            }
+            return;
+        }
+        setApoQuestionarioFascia65ContinuaDisponibile(form, !!(payload.data && payload.data.canContinue));
+        const saved = payload.data && payload.data.found ? payload.data.questionario : null;
+        if (!saved) {
+            return;
+        }
+        let savedPayload = saved.questionario;
+        if (typeof savedPayload === "string") {
+            try {
+                savedPayload = JSON.parse(savedPayload);
+            } catch (error) {
+                throw new Error("I dati salvati del questionario non sono leggibili.");
+            }
+        }
+        applyApoQuestionarioFascia65Fields(form, savedPayload);
+        syncApoQuestionarioFascia65Rifiuto();
+    } catch (error) {
+        if (apoState.questionarioFascia65RequestId === requestId) {
+            setApoSearchMessage(error && error.message ? error.message : "Errore nel caricamento del questionario fascia dai 65 anni.", "danger");
+        }
+    }
+}
+
+function buildApoQuestionarioFascia65Payload(form, patient) {
+    return {
+        version: 1,
+        codPaz: getApoQuestionarioFascia65CodPaz(patient),
+        fields: collectApoQuestionarioMammografiaFields(form)
+    };
+}
+
+async function saveApoQuestionarioFascia65(form) {
+    if (!form || !canApoCompileQuestionari() || apoState.questionarioFascia65Saving || form.dataset.readOnly === "true") {
+        return;
+    }
+    if (!isApoQuestionarioFasciaSalvabile(form)) {
+        syncApoQuestionarioFascia65Rifiuto();
+        return;
+    }
+    const patient = getApoSelectedAccesso() || getApoAccessoById(apoState.mainAccessoId);
+    const codPaz = getApoQuestionarioFascia65CodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    if (!codPaz || !codConsulenza) {
+        setApoSearchMessage("Codice paziente o codice consulenza non disponibile: impossibile salvare il questionario.", "warning");
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codConsulenza", codConsulenza);
+    params.set("questionario", JSON.stringify(buildApoQuestionarioFascia65Payload(form, patient)));
+    apoState.questionarioFascia65RequestId += 1;
+    apoState.questionarioFascia65Saving = true;
+    const submitButton = form.querySelector("button[type=submit]");
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
+    try {
+        const response = await postApoFormRequest(apoQuestionariFascia65Url, params);
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel salvataggio del questionario fascia dai 65 anni.");
+        }
+        clearApoQuestionarioFascia65DisponibilitaCache(codPaz);
+        setApoSearchMessage(payload.message || "Questionario salvato correttamente.", "success");
+        const modal = document.getElementById("apo-questionario-fascia65-modal");
+        if (modal) {
+            modal.classList.add("is-hidden");
+            modal.setAttribute("aria-hidden", "true");
+        }
+        closeApoQuestionariPazienteModal(false);
+        void loadApoQuestionariPazienteStorico(patient, true);
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nel salvataggio del questionario fascia dai 65 anni.", "danger");
+    } finally {
+        apoState.questionarioFascia65Saving = false;
+        syncApoQuestionarioFascia65Rifiuto();
+    }
+}
+
+function openApoQuestionarioFascia65Modal(patient, options) {
+    const config = options && typeof options === "object" ? options : {};
+    const modal = document.getElementById("apo-questionario-fascia65-modal");
+    const form = document.getElementById("questionarioFascia65");
+    if (!modal || !form || !patient) {
+        return;
+    }
+    const readOnly = !!config.readOnly;
+    const closeButton = document.getElementById("apo-questionario-fascia65-close");
+    modal.dataset.readOnly = readOnly ? "true" : "false";
+    if (closeButton) {
+        closeButton.classList.remove("is-hidden");
+        closeButton.setAttribute("aria-hidden", "false");
+    }
+    modal.dataset.mandatory = "false";
+    if (config.fromHistory) {
+        closeApoQuestionariPazienteModal(false);
+    }
+    const patientTitle = document.getElementById("apo-questionario-fascia65-paziente");
+    const userInfo = getApoLoggedUserInfo(getApoSessionData());
+    const cognome = normalizeApoDisplayValue(patient.cognome);
+    const nome = normalizeApoDisplayValue(patient.nome);
+    const patientName = normalizeApoDisplayValue(patient.paziente) || [cognome, nome].filter(Boolean).join(" ");
+    if (patientTitle) {
+        patientTitle.textContent = patientName ? "- " + patientName : "";
+    }
+    setApoQuestionarioFascia65ReadOnly(form, false);
+    resetApoQuestionarioFascia65Form(form, patient, userInfo);
+    setApoQuestionarioFascia65ReadOnly(form, readOnly);
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+    const requestId = apoState.questionarioFascia65RequestId + 1;
+    apoState.questionarioFascia65RequestId = requestId;
+    if (!config.startEmpty) {
+        void loadApoQuestionarioFascia65(patient, form, requestId, config.idQuestionario || "");
+    }
+}
+
+async function openApoQuestionarioFascia65Diretto() {
+    if (!canApoCompileQuestionari() || apoQuestionariPazienteTemporaneamenteDisabilitati) {
+        return false;
+    }
+    const patient = getApoSelectedAccesso();
+    if (!isApoQuestionarioFascia65Disponibile(patient)) {
+        return false;
+    }
+    const requestId = apoState.questionariPazienteRequestId + 1;
+    apoState.questionariPazienteRequestId = requestId;
+    try {
+        const canCompile = await getApoQuestionarioFascia65Disponibilita(patient, true);
+        if (apoState.questionariPazienteRequestId !== requestId || !canCompile) {
+            return false;
+        }
+        openApoQuestionarioFascia65Modal(patient, {readOnly: false, startEmpty: true});
+        return true;
+    } catch (error) {
+        if (apoState.questionariPazienteRequestId === requestId) {
+            setApoSearchMessage(error && error.message ? error.message : "Errore nella verifica del questionario fascia dai 65 anni.", "danger");
+        }
+        return false;
+    }
+}
+
+function setApoQuestionarioFascia625ContinuaDisponibile(form, canContinue) {
+    if (!form) {
+        return;
+    }
+    form.dataset.canContinue = canContinue ? "true" : "false";
+    syncApoQuestionarioFascia625Rifiuto();
+}
+
+function syncApoQuestionarioFascia625Rifiuto() {
+    const form = document.getElementById("questionarioFascia625");
+    if (!form) {
+        return;
+    }
+    const readOnly = form.dataset.readOnly === "true";
+    const motiviClinici = form.elements.impossibile_somministrare_motivi_clinici;
+    const negaAdesione = form.elements.nega_adesione_progetto;
+    const rifiuta = !!((motiviClinici && motiviClinici.checked) || (negaAdesione && negaAdesione.checked));
+    const continuaDisponibile = form.dataset.canContinue === "true";
+    const continueButton = document.getElementById("apo-questionario-fascia625-continue");
+    form.classList.toggle("is-questionario-rifiutato", rifiuta);
+    form.querySelectorAll("input, textarea, select, button").forEach(function (field) {
+        if (field.tagName === "BUTTON") {
+            return;
+        }
+        field.disabled = readOnly || (field.name !== "impossibile_somministrare_motivi_clinici"
+            && field.name !== "nega_adesione_progetto" && rifiuta);
+    });
+    form.querySelectorAll(".mammo-actions button").forEach(function (button) {
+        if (button === continueButton) {
+            const showContinue = !readOnly && rifiuta && continuaDisponibile;
+            button.classList.toggle("is-hidden", !showContinue);
+            button.setAttribute("aria-hidden", showContinue ? "false" : "true");
+            button.disabled = !showContinue;
+            return;
+        }
+        syncApoQuestionarioFasciaSalvataggio(form, readOnly);
+    });
+}
+
+function setApoQuestionarioFascia625ReadOnly(form, readOnly) {
+    if (!form) {
+        return;
+    }
+    const isReadOnly = !!readOnly;
+    apoState.questionarioFascia625ReadOnly = isReadOnly;
+    form.dataset.readOnly = isReadOnly ? "true" : "false";
+    form.classList.toggle("is-questionario-readonly", isReadOnly);
+    form.querySelectorAll(".mammo-actions").forEach(function (actions) {
+        actions.classList.toggle("is-hidden", isReadOnly);
+        actions.setAttribute("aria-hidden", isReadOnly ? "true" : "false");
+    });
+    syncApoQuestionarioFascia625Rifiuto();
+}
+
+function isApoQuestionarioFascia625Disponibile(patient) {
+    const source = patient && typeof patient === "object" ? patient : {};
+    const etaAccesso = Number.parseFloat(String(source.eta || "").replace(",", "."));
+    const eta = Number.isFinite(etaAccesso)
+        ? etaAccesso
+        : Number.parseFloat(getApoQuestionarioMammografiaEta(source.dataNascita));
+    return Number.isFinite(eta) && eta >= 6 && eta <= 25;
+}
+
+function getApoQuestionarioFascia625CodPaz(patient) {
+    return getApoQuestionarioMammografiaCodPaz(patient);
+}
+
+function getApoQuestionarioFascia625DisponibilitaCache(patient) {
+    const codPaz = normalizeApoValue(getApoQuestionarioFascia625CodPaz(patient));
+    return codPaz && codPaz === apoState.questionarioFascia625AvailabilityCodPaz
+        ? apoState.questionarioFascia625CanCompile
+        : null;
+}
+
+function clearApoQuestionarioFascia625DisponibilitaCache(codPaz) {
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!normalizedCodPaz || normalizedCodPaz === apoState.questionarioFascia625AvailabilityCodPaz) {
+        apoState.questionarioFascia625AvailabilityCodPaz = "";
+        apoState.questionarioFascia625CanCompile = null;
+    }
+}
+
+async function getApoQuestionarioFascia625Disponibilita(patient, forceReload) {
+    const codPaz = getApoQuestionarioFascia625CodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!codPaz || !codConsulenza) {
+        return false;
+    }
+    const cached = getApoQuestionarioFascia625DisponibilitaCache(patient);
+    if (!forceReload && cached !== null) {
+        return cached;
+    }
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codConsulenza", codConsulenza);
+    const response = await postApoFormRequest(apoQuestionariFascia625Url, params, "availability");
+    if (response.status === 401) {
+        window.location.href = apoLoginUrl;
+        return false;
+    }
+    let payload = null;
+    try {
+        payload = await response.json();
+    } catch (error) {
+        payload = null;
+    }
+    if (!response.ok || !payload || payload.esito !== "ok") {
+        throw new Error(payload && payload.message ? payload.message : "Errore nella verifica del questionario fascia 6-25 anni.");
+    }
+    const canCompile = !(payload.data && payload.data.canCompile === false);
+    if (normalizeApoValue(getApoQuestionarioFascia625CodPaz(patient)) === normalizedCodPaz) {
+        apoState.questionarioFascia625AvailabilityCodPaz = normalizedCodPaz;
+        apoState.questionarioFascia625CanCompile = canCompile;
+    }
+    return canCompile;
+}
+
+function resetApoQuestionarioFascia625Form(form, patient, userInfo) {
+    if (!form) {
+        return;
+    }
+    renderApoQuestionarioFascia625Domande();
+    form.reset();
+    setApoQuestionarioFascia625ContinuaDisponibile(form, false);
+    form.querySelectorAll("input, textarea, select, button").forEach(function (field) {
+        if (field.name !== "impossibile_somministrare_motivi_clinici" && field.name !== "nega_adesione_progetto") {
+            field.disabled = false;
+        }
+    });
+    const dateInput = form.elements.data;
+    const etaInput = form.elements.eta;
+    const operatoreInput = form.elements.operatore;
+    if (dateInput) {
+        dateInput.value = getApoCurrentDate();
+    }
+    if (etaInput) {
+        etaInput.value = getApoQuestionarioMammografiaEta(patient && patient.dataNascita);
+    }
+    if (operatoreInput) {
+        operatoreInput.value = (userInfo && userInfo.fullName) || getApoLoggedUsername();
+    }
+    syncApoQuestionarioFascia625Rifiuto();
+}
+
+function applyApoQuestionarioFascia625Fields(form, savedPayload) {
+    if (!form || !savedPayload || typeof savedPayload !== "object") {
+        return;
+    }
+    applyApoQuestionarioMammografiaFields(form, savedPayload);
+    const fields = savedPayload.fields && typeof savedPayload.fields === "object"
+        ? savedPayload.fields
+        : savedPayload;
+    const hasNuoviFlag = Object.prototype.hasOwnProperty.call(fields, "impossibile_somministrare_motivi_clinici")
+        || Object.prototype.hasOwnProperty.call(fields, "nega_adesione_progetto");
+    if (!hasNuoviFlag && normalizeApoValue(fields.rifiuta_compilazione) === "SI" && form.elements.nega_adesione_progetto) {
+        form.elements.nega_adesione_progetto.checked = true;
+    }
+}
+
+async function loadApoQuestionarioFascia625(patient, form, requestId, idQuestionario) {
+    const codPaz = getApoQuestionarioFascia625CodPaz(patient);
+    if (!codPaz || !form) {
+        return;
+    }
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    if (idQuestionario) {
+        params.set("idQuestionario", idQuestionario);
+    }
+    try {
+        const response = await postApoFormRequest(apoQuestionariFascia625Url, params, "load");
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        if (response.status === 404) {
+            return;
+        }
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento del questionario fascia 6-25 anni.");
+        }
+        if (apoState.questionarioFascia625RequestId !== requestId) {
+            return;
+        }
+        if (payload.data && payload.data.canCompile === false) {
+            apoState.questionarioFascia625AvailabilityCodPaz = normalizeApoValue(codPaz);
+            apoState.questionarioFascia625CanCompile = false;
+            setApoQuestionarioFascia625ContinuaDisponibile(form, false);
+            const modal = document.getElementById("apo-questionario-fascia625-modal");
+            if (modal) {
+                modal.classList.add("is-hidden");
+                modal.setAttribute("aria-hidden", "true");
+            }
+            return;
+        }
+        setApoQuestionarioFascia625ContinuaDisponibile(form, !!(payload.data && payload.data.canContinue));
+        const saved = payload.data && payload.data.found ? payload.data.questionario : null;
+        if (!saved) {
+            return;
+        }
+        let savedPayload = saved.questionario;
+        if (typeof savedPayload === "string") {
+            try {
+                savedPayload = JSON.parse(savedPayload);
+            } catch (error) {
+                throw new Error("I dati salvati del questionario non sono leggibili.");
+            }
+        }
+        applyApoQuestionarioFascia625Fields(form, savedPayload);
+        syncApoQuestionarioFascia625Rifiuto();
+    } catch (error) {
+        if (apoState.questionarioFascia625RequestId === requestId) {
+            setApoSearchMessage(error && error.message ? error.message : "Errore nel caricamento del questionario fascia 6-25 anni.", "danger");
+        }
+    }
+}
+
+function buildApoQuestionarioFascia625Payload(form, patient) {
+    return {
+        version: 1,
+        codPaz: getApoQuestionarioFascia625CodPaz(patient),
+        fields: collectApoQuestionarioMammografiaFields(form)
+    };
+}
+
+async function saveApoQuestionarioFascia625(form) {
+    if (!form || !canApoCompileQuestionari() || apoState.questionarioFascia625Saving || form.dataset.readOnly === "true") {
+        return;
+    }
+    if (!isApoQuestionarioFasciaSalvabile(form)) {
+        syncApoQuestionarioFascia625Rifiuto();
+        return;
+    }
+    const patient = getApoSelectedAccesso() || getApoAccessoById(apoState.mainAccessoId);
+    const codPaz = getApoQuestionarioFascia625CodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    if (!codPaz || !codConsulenza) {
+        setApoSearchMessage("Codice paziente o codice consulenza non disponibile: impossibile salvare il questionario.", "warning");
+        return;
+    }
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codConsulenza", codConsulenza);
+    params.set("questionario", JSON.stringify(buildApoQuestionarioFascia625Payload(form, patient)));
+    apoState.questionarioFascia625RequestId += 1;
+    apoState.questionarioFascia625Saving = true;
+    const submitButton = form.querySelector("button[type=submit]");
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
+    try {
+        const response = await postApoFormRequest(apoQuestionariFascia625Url, params);
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (error) {
+            payload = null;
+        }
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel salvataggio del questionario fascia 6-25 anni.");
+        }
+        clearApoQuestionarioFascia625DisponibilitaCache(codPaz);
+        setApoSearchMessage(payload.message || "Questionario salvato correttamente.", "success");
+        const modal = document.getElementById("apo-questionario-fascia625-modal");
+        if (modal) {
+            modal.classList.add("is-hidden");
+            modal.setAttribute("aria-hidden", "true");
+        }
+        closeApoQuestionariPazienteModal(false);
+        void loadApoQuestionariPazienteStorico(patient, true);
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nel salvataggio del questionario fascia 6-25 anni.", "danger");
+    } finally {
+        apoState.questionarioFascia625Saving = false;
+        syncApoQuestionarioFascia625Rifiuto();
+    }
+}
+
+function openApoQuestionarioFascia625Modal(patient, options) {
+    const config = options && typeof options === "object" ? options : {};
+    const modal = document.getElementById("apo-questionario-fascia625-modal");
+    const form = document.getElementById("questionarioFascia625");
+    if (!modal || !form || !patient) {
+        return;
+    }
+    const readOnly = !!config.readOnly;
+    const closeButton = document.getElementById("apo-questionario-fascia625-close");
+    modal.dataset.readOnly = readOnly ? "true" : "false";
+    if (closeButton) {
+        closeButton.classList.remove("is-hidden");
+        closeButton.setAttribute("aria-hidden", "false");
+    }
+    modal.dataset.mandatory = "false";
+    if (config.fromHistory) {
+        closeApoQuestionariPazienteModal(false);
+    }
+    const patientTitle = document.getElementById("apo-questionario-fascia625-paziente");
+    const userInfo = getApoLoggedUserInfo(getApoSessionData());
+    const cognome = normalizeApoDisplayValue(patient.cognome);
+    const nome = normalizeApoDisplayValue(patient.nome);
+    const patientName = normalizeApoDisplayValue(patient.paziente) || [cognome, nome].filter(Boolean).join(" ");
+    if (patientTitle) {
+        patientTitle.textContent = patientName ? "- " + patientName : "";
+    }
+    setApoQuestionarioFascia625ReadOnly(form, false);
+    resetApoQuestionarioFascia625Form(form, patient, userInfo);
+    setApoQuestionarioFascia625ReadOnly(form, readOnly);
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+    const requestId = apoState.questionarioFascia625RequestId + 1;
+    apoState.questionarioFascia625RequestId = requestId;
+    if (!config.startEmpty) {
+        void loadApoQuestionarioFascia625(patient, form, requestId, config.idQuestionario || "");
+    }
+}
+
+async function openApoQuestionarioFascia625Diretto() {
+    if (!canApoCompileQuestionari() || apoQuestionariPazienteTemporaneamenteDisabilitati) {
+        return false;
+    }
+    const patient = getApoSelectedAccesso();
+    if (!isApoQuestionarioFascia625Disponibile(patient)) {
+        return false;
+    }
+    const requestId = apoState.questionariPazienteRequestId + 1;
+    apoState.questionariPazienteRequestId = requestId;
+    try {
+        const canCompile = await getApoQuestionarioFascia625Disponibilita(patient, true);
+        if (apoState.questionariPazienteRequestId !== requestId || !canCompile) {
+            return false;
+        }
+        openApoQuestionarioFascia625Modal(patient, {readOnly: false, startEmpty: true});
+        return true;
+    } catch (error) {
+        if (apoState.questionariPazienteRequestId === requestId) {
+            setApoSearchMessage(error && error.message ? error.message : "Errore nella verifica del questionario fascia 6-25 anni.", "danger");
+        }
+        return false;
+    }
+}
+
+function setApoQuestionarioFascia2664ContinuaDisponibile(form, canContinue) {
+    if (!form) {
+        return;
+    }
+    form.dataset.canContinue = canContinue ? "true" : "false";
+    syncApoQuestionarioFascia2664();
+}
+
+function syncApoQuestionarioFascia2664Fumo(form) {
+    if (!form) {
+        return;
+    }
+    const readOnly = form.dataset.readOnly === "true";
+    const rifiuta = !!((form.elements.impossibile_somministrare_motivi_clinici && form.elements.impossibile_somministrare_motivi_clinici.checked)
+        || (form.elements.nega_adesione_progetto && form.elements.nega_adesione_progetto.checked));
+    const selected = form.querySelector("input[name=q1_fuma]:checked");
+    const fumaSi = selected && selected.value === "SI";
+    const tipoFumo = document.getElementById("apo-questionario-fascia2664-tipo-fumo");
+    if (tipoFumo) {
+        tipoFumo.classList.toggle("is-hidden", !fumaSi);
+    }
+    form.querySelectorAll("input[name=q1_tipologia_fumo]").forEach(function (input) {
+        if (!fumaSi) {
+            input.checked = false;
+        }
+        input.disabled = readOnly || rifiuta || !fumaSi;
+        input.required = !!fumaSi && !readOnly && !rifiuta;
+    });
+}
+
+function syncApoQuestionarioFascia2664() {
+    const form = document.getElementById("questionarioFascia2664");
+    if (!form) {
+        return;
+    }
+    const readOnly = form.dataset.readOnly === "true";
+    const motiviClinici = form.elements.impossibile_somministrare_motivi_clinici;
+    const negaAdesione = form.elements.nega_adesione_progetto;
+    const rifiuta = !!((motiviClinici && motiviClinici.checked) || (negaAdesione && negaAdesione.checked));
+    const continueButton = document.getElementById("apo-questionario-fascia2664-continue");
+    form.classList.toggle("is-questionario-rifiutato", rifiuta);
+    form.querySelectorAll("input, textarea, select, button").forEach(function (field) {
+        if (field.tagName !== "BUTTON") {
+            field.disabled = readOnly || (field.name !== "impossibile_somministrare_motivi_clinici"
+                && field.name !== "nega_adesione_progetto" && rifiuta);
+        }
+    });
+    syncApoQuestionarioFascia2664Fumo(form);
+    form.querySelectorAll(".mammo-actions button").forEach(function (button) {
+        if (button === continueButton) {
+            const showContinue = !readOnly && rifiuta && form.dataset.canContinue === "true";
+            button.classList.toggle("is-hidden", !showContinue);
+            button.setAttribute("aria-hidden", showContinue ? "false" : "true");
+            button.disabled = !showContinue;
+        } else {
+            syncApoQuestionarioFasciaSalvataggio(form, readOnly);
+        }
+    });
+}
+
+function setApoQuestionarioFascia2664ReadOnly(form, readOnly) {
+    if (!form) {
+        return;
+    }
+    const isReadOnly = !!readOnly;
+    apoState.questionarioFascia2664ReadOnly = isReadOnly;
+    form.dataset.readOnly = isReadOnly ? "true" : "false";
+    form.classList.toggle("is-questionario-readonly", isReadOnly);
+    form.querySelectorAll(".mammo-actions").forEach(function (actions) {
+        actions.classList.toggle("is-hidden", isReadOnly);
+        actions.setAttribute("aria-hidden", isReadOnly ? "true" : "false");
+    });
+    syncApoQuestionarioFascia2664();
+}
+
+function isApoQuestionarioFascia2664Disponibile(patient) {
+    const source = patient && typeof patient === "object" ? patient : {};
+    const etaAccesso = Number.parseFloat(String(source.eta || "").replace(",", "."));
+    const eta = Number.isFinite(etaAccesso)
+        ? etaAccesso
+        : Number.parseFloat(getApoQuestionarioMammografiaEta(source.dataNascita));
+    return Number.isFinite(eta) && eta >= 26 && eta <= 64;
+}
+
+function getApoQuestionarioFascia2664CodPaz(patient) {
+    return getApoQuestionarioMammografiaCodPaz(patient);
+}
+
+async function getApoQuestionarioFascia2664Disponibilita(patient, forceReload) {
+    const codPaz = getApoQuestionarioFascia2664CodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!codPaz || !codConsulenza) {
+        return false;
+    }
+    if (!forceReload && normalizedCodPaz === apoState.questionarioFascia2664AvailabilityCodPaz
+            && apoState.questionarioFascia2664CanCompile !== null) {
+        return apoState.questionarioFascia2664CanCompile;
+    }
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codConsulenza", codConsulenza);
+    const response = await postApoFormRequest(apoQuestionariFascia2664Url, params, "availability");
+    if (response.status === 401) {
+        window.location.href = apoLoginUrl;
+        return false;
+    }
+    const payload = await response.json().catch(function () { return null; });
+    if (!response.ok || !payload || payload.esito !== "ok") {
+        throw new Error(payload && payload.message ? payload.message : "Errore nella verifica del questionario fascia 26-64 anni.");
+    }
+    const canCompile = !(payload.data && payload.data.canCompile === false);
+    apoState.questionarioFascia2664AvailabilityCodPaz = normalizedCodPaz;
+    apoState.questionarioFascia2664CanCompile = canCompile;
+    return canCompile;
+}
+
+function clearApoQuestionarioFascia2664DisponibilitaCache(codPaz) {
+    const normalizedCodPaz = normalizeApoValue(codPaz);
+    if (!normalizedCodPaz || normalizedCodPaz === apoState.questionarioFascia2664AvailabilityCodPaz) {
+        apoState.questionarioFascia2664AvailabilityCodPaz = "";
+        apoState.questionarioFascia2664CanCompile = null;
+    }
+}
+
+function resetApoQuestionarioFascia2664Form(form, patient, userInfo) {
+    if (!form) {
+        return;
+    }
+    form.reset();
+    setApoQuestionarioFascia2664ContinuaDisponibile(form, false);
+    form.querySelectorAll("input, textarea, select, button").forEach(function (field) {
+        if (field.name !== "impossibile_somministrare_motivi_clinici" && field.name !== "nega_adesione_progetto") {
+            field.disabled = false;
+        }
+    });
+    if (form.elements.data) {
+        form.elements.data.value = getApoCurrentDate();
+    }
+    if (form.elements.eta) {
+        form.elements.eta.value = getApoQuestionarioMammografiaEta(patient && patient.dataNascita);
+    }
+    if (form.elements.operatore) {
+        form.elements.operatore.value = (userInfo && userInfo.fullName) || getApoLoggedUsername();
+    }
+    syncApoQuestionarioFascia2664();
+}
+
+function applyApoQuestionarioFascia2664Fields(form, savedPayload) {
+    if (!form || !savedPayload || typeof savedPayload !== "object") {
+        return;
+    }
+    applyApoQuestionarioMammografiaFields(form, savedPayload);
+}
+
+async function loadApoQuestionarioFascia2664(patient, form, requestId, idQuestionario) {
+    const codPaz = getApoQuestionarioFascia2664CodPaz(patient);
+    if (!codPaz || !form) {
+        return;
+    }
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    if (idQuestionario) {
+        params.set("idQuestionario", idQuestionario);
+    }
+    try {
+        const response = await postApoFormRequest(apoQuestionariFascia2664Url, params, "load");
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        const payload = await response.json().catch(function () { return null; });
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento del questionario fascia 26-64 anni.");
+        }
+        if (apoState.questionarioFascia2664RequestId !== requestId) {
+            return;
+        }
+        if (payload.data && payload.data.canCompile === false) {
+            apoState.questionarioFascia2664AvailabilityCodPaz = normalizeApoValue(codPaz);
+            apoState.questionarioFascia2664CanCompile = false;
+            const modal = document.getElementById("apo-questionario-fascia2664-modal");
+            if (modal) {
+                modal.classList.add("is-hidden");
+                modal.setAttribute("aria-hidden", "true");
+            }
+            return;
+        }
+        setApoQuestionarioFascia2664ContinuaDisponibile(form, !!(payload.data && payload.data.canContinue));
+        const saved = payload.data && payload.data.found ? payload.data.questionario : null;
+        if (saved) {
+            let savedPayload = saved.questionario;
+            if (typeof savedPayload === "string") {
+                savedPayload = JSON.parse(savedPayload);
+            }
+            applyApoQuestionarioFascia2664Fields(form, savedPayload);
+            syncApoQuestionarioFascia2664();
+        }
+    } catch (error) {
+        if (apoState.questionarioFascia2664RequestId === requestId) {
+            setApoSearchMessage(error && error.message ? error.message : "Errore nel caricamento del questionario fascia 26-64 anni.", "danger");
+        }
+    }
+}
+
+async function saveApoQuestionarioFascia2664(form) {
+    if (!form || !canApoCompileQuestionari() || apoState.questionarioFascia2664Saving || form.dataset.readOnly === "true") {
+        return;
+    }
+    if (!isApoQuestionarioFasciaSalvabile(form)) {
+        syncApoQuestionarioFascia2664();
+        return;
+    }
+    const patient = getApoSelectedAccesso() || getApoAccessoById(apoState.mainAccessoId);
+    const codPaz = getApoQuestionarioFascia2664CodPaz(patient);
+    const codConsulenza = getApoAccessoCodConsulenza(patient);
+    if (!codPaz || !codConsulenza) {
+        setApoSearchMessage("Codice paziente o codice consulenza non disponibile: impossibile salvare il questionario.", "warning");
+        return;
+    }
+    const params = new URLSearchParams();
+    params.set("codPaz", codPaz);
+    params.set("codConsulenza", codConsulenza);
+    params.set("questionario", JSON.stringify({version: 1, codPaz: codPaz, fields: collectApoQuestionarioMammografiaFields(form)}));
+    apoState.questionarioFascia2664RequestId += 1;
+    apoState.questionarioFascia2664Saving = true;
+    const submitButton = form.querySelector("button[type=submit]");
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
+    try {
+        const response = await postApoFormRequest(apoQuestionariFascia2664Url, params);
+        if (response.status === 401) {
+            window.location.href = apoLoginUrl;
+            return;
+        }
+        const payload = await response.json().catch(function () { return null; });
+        if (!response.ok || !payload || payload.esito !== "ok") {
+            throw new Error(payload && payload.message ? payload.message : "Errore nel salvataggio del questionario fascia 26-64 anni.");
+        }
+        clearApoQuestionarioFascia2664DisponibilitaCache(codPaz);
+        setApoSearchMessage(payload.message || "Questionario salvato correttamente.", "success");
+        const modal = document.getElementById("apo-questionario-fascia2664-modal");
+        if (modal) {
+            modal.classList.add("is-hidden");
+            modal.setAttribute("aria-hidden", "true");
+        }
+        closeApoQuestionariPazienteModal(false);
+        void loadApoQuestionariPazienteStorico(patient, true);
+    } catch (error) {
+        setApoSearchMessage(error && error.message ? error.message : "Errore nel salvataggio del questionario fascia 26-64 anni.", "danger");
+    } finally {
+        apoState.questionarioFascia2664Saving = false;
+        syncApoQuestionarioFascia2664();
+    }
+}
+
+function openApoQuestionarioFascia2664Modal(patient, options) {
+    const config = options && typeof options === "object" ? options : {};
+    const modal = document.getElementById("apo-questionario-fascia2664-modal");
+    const form = document.getElementById("questionarioFascia2664");
+    if (!modal || !form || !patient) {
+        return;
+    }
+    const readOnly = !!config.readOnly;
+    const closeButton = document.getElementById("apo-questionario-fascia2664-close");
+    modal.dataset.readOnly = readOnly ? "true" : "false";
+    modal.dataset.mandatory = "false";
+    if (closeButton) {
+        closeButton.classList.remove("is-hidden");
+        closeButton.setAttribute("aria-hidden", "false");
+    }
+    if (config.fromHistory) {
+        closeApoQuestionariPazienteModal(false);
+    }
+    const patientTitle = document.getElementById("apo-questionario-fascia2664-paziente");
+    const patientName = normalizeApoDisplayValue(patient.paziente)
+        || [normalizeApoDisplayValue(patient.cognome), normalizeApoDisplayValue(patient.nome)].filter(Boolean).join(" ");
+    if (patientTitle) {
+        patientTitle.textContent = patientName ? "- " + patientName : "";
+    }
+    setApoQuestionarioFascia2664ReadOnly(form, false);
+    resetApoQuestionarioFascia2664Form(form, patient, getApoLoggedUserInfo(getApoSessionData()));
+    setApoQuestionarioFascia2664ReadOnly(form, readOnly);
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+    const requestId = apoState.questionarioFascia2664RequestId + 1;
+    apoState.questionarioFascia2664RequestId = requestId;
+    if (!config.startEmpty) {
+        void loadApoQuestionarioFascia2664(patient, form, requestId, config.idQuestionario || "");
+    }
+}
+
+async function openApoQuestionarioFascia2664Diretto() {
+    if (!canApoCompileQuestionari() || apoQuestionariPazienteTemporaneamenteDisabilitati) {
+        return false;
+    }
+    const patient = getApoSelectedAccesso();
+    if (!isApoQuestionarioFascia2664Disponibile(patient)) {
+        return false;
+    }
+    const requestId = apoState.questionariPazienteRequestId + 1;
+    apoState.questionariPazienteRequestId = requestId;
+    try {
+        const canCompile = await getApoQuestionarioFascia2664Disponibilita(patient, true);
+        if (apoState.questionariPazienteRequestId !== requestId || !canCompile) {
+            return false;
+        }
+        openApoQuestionarioFascia2664Modal(patient, {readOnly: false, startEmpty: true});
+        return true;
+    } catch (error) {
+        if (apoState.questionariPazienteRequestId === requestId) {
+            setApoSearchMessage(error && error.message ? error.message : "Errore nella verifica del questionario fascia 26-64 anni.", "danger");
+        }
+        return false;
+    }
+}
+
+async function openApoQuestionariDiretti() {
+    if (await openApoQuestionarioMammografiaDiretto()) {
+        return;
+    }
+    if (await openApoQuestionarioFascia65Diretto()) {
+        return;
+    }
+    if (await openApoQuestionarioFascia625Diretto()) {
+        return;
+    }
+    await openApoQuestionarioFascia2664Diretto();
+}
+
+async function openApoQuestionariPazienteModal() {
+    if (apoQuestionariPazienteTemporaneamenteDisabilitati) {
+        return;
+    }
+    const modal = document.getElementById("apo-questionari-paziente-modal");
+    const patient = getApoSelectedAccesso();
+    if (!modal || !patient) {
+        return;
+    }
+    const questionari = await loadApoQuestionariPazienteStorico(patient, true);
+    if (!questionari.length) {
+        return;
+    }
+    apoState.questionariPazienteLastFocus = document.activeElement;
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+    const firstQuestionario = modal.querySelector(".apo-questionari-paziente-list button");
+    if (firstQuestionario) {
+        firstQuestionario.focus();
+    }
+}
+
+function closeApoQuestionariPazienteModal(restoreFocus) {
+    const modal = document.getElementById("apo-questionari-paziente-modal");
+    if (modal) {
+        modal.classList.add("is-hidden");
+        modal.setAttribute("aria-hidden", "true");
+    }
+    if (restoreFocus && apoState.questionariPazienteLastFocus && typeof apoState.questionariPazienteLastFocus.focus === "function") {
+        apoState.questionariPazienteLastFocus.focus();
+    }
+    apoState.questionariPazienteLastFocus = null;
 }
 
 function openApoSelectedSchedaPazienteModal() {
@@ -10398,11 +13449,7 @@ async function searchApoNuovoAccessoPazienti() {
     updateApoNuovoAccessoSelectButton();
 
     try {
-        const response = await fetch(apoAnagrafeSearchUrl + "?" + params.toString(), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoAnagrafeSearchUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -10529,17 +13576,12 @@ function applyApoCurrentAccessiResult() {
 
 async function searchApoAccessi() {
     const params = getApoAccessiParams();
-    const requestUrl = params.toString() ? apoAccessiUrl + "?" + params.toString() : apoAccessiUrl;
 
     setApoSearchBusy(true);
     setApoSearchMessage("", "info");
 
     try {
-        const response = await fetch(requestUrl, {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
+        const response = await postApoFormRequest(apoAccessiUrl, params, "load");
 
         if (response.status === 401) {
             window.location.href = apoLoginUrl;
@@ -10645,39 +13687,6 @@ function openApoPazienteFromSelectedAccessoGrid() {
     openApoPazienteFromAccesso(selectedAccesso.id);
 }
 
-function getApoCurrentAccessoGridIndex() {
-    const currentId = String(apoState.mainAccessoId || apoState.selectedAccessoId || "").trim();
-    if (!currentId) {
-        return -1;
-    }
-
-    for (let index = 0; index < apoState.filteredAccessi.length; index += 1) {
-        if (String(apoState.filteredAccessi[index].id || "").trim() === currentId) {
-            return index;
-        }
-    }
-
-    return -1;
-}
-
-function openAdjacentApoPaziente(direction) {
-    const offset = direction === "previous" ? -1 : 1;
-    const currentIndex = getApoCurrentAccessoGridIndex();
-    const nextIndex = currentIndex + offset;
-    const nextAccesso = nextIndex >= 0 && nextIndex < apoState.filteredAccessi.length
-        ? apoState.filteredAccessi[nextIndex]
-        : null;
-
-    if (!nextAccesso) {
-        setApoSearchMessage(direction === "previous"
-            ? "Non ci sono pazienti precedenti."
-            : "Non ci sono pazienti successivi.", "warning");
-        return;
-    }
-
-    openApoPazienteFromAccesso(nextAccesso.id);
-}
-
 function handleApoAccessoRowClick(accessoId) {
     const normalizedId = String(accessoId || "").trim();
     const now = Date.now();
@@ -10699,14 +13708,57 @@ function handleApoAccessoRowClick(accessoId) {
     selectApoAccesso(normalizedId);
 }
 
+function getApoSectionOrder(sectionName) {
+    if (sectionName === "paziente") {
+        return 1;
+    }
+    if (sectionName === "statistiche") {
+        return 2;
+    }
+    return 0;
+}
+
+function animateApoSectionTransition(layout, direction) {
+    if (!layout) {
+        return;
+    }
+
+    if (typeof layout.__apoClearTransition === "function") {
+        layout.__apoClearTransition();
+    }
+
+    layout.classList.remove("apo-section-transition", "apo-section-slide-forward", "apo-section-slide-backward");
+    void layout.offsetWidth;
+
+    const directionClass = direction === "backward"
+        ? "apo-section-slide-backward"
+        : "apo-section-slide-forward";
+    const clearTransition = function () {
+        layout.classList.remove("apo-section-transition", "apo-section-slide-forward", "apo-section-slide-backward");
+        layout.removeEventListener("animationend", clearTransition);
+        layout.removeEventListener("animationcancel", clearTransition);
+        layout.__apoClearTransition = null;
+    };
+
+    layout.__apoClearTransition = clearTransition;
+    layout.classList.add("apo-section-transition", directionClass);
+    layout.addEventListener("animationend", clearTransition);
+    layout.addEventListener("animationcancel", clearTransition);
+}
+
 function setApoActiveSection(sectionName) {
+    const previousSection = apoState.activeSection || "accessi";
+    const wasPaziente = previousSection === "paziente";
     const accessiLayout = document.getElementById("apo-accessi-layout");
     const pazienteLayout = document.getElementById("apo-paziente-layout");
     const statisticheLayout = document.getElementById("apo-statistiche-layout");
     const accessiButton = document.getElementById("nav-accessi-button");
     const pazienteButton = document.getElementById("nav-paziente-button");
     const statisticheButton = document.getElementById("nav-statistiche-button");
-    const normalizedSection = sectionName === "paziente" ? "paziente" : sectionName === "statistiche" ? "statistiche" : "accessi";
+    const requestedSection = sectionName === "paziente" ? "paziente" : sectionName === "statistiche" ? "statistiche" : "accessi";
+    const normalizedSection = requestedSection === "statistiche" && !canApoViewStatistiche()
+        ? "accessi"
+        : requestedSection;
 
     apoState.activeSection = normalizedSection;
 
@@ -10727,6 +13779,19 @@ function setApoActiveSection(sectionName) {
     if (statisticheLayout) {
         statisticheLayout.classList.toggle("is-hidden", normalizedSection !== "statistiche");
     }
+
+    const activeLayout = normalizedSection === "paziente"
+        ? pazienteLayout
+        : normalizedSection === "statistiche"
+            ? statisticheLayout
+            : accessiLayout;
+    if (activeLayout && previousSection !== normalizedSection) {
+        animateApoSectionTransition(
+            activeLayout,
+            getApoSectionOrder(normalizedSection) > getApoSectionOrder(previousSection) ? "forward" : "backward"
+        );
+    }
+
     if (accessiButton) {
         accessiButton.classList.toggle("is-active", normalizedSection === "accessi");
         accessiButton.setAttribute("aria-current", normalizedSection === "accessi" ? "page" : "false");
@@ -10743,6 +13808,15 @@ function setApoActiveSection(sectionName) {
     renderApoSelectedPaziente();
     if (normalizedSection === "paziente") {
         renderApoPazienteBody();
+        if (!wasPaziente) {
+            void openApoQuestionariDiretti();
+        }
+    }
+    if (normalizedSection === "statistiche") {
+        renderApoStatisticheSection();
+        if (!apoState.statisticheLoaded && !apoState.statisticheLoading) {
+            void loadApoStatisticheReports(false);
+        }
     }
 }
 
@@ -10798,6 +13872,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const accessiButton = document.getElementById("nav-accessi-button");
     const pazienteButton = document.getElementById("nav-paziente-button");
     const statisticheButton = document.getElementById("nav-statistiche-button");
+    const statisticheLayout = document.getElementById("apo-statistiche-layout");
+    const statisticheModal = document.getElementById("apo-statistiche-modal");
+    const statisticheForm = document.getElementById("apo-statistiche-form");
+    const statisticheCancel = document.getElementById("apo-statistiche-cancel");
+    const statisticheClose = document.getElementById("apo-statistiche-modal-close");
+    const statisticheMonthsToggle = document.getElementById("apo-statistiche-months-toggle");
+    const statisticheStructuresToggle = document.getElementById("apo-statistiche-structures-toggle");
     const pazienteMenu = document.getElementById("apo-paziente-menu");
     const pazienteHistoryTabs = document.getElementById("apo-paziente-history-main-tabs");
     const pazienteSchedaTabs = document.getElementById("apo-paziente-scheda-tabs");
@@ -10809,6 +13890,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const deleteConfirmModal = document.getElementById("apo-delete-confirm-modal");
     const deleteConfirmCancel = document.getElementById("apo-delete-confirm-cancel");
     const deleteConfirmOk = document.getElementById("apo-delete-confirm-ok");
+    const questionarioRifiutoMedicoModal = document.getElementById("apo-questionario-rifiuto-medico-modal");
+    const questionarioRifiutoMedicoCancel = document.getElementById("apo-questionario-rifiuto-medico-cancel");
+    const questionarioRifiutoMedicoConfirm = document.getElementById("apo-questionario-rifiuto-medico-confirm");
     const newAccessoButton = document.getElementById("apo-new-accesso-button");
     const newAccessoModal = document.getElementById("apo-new-accesso-modal");
     const newAccessoForm = document.getElementById("apo-new-accesso-form");
@@ -10823,7 +13907,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const schedaPazienteOk = document.getElementById("apo-scheda-paziente-ok");
     const schedaPazienteBack = document.getElementById("apo-scheda-paziente-back");
     const schedaPazienteClose = document.getElementById("apo-scheda-paziente-close");
+    const questionariPazienteModal = document.getElementById("apo-questionari-paziente-modal");
+    const questionariPazienteClose = document.getElementById("apo-questionari-paziente-close");
+    const questionariPazienteList = document.getElementById("apo-questionari-paziente-list");
+    const questionarioMammografiaModal = document.getElementById("apo-questionario-mammografia-modal");
+    const questionarioMammografiaClose = document.getElementById("apo-questionario-mammografia-close");
+    const questionarioMammografiaBack = document.getElementById("apo-questionario-mammografia-back");
+    const questionarioFascia65Modal = document.getElementById("apo-questionario-fascia65-modal");
+    const questionarioFascia65Close = document.getElementById("apo-questionario-fascia65-close");
+    const questionarioFascia65Back = document.getElementById("apo-questionario-fascia65-back");
+    const questionarioFascia65Continue = document.getElementById("apo-questionario-fascia65-continue");
+    const questionarioFascia625Modal = document.getElementById("apo-questionario-fascia625-modal");
+    const questionarioFascia625Close = document.getElementById("apo-questionario-fascia625-close");
+    const questionarioFascia625Back = document.getElementById("apo-questionario-fascia625-back");
+    const questionarioFascia625Continue = document.getElementById("apo-questionario-fascia625-continue");
+    const questionarioFascia2664Modal = document.getElementById("apo-questionario-fascia2664-modal");
+    const questionarioFascia2664Close = document.getElementById("apo-questionario-fascia2664-close");
+    const questionarioFascia2664Back = document.getElementById("apo-questionario-fascia2664-back");
+    const questionarioFascia2664Continue = document.getElementById("apo-questionario-fascia2664-continue");
     const selectedSchedaButton = document.getElementById("apo-selected-scheda-button");
+    const selectedQuestionariButton = document.getElementById("apo-selected-questionari-button");
+    const pazienteTelevisitaButton = document.getElementById("apo-paziente-televisita-button");
     const diarioModal = document.getElementById("apo-diario-modal");
     const diarioForm = document.getElementById("apo-diario-form");
     const diarioClose = document.getElementById("apo-diario-close");
@@ -10844,6 +13948,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     renderApoPazienteHistoryTabs();
     renderApoSchedaPazienteHistorySection();
+    renderApoStatisticheSection();
+    renderApoStatisticheModalFilters();
 
     if (filterForm) {
         filterForm.addEventListener("submit", function (event) {
@@ -11065,6 +14171,19 @@ document.addEventListener("DOMContentLoaded", function () {
             openApoSelectedSchedaPazienteModal();
         });
     }
+    if (selectedQuestionariButton) {
+        selectedQuestionariButton.addEventListener("click", function () {
+            void openApoQuestionariPazienteModal();
+        });
+    }
+    if (pazienteTelevisitaButton) {
+        pazienteTelevisitaButton.addEventListener("click", function () {
+            if (!isApoTelevisitaAccesso(getApoSelectedAccesso())) {
+                return;
+            }
+            window.open(apoTelevisitaUrl, "_blank", "noopener,noreferrer");
+        });
+    }
 
     if (schedaPazienteModal) {
         schedaPazienteModal.addEventListener("keydown", function (event) {
@@ -11074,6 +14193,235 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    if (questionariPazienteList) {
+        questionariPazienteList.addEventListener("click", function (event) {
+            const button = event.target.closest("button[data-questionario-id]");
+            if (!button) {
+                return;
+            }
+            const patient = getApoSelectedAccesso() || getApoAccessoById(apoState.mainAccessoId);
+            const idQuestionario = normalizeApoDisplayValue(button.dataset.questionarioId);
+            const tipo = normalizeApoValue(button.dataset.questionarioTipo);
+            if (!patient || !idQuestionario) {
+                return;
+            }
+            if (tipo === "MAMMO") {
+                openApoQuestionarioMammografiaModal(patient, {
+                    idQuestionario: idQuestionario,
+                    readOnly: true,
+                    fromHistory: true
+                });
+            } else if (tipo === "FASCIA65") {
+                openApoQuestionarioFascia65Modal(patient, {
+                    idQuestionario: idQuestionario,
+                    readOnly: true,
+                    fromHistory: true
+                });
+            } else if (tipo === "FASCIA625") {
+                openApoQuestionarioFascia625Modal(patient, {
+                    idQuestionario: idQuestionario,
+                    readOnly: true,
+                    fromHistory: true
+                });
+            } else if (tipo === "FASCIA2664") {
+                openApoQuestionarioFascia2664Modal(patient, {
+                    idQuestionario: idQuestionario,
+                    readOnly: true,
+                    fromHistory: true
+                });
+            }
+        });
+    }
+    const questionarioMammografiaForm = document.getElementById("questionarioMammografia");
+    if (questionarioMammografiaForm) {
+        questionarioMammografiaForm.addEventListener("change", function (event) {
+            if (event.target && event.target.name === "rifiuta_compilazione") {
+                syncApoQuestionarioMammografiaRifiuto();
+            }
+        });
+        questionarioMammografiaForm.addEventListener("reset", function () {
+            window.setTimeout(syncApoQuestionarioMammografiaRifiuto, 0);
+        });
+        questionarioMammografiaForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            void saveApoQuestionarioMammografia(questionarioMammografiaForm);
+        });
+    }
+    if (questionarioMammografiaClose) {
+        const closeMammografiaModal = function () {
+            if (questionarioMammografiaModal.dataset.mandatory === "true") {
+                return;
+            }
+            questionarioMammografiaModal.classList.add("is-hidden");
+            questionarioMammografiaModal.setAttribute("aria-hidden", "true");
+            const questionariButton = document.getElementById("apo-selected-questionari-button");
+            if (questionariButton && !questionariButton.disabled) {
+                questionariButton.focus();
+            }
+        };
+        const backToQuestionariOrAccessi = function () {
+            questionarioMammografiaModal.classList.add("is-hidden");
+            questionarioMammografiaModal.setAttribute("aria-hidden", "true");
+            if (questionarioMammografiaModal.dataset.readOnly === "true") {
+                void openApoQuestionariPazienteModal();
+            } else {
+                setApoActiveSection("accessi");
+            }
+        };
+        questionarioMammografiaClose.addEventListener("click", closeMammografiaModal);
+        questionarioMammografiaClose.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); closeMammografiaModal(); }
+        });
+        if (questionarioMammografiaBack) {
+            questionarioMammografiaBack.addEventListener("click", backToQuestionariOrAccessi);
+        }
+        questionarioMammografiaModal.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && questionarioMammografiaModal.dataset.mandatory !== "true") {
+                event.preventDefault();
+                closeMammografiaModal();
+            }
+        });
+    }
+    const questionarioFascia65Form = document.getElementById("questionarioFascia65");
+    if (questionarioFascia65Form) {
+        questionarioFascia65Form.addEventListener("change", function () {
+            syncApoQuestionarioFascia65Rifiuto();
+        });
+        questionarioFascia65Form.addEventListener("reset", function () {
+            window.setTimeout(syncApoQuestionarioFascia65Rifiuto, 0);
+        });
+        questionarioFascia65Form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            void saveApoQuestionarioFascia65(questionarioFascia65Form);
+        });
+    }
+    if (questionarioFascia65Continue) {
+        questionarioFascia65Continue.addEventListener("click", function () {
+            if (questionarioFascia65Continue.disabled || !questionarioFascia65Modal) {
+                return;
+            }
+            questionarioFascia65Modal.classList.add("is-hidden");
+            questionarioFascia65Modal.setAttribute("aria-hidden", "true");
+        });
+    }
+    if (questionarioFascia65Close) {
+        const closeFascia65Modal = function () {
+            requestApoQuestionarioFasciaClose("FASCIA65", questionarioFascia65Close);
+        };
+        questionarioFascia65Close.addEventListener("click", closeFascia65Modal);
+        questionarioFascia65Close.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); closeFascia65Modal(); }
+        });
+        questionarioFascia65Modal.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                closeFascia65Modal();
+            }
+        });
+    }
+    if (questionarioFascia65Back) {
+        questionarioFascia65Back.addEventListener("click", function () {
+            closeApoQuestionarioFasciaModal("FASCIA65");
+            setApoActiveSection("accessi");
+        });
+    }
+    const questionarioFascia625Form = document.getElementById("questionarioFascia625");
+    if (questionarioFascia625Form) {
+        questionarioFascia625Form.addEventListener("change", function () {
+            syncApoQuestionarioFascia625Rifiuto();
+        });
+        questionarioFascia625Form.addEventListener("reset", function () {
+            window.setTimeout(syncApoQuestionarioFascia625Rifiuto, 0);
+        });
+        questionarioFascia625Form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            void saveApoQuestionarioFascia625(questionarioFascia625Form);
+        });
+    }
+    if (questionarioFascia625Continue) {
+        questionarioFascia625Continue.addEventListener("click", function () {
+            if (questionarioFascia625Continue.disabled || !questionarioFascia625Modal) {
+                return;
+            }
+            questionarioFascia625Modal.classList.add("is-hidden");
+            questionarioFascia625Modal.setAttribute("aria-hidden", "true");
+        });
+    }
+    if (questionarioFascia625Close) {
+        const closeFascia625Modal = function () {
+            requestApoQuestionarioFasciaClose("FASCIA625", questionarioFascia625Close);
+        };
+        questionarioFascia625Close.addEventListener("click", closeFascia625Modal);
+        questionarioFascia625Close.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); closeFascia625Modal(); }
+        });
+        questionarioFascia625Modal.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                closeFascia625Modal();
+            }
+        });
+    }
+    if (questionarioFascia625Back) {
+        questionarioFascia625Back.addEventListener("click", function () {
+            closeApoQuestionarioFasciaModal("FASCIA625");
+            setApoActiveSection("accessi");
+        });
+    }
+    const questionarioFascia2664Form = document.getElementById("questionarioFascia2664");
+    if (questionarioFascia2664Form) {
+        questionarioFascia2664Form.addEventListener("change", function () {
+            syncApoQuestionarioFascia2664();
+        });
+        questionarioFascia2664Form.addEventListener("reset", function () {
+            window.setTimeout(syncApoQuestionarioFascia2664, 0);
+        });
+        questionarioFascia2664Form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            void saveApoQuestionarioFascia2664(questionarioFascia2664Form);
+        });
+    }
+    if (questionarioFascia2664Continue) {
+        questionarioFascia2664Continue.addEventListener("click", function () {
+            if (questionarioFascia2664Continue.disabled || !questionarioFascia2664Modal) {
+                return;
+            }
+            questionarioFascia2664Modal.classList.add("is-hidden");
+            questionarioFascia2664Modal.setAttribute("aria-hidden", "true");
+        });
+    }
+    if (questionarioFascia2664Close) {
+        const closeFascia2664Modal = function () {
+            requestApoQuestionarioFasciaClose("FASCIA2664", questionarioFascia2664Close);
+        };
+        questionarioFascia2664Close.addEventListener("click", closeFascia2664Modal);
+        questionarioFascia2664Close.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); closeFascia2664Modal(); }
+        });
+        questionarioFascia2664Modal.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                closeFascia2664Modal();
+            }
+        });
+    }
+    if (questionarioFascia2664Back) {
+        questionarioFascia2664Back.addEventListener("click", function () {
+            closeApoQuestionarioFasciaModal("FASCIA2664");
+            setApoActiveSection("accessi");
+        });
+    }
+    if (questionariPazienteClose) {
+        questionariPazienteClose.addEventListener("click", function () { closeApoQuestionariPazienteModal(true); });
+        questionariPazienteClose.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") { event.preventDefault(); closeApoQuestionariPazienteModal(true); }
+        });
+    }
+    if (questionariPazienteModal) {
+        questionariPazienteModal.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") { event.preventDefault(); closeApoQuestionariPazienteModal(true); }
+        });
+    }
     if (diarioForm) {
         diarioForm.addEventListener("submit", function (event) {
             event.preventDefault();
@@ -11171,14 +14519,91 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    if (pazienteMenu) {
-        pazienteMenu.addEventListener("click", function (event) {
-            const navigationButton = event.target.closest("button[data-paziente-navigation]");
-            if (navigationButton) {
-                openAdjacentApoPaziente(navigationButton.getAttribute("data-paziente-navigation"));
+    if (statisticheLayout) {
+        statisticheLayout.addEventListener("click", function (event) {
+            const button = event.target.closest("[data-statistica-report-id]");
+            if (!button) {
+                return;
+            }
+            openApoStatisticheModal(button.getAttribute("data-statistica-report-id"), button);
+        });
+    }
+
+    if (statisticheForm) {
+        statisticheForm.addEventListener("submit", function (event) {
+            void downloadApoStatisticheExcel(event);
+        });
+    }
+
+    const statisticheMonthContainer = document.getElementById("apo-statistiche-mese");
+    const statisticheStructureContainer = document.getElementById("apo-statistiche-struttura");
+    if (statisticheMonthContainer) {
+        statisticheMonthContainer.addEventListener("change", function () {
+            syncApoStatisticheCheckboxVisualState(statisticheMonthContainer);
+            syncApoStatisticheToggleLabel(statisticheMonthsToggle, statisticheMonthContainer, "il mese", "tutti i mesi");
+        });
+    }
+    if (statisticheStructureContainer) {
+        statisticheStructureContainer.addEventListener("change", function () {
+            syncApoStatisticheCheckboxVisualState(statisticheStructureContainer);
+            syncApoStatisticheToggleLabel(statisticheStructuresToggle, statisticheStructureContainer, "la struttura", "tutte le strutture");
+        });
+    }
+    if (statisticheMonthsToggle && statisticheMonthContainer) {
+        statisticheMonthsToggle.addEventListener("click", function () {
+            const selectedCount = getApoStatisticheCheckedValues(statisticheMonthContainer).length;
+            const totalCount = statisticheMonthContainer.querySelectorAll("input[type=\"checkbox\"]").length;
+            setApoStatisticheCheckedState(statisticheMonthContainer, selectedCount !== totalCount);
+            syncApoStatisticheToggleLabel(statisticheMonthsToggle, statisticheMonthContainer, "il mese", "tutti i mesi");
+        });
+    }
+    if (statisticheStructuresToggle && statisticheStructureContainer) {
+        statisticheStructuresToggle.addEventListener("click", function () {
+            const selectedCount = getApoStatisticheCheckedValues(statisticheStructureContainer).length;
+            const totalCount = statisticheStructureContainer.querySelectorAll("input[type=\"checkbox\"]").length;
+            setApoStatisticheCheckedState(statisticheStructureContainer, selectedCount !== totalCount);
+            syncApoStatisticheToggleLabel(statisticheStructuresToggle, statisticheStructureContainer, "la struttura", "tutte le strutture");
+        });
+    }
+
+    if (statisticheCancel) {
+        statisticheCancel.addEventListener("click", function () {
+            if (!apoState.statisticheExporting) {
+                closeApoStatisticheModal(true);
+            }
+        });
+    }
+
+    if (statisticheClose) {
+        statisticheClose.addEventListener("click", function () {
+            if (!apoState.statisticheExporting) {
+                closeApoStatisticheModal(true);
+            }
+        });
+
+        statisticheClose.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" && event.key !== " ") {
                 return;
             }
 
+            event.preventDefault();
+            if (!apoState.statisticheExporting) {
+                closeApoStatisticheModal(true);
+            }
+        });
+    }
+
+    if (statisticheModal) {
+        statisticheModal.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && !apoState.statisticheExporting) {
+                event.preventDefault();
+                closeApoStatisticheModal(true);
+            }
+        });
+    }
+
+    if (pazienteMenu) {
+        pazienteMenu.addEventListener("click", function (event) {
             const button = event.target.closest("button[data-paziente-section]");
             if (!button) {
                 return;
@@ -11305,6 +14730,29 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    if (questionarioRifiutoMedicoCancel) {
+        questionarioRifiutoMedicoCancel.addEventListener("click", function () {
+            if (!apoState.questionarioRifiutoMedicoSaving) {
+                hideApoQuestionarioRifiutoMedicoModal(true);
+            }
+        });
+    }
+
+    if (questionarioRifiutoMedicoConfirm) {
+        questionarioRifiutoMedicoConfirm.addEventListener("click", function () {
+            void confirmApoQuestionarioRifiutoMedico();
+        });
+    }
+
+    if (questionarioRifiutoMedicoModal) {
+        questionarioRifiutoMedicoModal.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && !apoState.questionarioRifiutoMedicoSaving) {
+                event.preventDefault();
+                hideApoQuestionarioRifiutoMedicoModal(true);
+            }
+        });
+    }
+
     if (logoutButton) {
         logoutButton.addEventListener("click", function () {
             void logoutFromApo();
@@ -11337,6 +14785,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    void searchApoAccessi();
-    void loadApoSessionState();
+    void loadApoSessionState().then(function () {
+        if (!apoState.sessionData || !getApoCsrfToken()) {
+            return;
+        }
+        return searchApoAccessi();
+    });
 });

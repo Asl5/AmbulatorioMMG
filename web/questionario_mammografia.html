@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionario Mammografia</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 24px;
+        background: #edf5ff;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #203554;
+    }
+
+    .mammo-form {
+        --primary: #2767bd;
+        --border: #c9dbf3;
+        --text: #203554;
+        --muted: #637793;
+        --green: #1f914f;
+
+        width: 100%;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 22px 24px 26px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+    }
+
+    .mammo-header {
+        padding-bottom: 16px;
+        margin-bottom: 18px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .mammo-title {
+        margin: 0;
+        color: #132946;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .mammo-subtitle {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .mammo-meta {
+        display: grid;
+        grid-template-columns: 160px 160px minmax(220px, 1fr);
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .mammo-field label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .mammo-input,
+    .mammo-textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--text);
+        font: inherit;
+        font-size: 13px;
+        outline: none;
+    }
+
+    .mammo-input {
+        height: 38px;
+        padding: 0 10px;
+    }
+
+    .mammo-textarea {
+        min-height: 76px;
+        padding: 9px 10px;
+        resize: vertical;
+        line-height: 1.4;
+    }
+
+    .mammo-input:focus,
+    .mammo-textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(39, 103, 189, 0.10);
+    }
+
+    .mammo-question {
+        padding: 14px 0;
+        border-bottom: 1px solid #e4edf8;
+    }
+
+    .mammo-question:last-of-type {
+        border-bottom: 0;
+    }
+
+    .mammo-question-line {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 10px;
+    }
+
+    .mammo-number {
+        color: var(--primary);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .mammo-question-text {
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.45;
+    }
+
+    .mammo-yes-no {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+    }
+
+    .mammo-choice-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--text);
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .mammo-choice-inline input,
+    .mammo-list-option input {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        accent-color: var(--primary);
+    }
+
+    .mammo-under {
+        margin: 10px 0 0 44px;
+    }
+
+    .mammo-list {
+        display: grid;
+        gap: 7px;
+    }
+
+    .mammo-list-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        color: var(--text);
+        font-size: 13px;
+        line-height: 1.35;
+        cursor: pointer;
+    }
+
+    .mammo-inline-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .mammo-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding-top: 20px;
+    }
+
+    .mammo-btn {
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: 8px;
+        border: 0;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .mammo-btn-secondary {
+        color: var(--text);
+        background: #f3f6fa;
+        border: 1px solid var(--border);
+    }
+
+    .mammo-btn-primary {
+        color: #fff;
+        background: var(--primary);
+    }
+
+    .mammo-btn-success {
+        color: #fff;
+        background: var(--green);
+    }
+
+    @media (max-width: 760px) {
+        body {
+            padding: 0;
+        }
+
+        .mammo-form {
+            border-radius: 0;
+            padding: 18px;
+        }
+
+        .mammo-meta {
+            grid-template-columns: 1fr;
+        }
+
+        .mammo-question-line {
+            grid-template-columns: 28px minmax(0, 1fr);
+        }
+
+        .mammo-yes-no {
+            grid-column: 2;
+            margin-top: 8px;
+        }
+
+        .mammo-under {
+            margin-left: 38px;
+        }
+
+        .mammo-inline-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .mammo-actions {
+            flex-direction: column-reverse;
+        }
+
+        .mammo-btn {
+            width: 100%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<form class="mammo-form" id="questionarioMammografia" autocomplete="off">
+
+    <div class="mammo-header">
+        <h1 class="mammo-title">Questionario mammografia</h1>
+        <p class="mammo-subtitle">
+            Questionario per la prevenzione delle neoplasie mammarie
+        </p>
+    </div>
+
+    <div class="mammo-meta">
+        <div class="mammo-field">
+            <label for="mammoData">Data</label>
+            <input class="mammo-input" type="date" id="mammoData" name="data">
+        </div>
+
+        <div class="mammo-field">
+            <label for="mammoEta">Età</label>
+            <input class="mammo-input"
+                   type="number"
+                   id="mammoEta"
+                   name="eta"
+                   min="50"
+                   max="70"
+                   placeholder="50-70">
+        </div>
+
+        <div class="mammo-field">
+            <label for="mammoOperatore">Operatore</label>
+            <input class="mammo-input"
+                   type="text"
+                   id="mammoOperatore"
+                   name="operatore"
+                   placeholder="Nominativo operatore">
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">1)</div>
+            <div class="mammo-question-text">
+                Lei effettua con regolarità la mammografia per la prevenzione dei tumori al seno?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q1_regolarita" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q1_regolarita" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">2)</div>
+            <div class="mammo-question-text">
+                Se ha risposto No, può spiegare perché?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <textarea class="mammo-textarea"
+                      name="q2_motivazione"
+                      placeholder="Inserisci la motivazione"></textarea>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">3)</div>
+            <div class="mammo-question-text">
+                Per effettuare la mammografia utilizza il servizio di screening fornito dalla sua ASL?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q3_screening_asl" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q3_screening_asl" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">4)</div>
+            <div class="mammo-question-text">
+                Se ha risposto No, può spiegare perché?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <textarea class="mammo-textarea"
+                      name="q4_motivazione"
+                      placeholder="Inserisci la motivazione"></textarea>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">5)</div>
+            <div class="mammo-question-text">
+                Se non aderisce allo screening della ASL, quali altri canali utilizza per effettuare la mammografia?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <div class="mammo-list">
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="PRIVATAMENTE">
+                    <span>Esame eseguito privatamente</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="ASSICURAZIONE">
+                    <span>Esame eseguito attraverso polizze assicurative</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="OSPEDALE_ASL">
+                    <span>Esame prenotato in Ospedale o alla ASL</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="CENTRI_CONVENZIONATI">
+                    <span>Esame prenotato nei centri privati convenzionati con la ASL</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="ALTRO">
+                    <span>Altro</span>
+                </label>
+            </div>
+
+            <div style="margin-top:10px">
+                <input class="mammo-input"
+                       type="text"
+                       name="q5_altro"
+                       placeholder="Specificare altro canale">
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">6)</div>
+            <div class="mammo-question-text">
+                Lei effettua la mammografia preventiva ogni due anni?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q6_biennale" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q6_biennale" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">7)</div>
+            <div class="mammo-question-text">
+                Se ha risposto No, con quale intervallo effettua la mammografia e in base a quale indicazione?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <div class="mammo-list">
+                <label class="mammo-list-option">
+                    <input type="radio" name="q7_intervallo" value="ANNUALE_REFERTO">
+                    <span>Ogni anno come indicato sul referto della mammografia</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q7_intervallo" value="ANNUALE_TRANQUILLITA">
+                    <span>Ogni anno per essere più tranquilla</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q7_intervallo" value="ANNUALE_INDICAZIONE">
+                    <span>Ogni anno su indicazione di</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q7_intervallo" value="ALTRO">
+                    <span>Altro</span>
+                </label>
+            </div>
+
+            <div class="mammo-inline-grid">
+                <input class="mammo-input"
+                       type="text"
+                       name="q7_indicazione"
+                       placeholder="Su indicazione di">
+
+                <input class="mammo-input"
+                       type="text"
+                       name="q7_altro"
+                       placeholder="Specificare altro intervallo">
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">8)</div>
+            <div class="mammo-question-text">
+                Assieme alla mammografia effettua anche l'ecografia mammaria?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q8_ecografia" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q8_ecografia" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">9)</div>
+            <div class="mammo-question-text">
+                Se ha risposto Sì, può spiegare perché?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <div class="mammo-list">
+                <label class="mammo-list-option">
+                    <input type="radio" name="q9_motivo_ecografia" value="REFERTO">
+                    <span>Come indicato sul referto della mammografia</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q9_motivo_ecografia" value="TRANQUILLITA">
+                    <span>Per stare più tranquilla</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q9_motivo_ecografia" value="INDICAZIONE">
+                    <span>Su indicazione di</span>
+                </label>
+            </div>
+
+            <div style="margin-top:10px">
+                <input class="mammo-input"
+                       type="text"
+                       name="q9_indicazione"
+                       placeholder="Specificare">
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">10)</div>
+            <div class="mammo-question-text">
+                Avrebbe piacere di ricevere maggiori informazioni sugli esami preventivi per le neoplasie mammarie?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q10_informazioni" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q10_informazioni" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-actions">
+        <button type="reset" class="mammo-btn mammo-btn-secondary">
+            Pulisci
+        </button>
+
+        <button type="button"
+                class="mammo-btn mammo-btn-primary"
+                onclick="window.print()">
+            Stampa
+        </button>
+
+        <button type="submit" class="mammo-btn mammo-btn-success">
+            Salva questionario
+        </button>
+    </div>
+</form>
+
+<script>
+document.getElementById('questionarioMammografia')
+    .addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const dati = {};
+
+        formData.forEach(function (value, key) {
+            if (Object.prototype.hasOwnProperty.call(dati, key)) {
+                if (!Array.isArray(dati[key])) {
+                    dati[key] = [dati[key]];
+                }
+
+                dati[key].push(value);
+            } else {
+                dati[key] = value;
+            }
+        });
+
+        console.log('Dati questionario mammografia:', dati);
+    });
+</script>
+
+</body>
+</html>

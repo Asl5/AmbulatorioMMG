@@ -74,9 +74,10 @@ body::before {
 
 .gestfarm-page {
     min-height: 100vh;
-    padding: 18px;
+    padding: 12px;
     position: relative;
     z-index: 2;
+    align-content: center;
 }
 
 .gestfarm-shell {
@@ -85,7 +86,7 @@ body::before {
     margin: 0 auto;
     display: grid;
     grid-template-rows: auto 1fr;
-    gap: 16px;
+    gap: 12px;
     min-height: calc(100vh - 36px);
     position: relative;
     z-index: 2;
@@ -143,7 +144,7 @@ body::before {
 .gestfarm-brand {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     min-width: 0;
 }
 
@@ -246,7 +247,9 @@ body::before {
 }
 
 .apo-navbar-menu {
-    grid-template-columns: repeat(4, 115px);
+    grid-auto-flow: column;
+    grid-auto-columns: 115px;
+    justify-content: end;
 }
 
 .gestfarm-nav-button {
@@ -328,12 +331,12 @@ body::before {
     display: grid;
     grid-template-columns: minmax(260px, 18%) minmax(0, 1fr) var(--apo-detail-width);
     grid-template-areas: "filters movements detail";
-    gap: 16px;
+    gap: 12px;
     align-items: stretch;
     height: 100%;
     min-height: 0;
     overflow: hidden;
-    transition: grid-template-columns 0.28s ease;
+    transition: grid-template-columns 0.8s ease;
 }
 
 .riepilogo-stack.is-detail-open {
@@ -650,6 +653,37 @@ body::before {
     background: var(--gf-surface);
 }
 
+.apo-accessi-table-wrap {
+    position: relative;
+}
+
+.apo-accessi-grid-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    min-height: 100%;
+    padding: 24px;
+    flex-direction: column;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--gf-blue-700);
+    text-align: center;
+    letter-spacing: 0.02em;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(2px);
+    pointer-events: auto;
+}
+
+.apo-accessi-grid-loader[hidden] {
+    display: none;
+}
+
+.apo-accessi-grid-loader .apo-spinner-loader-text {
+    max-width: 380px;
+    font-size: 0.94rem;
+    line-height: 1.45;
+}
+
 .gestfarm-table {
     width: 100%;
     min-width: 900px;
@@ -732,6 +766,49 @@ body::before {
     display: none !important;
 }
 
+.apo-section-transition {
+    animation-duration: 1.2s;
+    animation-timing-function: cubic-bezier(0.22, 0.78, 0.25, 1);
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+}
+
+.apo-section-slide-forward {
+    animation-name: apo-section-slide-forward;
+}
+
+.apo-section-slide-backward {
+    animation-name: apo-section-slide-backward;
+}
+
+@keyframes apo-section-slide-forward {
+    from {
+        opacity: 0;
+        transform: translate3d(-152px, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes apo-section-slide-backward {
+    from {
+        opacity: 0;
+        transform: translate3d(152px, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .apo-section-transition {
+        animation-duration: 1ms;
+    }
+}
+
 .apo-secondary-panel,
 .apo-placeholder-card {
     min-height: 0;
@@ -744,7 +821,7 @@ body::before {
     grid-template-areas:
         "selected content actions"
         "history content actions";
-    gap: 16px;
+    gap: 12px;
     height: 100%;
     min-height: 0;
     align-items: stretch;
@@ -1208,7 +1285,7 @@ body::before {
     justify-content: space-between;
     gap: 10px;
     width: 100%;
-    min-height: 46px;
+    min-height: 42px;
     padding: 10px 14px;
     border: 1px solid var(--gf-border);
     border-radius: 12px;
@@ -1241,7 +1318,6 @@ body::before {
     border-color: #ffffff;
     background: #bbf7d0;
     color: #14532d;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.42);
 }
 
 .apo-paziente-menu-button:hover,
@@ -1267,7 +1343,7 @@ body::before {
     border-color: var(--gf-blue-700);
     background: var(--gf-blue-700);
     color: #ffffff;
-    box-shadow: 0 10px 18px rgba(31, 95, 184, 0.18);
+    box-shadow: 0 4px 18px rgba(31, 95, 184, 0.18);
 }
 
 .apo-paziente-menu-button-danger {
@@ -1283,38 +1359,6 @@ body::before {
     background: #b91c1c;
     color: #ffffff;
     box-shadow: 0 10px 18px rgba(185, 28, 28, 0.2);
-}
-
-.apo-paziente-navigation-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-}
-
-.apo-paziente-nav-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 42px;
-    padding: 8px 10px;
-    border: 1px solid var(--gf-border);
-    border-radius: 12px;
-    background: #ffffff;
-    color: var(--gf-text);
-    font-size: 0.78rem;
-    font-weight: 700;
-    line-height: 1.2;
-    text-align: center;
-    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
-}
-
-.apo-paziente-nav-button:hover,
-.apo-paziente-nav-button:focus-visible {
-    border-color: #abc4e8;
-    background: var(--gf-blue-050);
-    color: var(--gf-blue-700);
-    box-shadow: 0 8px 16px rgba(31, 95, 184, 0.12);
-    outline: none;
 }
 
 .apo-paziente-consenso-box {
@@ -2189,6 +2233,114 @@ body::before {
     overflow: hidden;
 }
 
+.apo-questionari-paziente-panel {
+    width: min(590px, calc(100vw - 24px));
+    height: min(410px, calc(100vh - 24px));
+    max-height: calc(100vh - 24px);
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
+}
+
+.apo-questionari-paziente-layout {
+    display: grid;
+    grid-template-columns: minmax(160px, 185px) minmax(0, 1fr);
+    min-height: 0;
+    height: 100%;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--gf-surface-soft);
+}
+
+.apo-questionari-paziente-sidebar {
+    padding: 16px;
+    border-right: 1px solid var(--gf-border);
+    background: #ffffff;
+}
+
+.apo-questionari-paziente-description {
+    margin: 0 0 12px;
+    color: var(--gf-text-soft);
+    font-weight: 700;
+}
+
+.apo-questionari-paziente-list {
+    display: grid;
+    gap: 8px;
+}
+
+.apo-questionari-paziente-button {
+    width: 100%;
+    min-height: 44px;
+    text-align: left;
+    white-space: normal;
+}
+
+.apo-questionario-mammografia-modal {
+    z-index: 60;
+}
+
+.apo-questionario-rifiuto-medico-modal {
+    z-index: 70;
+}
+
+.apo-questionario-mammografia-panel {
+    width: min(1020px, calc(100vw - 32px));
+    height: min(860px, calc(100vh - 32px));
+    max-height: calc(100vh - 32px);
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
+}
+
+.apo-questionario-mammografia-host {
+    min-height: 0;
+    overflow: auto;
+    background: #edf5ff;
+}
+.apo-questionari-paziente-content {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #edf5ff;
+}
+
+.apo-questionari-paziente-placeholder {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 24px;
+    text-align: center;
+}
+
+.apo-questionario-mammografia-frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #edf5ff;
+}
+
+@media (max-width: 760px) {
+    .apo-questionari-paziente-panel {
+        width: calc(100vw - 16px);
+        height: calc(100vh - 16px);
+        max-height: calc(100vh - 16px);
+        padding: 14px;
+    }
+    .apo-questionari-paziente-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+    .apo-questionari-paziente-sidebar {
+        padding: 10px;
+        border-right: 0;
+        border-bottom: 1px solid var(--gf-border);
+    }
+    .apo-questionari-paziente-description {
+        display: none;
+    }
+}
 .apo-scheda-paziente-body {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2708,7 +2860,7 @@ body::before {
 
 .apo-new-accesso-type-toggle {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
 }
 
@@ -2761,6 +2913,210 @@ body::before {
 
 .apo-statistiche-card {
     min-height: 320px;
+}
+
+.apo-statistiche-intro {
+    margin: 0 0 18px;
+    color: #45617f;
+    font-size: 0.95rem;
+}
+
+.apo-statistiche-reports {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.apo-statistiche-report-card {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    min-height: 220px;
+    padding: 20px;
+    border: 1px solid rgba(47, 121, 215, 0.16);
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+    box-shadow: 0 10px 22px rgba(21, 63, 111, 0.08);
+}
+
+.apo-statistiche-report-title {
+    margin: 0;
+    color: #17365d;
+    font-size: 1.02rem;
+    font-weight: 700;
+}
+
+.apo-statistiche-report-description {
+    margin: 0;
+    color: #496582;
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.apo-statistiche-report-actions {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.apo-statistiche-download-button {
+    min-width: 148px;
+}
+
+.apo-statistiche-modal-panel {
+    width: min(860px, calc(100vw - 32px));
+}
+
+.apo-statistiche-modal-description {
+    margin: 4px 0 18px;
+    color: #45617f;
+    font-size: 0.94rem;
+    line-height: 1.5;
+}
+
+.apo-statistiche-form {
+    display: grid;
+    gap: 18px;
+}
+
+.apo-statistiche-form-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.apo-statistiche-form-field {
+    display: grid;
+    gap: 8px;
+}
+
+.apo-statistiche-field-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.apo-statistiche-form-field span {
+    color: #17365d;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.apo-statistiche-form-field select {
+    min-height: 44px;
+    border: 1px solid var(--gf-border);
+    border-radius: 14px;
+    padding: 10px 12px;
+    background: #ffffff;
+    color: var(--gf-text);
+}
+
+.apo-statistiche-form-field select[multiple] {
+    min-height: 164px;
+    padding-right: 8px;
+}
+
+.apo-statistiche-choice-panel {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border: 1px solid rgba(47, 121, 215, 0.14);
+    border-radius: 16px;
+    background: linear-gradient(180deg, #fbfdff 0%, #f3f8ff 100%);
+}
+
+.apo-statistiche-choice-link {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #2f79d7;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.apo-statistiche-choice-link:hover,
+.apo-statistiche-choice-link:focus-visible {
+    color: #194f96;
+    outline: none;
+    text-decoration: underline;
+}
+
+.apo-statistiche-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.apo-statistiche-checkbox-list {
+    display: grid;
+    gap: 8px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.apo-statistiche-checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 8px 10px;
+    border: 1px solid rgba(47, 121, 215, 0.14);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #23486f;
+    cursor: pointer;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+
+.apo-statistiche-checkbox-option:hover,
+.apo-statistiche-checkbox-option:focus-within {
+    border-color: #79a9e5;
+    box-shadow: 0 0 0 3px rgba(47, 121, 215, 0.12);
+}
+
+.apo-statistiche-checkbox-option input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #2f79d7;
+    flex: 0 0 auto;
+}
+
+.apo-statistiche-checkbox-option span {
+    color: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.apo-statistiche-checkbox-option.is-selected {
+    border-color: #2f79d7;
+    background: #eaf4ff;
+    box-shadow: inset 0 0 0 1px rgba(47, 121, 215, 0.12);
+}
+
+.apo-statistiche-form-field-wide {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+    .apo-statistiche-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .apo-statistiche-checkbox-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .apo-statistiche-form-field-wide {
+        grid-column: auto;
+    }
+
+    .apo-statistiche-field-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 .apo-paziente-sheet {
@@ -2839,10 +3195,15 @@ body::before {
     min-height: 100%;
 }
 
+.apo-richiesta-prestazioni-form {
+    grid-template-rows: minmax(0, 1fr) auto auto;
+}
+
 .apo-prestazioni-inf-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
+    padding-top: 12px;
 }
 
 .apo-prestazioni-inf-field {
@@ -2874,7 +3235,7 @@ body::before {
     display: grid;
     gap: 6px;
     min-height: 112px;
-    max-height: 500px;
+    max-height: 350px;
     padding: 0px 16px 0px 0px;
     border: 0px solid var(--gf-border);
     border-radius: 14px;
@@ -2931,6 +3292,102 @@ body::before {
     max-height: 150px;
     resize: none;
     line-height: 1.55;
+}
+
+.apo-richiesta-prestazioni-previous {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 8px;
+    min-width: 0;
+    min-height: 0;
+    border-bottom: 1px solid #d7e2f0;
+    padding-bottom: 24px;
+}
+
+.apo-richiesta-prestazioni-previous-title {
+    color: var(--gf-blue-700);
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.apo-richiesta-prestazioni-previous-body {
+    display: grid;
+    gap: 8px;
+    max-height: 215px;
+    min-height: 180px;
+    padding-right: 8px;
+    overflow-y: auto;
+}
+
+.apo-richiesta-prestazioni-form .apo-richiesta-prestazioni-previous-body {
+    max-height: none;
+    min-height: 0;
+}
+
+.apo-richiesta-prestazioni-previous-row {
+    display: grid;
+    grid-template-columns: minmax(112px, 150px) minmax(0, 1fr) minmax(160px, 240px);
+    gap: 12px;
+    align-items: start;
+    padding: 10px 12px;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.apo-richiesta-prestazioni-previous-date {
+    color: var(--gf-text-soft);
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.apo-richiesta-prestazioni-previous-consulenza {
+    margin-top: 4px;
+    color: var(--gf-blue-700);
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.apo-richiesta-prestazioni-previous-texts {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.apo-richiesta-prestazioni-previous-category {
+    color: var(--gf-text);
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.apo-richiesta-prestazioni-previous-subcategory,
+.apo-richiesta-prestazioni-previous-requester,
+.apo-richiesta-prestazioni-previous-empty {
+    color: var(--gf-text-soft);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.apo-richiesta-prestazioni-previous-requester {
+    font-weight: 700;
+}
+
+.apo-richiesta-prestazioni-controls {
+    align-self: end;
+}
+
+@media (max-width: 760px) {
+    .apo-richiesta-prestazioni-previous-row {
+        grid-template-columns: 1fr;
+    }
 }
 
 .apo-prestazioni-inf-actions {
@@ -3158,7 +3615,7 @@ body::before {
     min-width: 0;
     display: inline-block;
     width: 100%;
-    margin: 0 0 10px;
+    margin: 0 0 16px;
     break-inside: avoid;
     padding: 10px;
     border: 1px solid var(--gf-border);
@@ -3598,4 +4055,639 @@ body::before {
     .apo-allegato-action-button {
         width: 100%;
     }
+}
+
+
+/* Questionario mammografia statico */
+.apo-questionario-mammografia-host * {
+        box-sizing: border-box;
+    }
+
+    .apo-questionario-mammografia-host {
+        margin: 0;
+        padding: 24px;
+        background: #edf5ff;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #203554;
+    }
+
+    .mammo-form {
+        --primary: #2767bd;
+        --border: #c9dbf3;
+        --text: #203554;
+        --muted: #637793;
+        --green: #1f914f;
+
+        width: 100%;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 22px 24px 26px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+    }
+
+    .mammo-header {
+        padding-bottom: 16px;
+        margin-bottom: 18px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .mammo-title {
+        margin: 0;
+        color: #132946;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .mammo-subtitle {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .mammo-meta {
+        display: grid;
+        grid-template-columns: 160px 160px minmax(220px, 1fr);
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .mammo-field label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .mammo-input,
+    .mammo-textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--text);
+        font: inherit;
+        font-size: 13px;
+        outline: none;
+    }
+
+    .mammo-input {
+        height: 38px;
+        padding: 0 10px;
+    }
+
+    .mammo-textarea {
+        min-height: 76px;
+        padding: 9px 10px;
+        resize: vertical;
+        line-height: 1.4;
+    }
+
+    .mammo-input:focus,
+    .mammo-textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(39, 103, 189, 0.10);
+    }
+
+    .mammo-question {
+        padding: 14px 0;
+        border-bottom: 1px solid #e4edf8;
+    }
+
+    .mammo-question:last-of-type {
+        border-bottom: 0;
+    }
+
+    .mammo-question-line {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 10px;
+    }
+
+    .mammo-number {
+        color: var(--primary);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .mammo-question-text {
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.45;
+    }
+
+    .mammo-yes-no {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+    }
+
+    .mammo-choice-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--text);
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .mammo-choice-inline input,
+    .mammo-list-option input {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        accent-color: var(--primary);
+    }
+
+    .mammo-under {
+        margin: 18px 0 0 44px;
+    }
+
+    .mammo-list {
+        display: grid;
+        gap: 7px;
+    }
+
+    .mammo-list-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        color: var(--text);
+        font-size: 13px;
+        line-height: 1.35;
+        cursor: pointer;
+    }
+
+    .mammo-inline-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .mammo-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding-top: 20px;
+    }
+
+    .mammo-btn {
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: 8px;
+        border: 0;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .mammo-btn-secondary {
+        color: var(--text);
+        background: #f3f6fa;
+        border: 1px solid var(--border);
+    }
+
+    .mammo-btn-primary {
+        color: #fff;
+        background: var(--primary);
+    }
+
+    .mammo-btn-success {
+        color: #fff;
+        background: var(--green);
+    }
+
+    .mammo-btn-success:disabled,
+    .mammo-btn-success:disabled:hover,
+    .mammo-btn-success:disabled:focus-visible {
+        background: #9ca8b6;
+        color: #eef2f7;
+        cursor: not-allowed;
+        opacity: 0.7;
+        box-shadow: none;
+    }
+
+    @media (max-width: 760px) {
+        .apo-questionario-mammografia-host {
+            padding: 0;
+        }
+
+        .mammo-form {
+            border-radius: 0;
+            padding: 18px;
+        }
+
+        .mammo-meta {
+            grid-template-columns: 1fr;
+        }
+
+        .mammo-question-line {
+            grid-template-columns: 28px minmax(0, 1fr);
+        }
+
+        .mammo-yes-no {
+            grid-column: 2;
+            margin-top: 8px;
+        }
+
+        .mammo-under {
+            margin-left: 38px;
+        }
+
+        .mammo-inline-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .mammo-actions {
+            flex-direction: column-reverse;
+        }
+
+        .mammo-btn {
+            width: 100%;
+        }
+    }
+/* Finestra elenco questionari */
+.apo-questionari-paziente-panel {
+    width: min(520px, calc(100vw - 24px));
+    height: 250px;
+    max-height: calc(100vh - 24px);
+    padding: 18px;
+}
+
+.apo-questionario-fascia625-modal .fascia625-scale {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.apo-questionario-fascia625-modal .fascia625-scale .mammo-choice-inline {
+    align-items: flex-start;
+    height: auto;
+    padding: 9px;
+    white-space: normal;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+    place-items: center;
+}
+
+.apo-questionario-fascia625-modal .fascia625-scale .mammo-choice-inline input {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 900px) {
+    .apo-questionario-fascia625-modal .fascia625-scale {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .apo-questionario-fascia625-modal .fascia625-scale {
+        grid-template-columns: 1fr;
+    }
+}
+
+.apo-questionari-paziente-layout {
+    grid-template-columns: 185px minmax(0, 1fr);
+    height: 100%;
+    border-radius: 10px;
+}
+
+.apo-questionari-paziente-sidebar {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    padding: 14px;
+}
+
+.apo-questionari-paziente-description {
+    margin: 0;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.apo-questionari-paziente-list {
+    display: grid;
+    gap: 8px;
+}
+
+.apo-questionari-paziente-button {
+    display: block;
+    min-height: 46px;
+    padding: 10px 12px;
+    border-radius: 7px;
+    text-align: left;
+    line-height: 1.25;
+    white-space: normal;
+}
+
+.apo-questionari-paziente-content {
+    display: grid;
+    place-items: center;
+    padding: 22px;
+    background: linear-gradient(145deg, #f8fbff, #eaf3ff);
+}
+
+.apo-questionari-paziente-placeholder {
+    max-width: 230px;
+    margin: 0;
+    color: var(--gf-text-soft);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Finestra form mammografia */
+.apo-questionario-mammografia-panel {
+    width: min(1020px, calc(100vw - 32px));
+    height: min(860px, calc(100vh - 32px));
+    max-height: calc(100vh - 32px);
+    padding: 14px;
+    gap: 10px;
+    border-radius: 14px;
+}
+
+.apo-questionario-mammografia-panel .apo-modal-heading {
+    padding: 2px 8px;
+}
+
+.apo-questionario-mammografia-host {
+    min-height: 0;
+    padding: 0;
+    overflow: auto;
+    border: 1px solid #c9dbf3;
+    border-radius: 10px;
+    background: #edf5ff;
+}
+
+@media (max-width: 760px) {
+    .apo-questionari-paziente-panel {
+        width: calc(100vw - 16px);
+        height: 230px;
+        padding: 12px;
+    }
+    .apo-questionari-paziente-layout {
+        grid-template-columns: 150px minmax(0, 1fr);
+    }
+    .apo-questionari-paziente-sidebar {
+        padding: 10px;
+    }
+    .apo-questionari-paziente-content {
+        padding: 12px;
+    }
+    .apo-questionario-mammografia-panel {
+        width: calc(100vw - 12px);
+        height: calc(100vh - 12px);
+        max-height: calc(100vh - 12px);
+        padding: 8px;
+    }
+}
+/* Adattamenti form mammografia */
+.apo-questionario-mammografia-host {
+    border: 0;
+    border-radius: 0;
+}
+
+.apo-questionario-mammografia-host .mammo-form {
+    max-width: none;
+    min-height: 100%;
+    border: 0;
+    border-radius: 0;
+}
+
+.apo-questionario-mammografia-host .mammo-yes-no {
+    gap: 12px;
+}
+
+
+.apo-questionario-mammografia-host .mammo-choice-inline {
+    min-height: 36px;
+    padding: 8px 12px;
+    border: 1px solid #9dbce4;
+    border-radius: 8px;
+    background: #f3f8ff;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.apo-questionario-mammografia-host .mammo-choice-inline:has(input:checked) {
+    border-color: #2767bd;
+    background: #dcecff;
+    box-shadow: 0 0 0 2px rgba(39, 103, 189, 0.14);
+}
+
+.apo-questionario-mammografia-host .mammo-choice-inline input {
+    width: 22px;
+    height: 22px;
+}
+
+.apo-questionario-mammografia-host .mammo-input[readonly] {
+    background: #edf4fd;
+    color: #203554;
+    font-weight: 700;
+}
+
+@media (max-width: 760px) {
+    .apo-questionario-mammografia-host .mammo-choice-inline {
+        min-height: 40px;
+        padding: 8px 10px;
+    }
+
+}
+/* Finestra elenco questionari semplificata */
+.apo-questionari-paziente-panel {
+    width: min(360px, calc(100vw - 24px));
+    height: auto;
+    min-height: 0;
+    padding: 20px;
+    overflow: visible;
+}
+
+.apo-questionari-paziente-list {
+    display: grid;
+    gap: 10px;
+}
+
+.apo-questionari-paziente-button {
+    min-height: 42px;
+    padding: 9px 14px;
+}
+
+/* Storico questionari paziente */
+.apo-questionari-paziente-list {
+    display: block;
+    overflow-x: auto;
+    border: 1px solid var(--gf-border);
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.apo-questionari-paziente-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.apo-questionari-paziente-table th,
+.apo-questionari-paziente-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gf-border);
+    vertical-align: middle;
+}
+
+.apo-questionari-paziente-table th {
+    color: var(--gf-text-soft);
+    background: var(--gf-surface-soft);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.apo-questionari-paziente-table th:nth-child(1) {
+    width: 20%;
+}
+
+.apo-questionari-paziente-table th:nth-child(2) {
+    width: 60%;
+}
+
+.apo-questionari-paziente-table th:nth-child(3) {
+    width: 20%;
+}
+
+.apo-questionari-paziente-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.apo-questionari-paziente-table td:last-child {
+    text-align: left;
+}
+
+.apo-questionari-paziente-view-button {
+    min-width: 96px;
+}
+
+.apo-questionari-paziente-panel {
+    width: min(720px, calc(100vw - 24px));
+}
+
+.apo-questionari-paziente-table th,
+.apo-questionari-paziente-table td {
+    padding: 12px 16px;
+    border-right: 1px solid var(--gf-border);
+}
+
+.apo-questionari-paziente-table th:last-child,
+.apo-questionari-paziente-table td:last-child {
+    border-right: 0;
+}
+
+.apo-questionari-paziente-table td:first-child,
+.apo-questionari-paziente-table td:last-child {
+    white-space: nowrap;
+}
+/* Azioni paziente selezionato e dati questionario */
+.apo-paziente-selected-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.apo-selected-questionari-button {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--gf-border-strong);
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--gf-blue-700);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.apo-selected-questionari-button:hover,
+.apo-selected-questionari-button:focus-visible {
+    border-color: #abc4e8;
+    background: var(--gf-blue-050);
+    outline: none;
+}
+
+.apo-selected-questionari-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+#apo-questionario-mammografia-paziente,
+#apo-questionario-fascia65-paziente {
+    color: var(--gf-text-soft);
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.apo-questionario-mammografia-host .mammo-input[type="date"][readonly] {
+    pointer-events: none;
+}
+.apo-questionario-mammografia-back {
+    min-height: 34px;
+    padding: 0 12px;
+    white-space: nowrap;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+.apo-questionario-mammografia-host .mammo-rifiuto-question {
+    padding: 14px;
+    border: 1px solid #9dbce4;
+    border-radius: 10px;
+    background: #f3f8ff;
+}
+
+.apo-questionario-mammografia-host .mammo-rifiuto-question .mammo-question-text {
+    align-self: center;
+    color: #173b6c;
+}
+
+.apo-questionario-mammografia-host .mammo-form.is-questionario-rifiutato > :not(.mammo-rifiuto-question) {
+    opacity: 0.5;
+}
+
+.apo-questionario-mammografia-host .mammo-form.is-questionario-rifiutato .mammo-actions {
+    opacity: 1;
+}
+
+.apo-questionario-mammografia-host .mammo-form.is-questionario-rifiutato .mammo-rifiuto-question {
+    border-color: #2767bd;
+    background: #dcecff;
+}
+
+/* Nei questionari per fasce d'età i due flag restano senza riquadro. */
+.apo-questionario-fascia65-modal .mammo-rifiuto-question,
+.apo-questionario-fascia625-modal .mammo-rifiuto-question,
+.apo-questionario-fascia2664-modal .mammo-rifiuto-question,
+.apo-questionario-fascia65-modal .mammo-form.is-questionario-rifiutato .mammo-rifiuto-question,
+.apo-questionario-fascia625-modal .mammo-form.is-questionario-rifiutato .mammo-rifiuto-question,
+.apo-questionario-fascia2664-modal .mammo-form.is-questionario-rifiutato .mammo-rifiuto-question {
+    padding: 14px 14px 14px 0px;
+    border: 0;
+    border-radius: 12px;
+    background: #edf4fd;
+    box-shadow: none;
+    border: 1px solid #9dbce4;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
 }

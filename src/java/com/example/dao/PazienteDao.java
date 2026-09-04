@@ -270,6 +270,45 @@ public class PazienteDao {
         return results;
     }
 
+    public List<Map<String, String>> findRichiestaPrestazioni(String codiceFiscale) throws SQLException {
+        String sql = "SELECT "
+                + "TRIM(CAST(PEA.ID AS VARCHAR2(100))) AS ID, "
+                + "TRIM(CAST(PEA.COD_SERVIZIO AS VARCHAR2(100))) AS COD_SERVIZIO, "
+                + "TRIM(CAST(PEA.COD_SERVIZIO AS VARCHAR2(255))) AS DESCRIZIONE, "
+                + "TO_CHAR(PEA.DATA_INS, 'DD/MM/YYYY HH24:MI') AS DATA_INS, "
+                + "TO_CHAR(PEA.DATA_INS, 'YYYY-MM-DD HH24:MI:SS') AS DATA_INS_SORT, "
+                + "TRIM(CAST(PEA.OPERATORE AS VARCHAR2(100))) AS OPERATORE, "
+                + "TRIM(CAST(PEA.OPERATORE || ' - ' || U.COGNOME || ' ' || U.NOME AS VARCHAR2(255))) AS DESC_OPERATORE, "
+                + "TRIM(CAST(PEA.ID_CONSULENZA AS VARCHAR2(100))) AS ID_CONSULENZA, "
+                + "TRIM(CAST(PR.IDEN_ESAME AS VARCHAR2(100))) AS COD_PRESTAZIONE, "
+                + "TRIM(CAST(PR.CATEGORIA AS VARCHAR2(255))) AS CATEGORIA, "
+                + "TRIM(CAST(PR.SOTTO_CATEGORIA AS VARCHAR2(255))) AS SOTTO_CATEGORIA, "
+                + "TRIM(CAST(PR.CATEGORIA || ' - ' || PR.SOTTO_CATEGORIA AS VARCHAR2(255))) AS PRESTAZIONE "
+                + "FROM PRESTAZIONI_EFFETTUATE_APO PEA "
+                + "JOIN PRESTAZIONI_RICHIEDIBILI PR "
+                + "ON PEA.ID_CATEGORIA = PR.IDEN_ESAME "
+                + "AND PEA.COD_SERVIZIO = PR.COD_SERVIZIO "
+                + "JOIN UTENTI U "
+                + "ON PEA.COD_SERVIZIO = U.COD_SERVIZIO "
+                + "AND U.COD_UTENTE = PEA.OPERATORE "
+                + "WHERE UPPER(TRIM(CAST(PEA.COD_FISCALE_PAZ AS VARCHAR2(32)))) = UPPER(?) "
+                + "AND PEA.TIPO = 'RICHIESTA PRESTAZIONE' "
+                + "ORDER BY PEA.DATA_INS DESC NULLS LAST, PEA.ID DESC";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, safe(codiceFiscale));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    results.add(mapPrestazioneInfermieristica(rs));
+                }
+            }
+        }
+
+        return results;
+    }
+
     public List<Map<String, String>> loadPrestazioniInfermieristicheCategorie(String codServizio) throws SQLException {
         String sql = "SELECT DISTINCT TRIM(CAST(CATEGORIA AS VARCHAR2(255))) AS CATEGORIA "
                 + "FROM PRESTAZIONI_INF_APO "
@@ -307,6 +346,59 @@ public class PazienteDao {
         List<Map<String, String>> results = new ArrayList<>();
         try (Connection connection = dataService.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, safe(codServizio));
+            statement.setString(2, safe(categoria));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> sottocategoria = new HashMap<>();
+                    sottocategoria.put("id", safe(rs.getString("ID")));
+                    sottocategoria.put("sottoCategoria", safe(rs.getString("SOTTO_CATEGORIA")));
+                    results.add(sottocategoria);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public List<Map<String, String>> loadPrestazioniRichiedibiliCategorie(String codServizio) throws SQLException {
+        String sql = "SELECT DISTINCT "
+                + "TRIM(CAST(CATEGORIA AS VARCHAR2(255))) AS CATEGORIA "
+                + "FROM VIEW_PRESTAZIONI_RICHIEDIBILI "
+                + "WHERE A_DATA IS NULL "
+                + "AND COD_SERVIZIO = ? "
+                + "ORDER BY CATEGORIA";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, safe(codServizio));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> categoria = new HashMap<>();
+                    categoria.put("categoria", safe(rs.getString("CATEGORIA")));
+                    results.add(categoria);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public List<Map<String, String>> loadPrestazioniRichiedibiliSottocategorie(String codServizio,
+            String categoria) throws SQLException {
+        String sql = "SELECT "
+                + "TRIM(CAST(IDEN_ESAME AS VARCHAR2(100))) AS ID, "
+                + "TRIM(CAST(SOTTO_CATEGORIA AS VARCHAR2(255))) AS SOTTO_CATEGORIA "
+                + "FROM VIEW_PRESTAZIONI_RICHIEDIBILI "
+                + "WHERE A_DATA IS NULL "
+                + "AND COD_SERVIZIO = ? "
+                + "AND CATEGORIA = ? "
+                + "ORDER BY SOTTO_CATEGORIA";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, safe(codServizio));
             statement.setString(2, safe(categoria));
             try (ResultSet rs = statement.executeQuery()) {
@@ -1012,6 +1104,18 @@ public class PazienteDao {
 
     public int insertPrestazioniInfermieristiche(List<String> idCategorie, String operatore, String codServizio,
             String idConsulenza, String codiceFiscalePaz, String note) throws SQLException {
+        return insertPrestazioniApo(idCategorie, operatore, codServizio, idConsulenza, codiceFiscalePaz,
+                note, "PRESTAZIONE INFERMIERISTICA");
+    }
+
+    public int insertRichiestaPrestazioni(List<String> idCategorie, String operatore, String codServizio,
+            String idConsulenza, String codiceFiscalePaz) throws SQLException {
+        return insertPrestazioniApo(idCategorie, operatore, codServizio, idConsulenza, codiceFiscalePaz,
+                "", "RICHIESTA PRESTAZIONE");
+    }
+
+    private int insertPrestazioniApo(List<String> idCategorie, String operatore, String codServizio,
+            String idConsulenza, String codiceFiscalePaz, String note, String tipo) throws SQLException {
         if (idCategorie == null || idCategorie.isEmpty()) {
             return 0;
         }
@@ -1021,7 +1125,7 @@ public class PazienteDao {
                 + "DATA_INS, COD_SERVIZIO, ID_CONSULENZA, "
                 + "TIPO, COD_RICETTA, COD_PT, "
                 + "COD_FISCALE_PAZ, A_DATA, NOTE) "
-                + "VALUES (?, ?, SYSDATE, ?, ?, 'PRESTAZIONE INFERMIERISTICA', NULL, NULL, ?, NULL, ?)";
+                + "VALUES (?, ?, SYSDATE, ?, ?, ?, NULL, NULL, ?, NULL, ?)";
 
         try (Connection connection = dataService.getConnection()) {
             boolean previousAutoCommit = connection.getAutoCommit();
@@ -1038,8 +1142,9 @@ public class PazienteDao {
                         statement.setString(2, safe(operatore));
                         statement.setString(3, safe(codServizio));
                         statement.setString(4, safe(idConsulenza));
-                        statement.setString(5, safe(codiceFiscalePaz));
-                        statement.setString(6, safe(note));
+                        statement.setString(5, safe(tipo));
+                        statement.setString(6, safe(codiceFiscalePaz));
+                        statement.setString(7, safe(note));
                         inserted += statement.executeUpdate();
                     }
                 }
@@ -1107,7 +1212,7 @@ public class PazienteDao {
                 + "JOIN SERVIZI S ON S.COD_SERVIZIO = R.COD_SERVIZIO "
                 + "JOIN ricette_farmaci.UTENTI U ON U.COD_FISCALE = R.CFMEDICO1 AND U.COD_SERVIZIO = R.COD_SERVIZIO "
                 + "WHERE UPPER(TRIM(CAST(R.COD_FISCALE AS VARCHAR2(32)))) = UPPER(?) "
-                + "AND (R.COD_SERVIZIO LIKE 'APO%' OR R.COD_SERVIZIO LIKE 'GMED%') "
+                + "AND (R.COD_SERVIZIO LIKE 'APO%' OR R.COD_SERVIZIO LIKE 'GMED%') AND R.STATO<3"
                 + "ORDER BY R.DATA_RICETTA DESC";
 
         List<Map<String, String>> results = new ArrayList<>();

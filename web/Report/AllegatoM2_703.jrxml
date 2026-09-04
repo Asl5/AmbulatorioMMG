@@ -1,0 +1,522 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final utlizzo versione della libreria JasperReports7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="AllegatoM" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f2af1992-e80b-4026-80f1-9a4090d514ed">
+	<property name="ireport.zoom" value="1.6105100000000012"/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="748"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+	<style name="PdfaDefault" default="true" fontName="DejaVu Sans" pdfEncoding="Identity-H" pdfEmbedded="true"/>
+	<parameter name="COD_SERVIZIO" class="java.lang.String"/>
+	<parameter name="COD_CONSULENZA" class="java.lang.String"/>
+	<query language="sql"><![CDATA[SELECT * FROM testfisiatriaweb.VIEW_STAMPA_ALLEGATO_M join testfisiatriaweb.IMG_BLOB on 1=1 WHERE COD_CONSULENZA=$P{COD_CONSULENZA}
+and cod_servizio = $P{COD_SERVIZIO}
+and cod_immagine = 'ASL_B']]></query>
+	<field name="COD_CONSULENZE" class="java.math.BigDecimal"/>
+	<field name="IND_RES" class="java.lang.String"/>
+	<field name="DESC_COMUNE_RESIDENZA" class="java.lang.String"/>
+	<field name="SIGLA_PROVINCIA" class="java.lang.String"/>
+	<field name="DATA_CONSULENZE" class="java.sql.Timestamp"/>
+	<field name="ORARIO_CONSULENZA" class="java.lang.String"/>
+	<field name="COD_SERVIZIO" class="java.lang.String"/>
+	<field name="COD_UTENTE" class="java.lang.String"/>
+	<field name="COD_PRESTAZIONE" class="java.lang.String"/>
+	<field name="STATO" class="java.math.BigDecimal"/>
+	<field name="DIFFERIBILEX" class="java.lang.String"/>
+	<field name="SN_INDENNEX" class="java.lang.String"/>
+	<field name="SN_COSCIENZAX" class="java.lang.String"/>
+	<field name="SN_PERDITAX" class="java.lang.String"/>
+	<field name="SN_STATOX" class="java.lang.String"/>
+	<field name="SN_CONVULSIONIX" class="java.lang.String"/>
+	<field name="SN_ROMBERGX" class="java.lang.String"/>
+	<field name="SN_RIGORX" class="java.lang.String"/>
+	<field name="SN_DEF_MOTX" class="java.lang.String"/>
+	<field name="SN_DEF_SENX" class="java.lang.String"/>
+	<field name="SN_DEVIAZIONEX" class="java.lang.String"/>
+	<field name="PLL_NORM_DXX" class="java.lang.String"/>
+	<field name="PLL_NORM_SXX" class="java.lang.String"/>
+	<field name="PLL_MIO_DXX" class="java.lang.String"/>
+	<field name="PLL_MIO_SXX" class="java.lang.String"/>
+	<field name="PLL_MID_DXX" class="java.lang.String"/>
+	<field name="PLL_MID_SXX" class="java.lang.String"/>
+	<field name="PLL_FOT_DXX" class="java.lang.String"/>
+	<field name="PLL_FOT_SXX" class="java.lang.String"/>
+	<field name="PLL_NISTAGMOX" class="java.lang.String"/>
+	<field name="APPCC_NORMALEX" class="java.lang.String"/>
+	<field name="APPCC_ARITMIAX" class="java.lang.String"/>
+	<field name="APPCC_CIANOSIX" class="java.lang.String"/>
+	<field name="APPCC_EDEMIX" class="java.lang.String"/>
+	<field name="APPRESP_INDENNEX" class="java.lang.String"/>
+	<field name="APPRESP_RUMX" class="java.lang.String"/>
+	<field name="APPRESP_RUM_SX" class="java.lang.String"/>
+	<field name="APPRESP_ENFISEMAX" class="java.lang.String"/>
+	<field name="ADD_MURPHYX" class="java.lang.String"/>
+	<field name="ADD_BLUEMX" class="java.lang.String"/>
+	<field name="ADD_ROVX" class="java.lang.String"/>
+	<field name="ADD_GIO_DXX" class="java.lang.String"/>
+	<field name="ADD_GIO_SXX" class="java.lang.String"/>
+	<field name="ADD_ASCITEX" class="java.lang.String"/>
+	<field name="CUTE_NX" class="java.lang.String"/>
+	<field name="CUTE_PX" class="java.lang.String"/>
+	<field name="CUTE_IX" class="java.lang.String"/>
+	<field name="CUTE_CX" class="java.lang.String"/>
+	<field name="CUTE_AX" class="java.lang.String"/>
+	<field name="DATA_CONS" class="java.lang.String"/>
+	<field name="COD_PAZ" class="java.math.BigDecimal"/>
+	<field name="COD_CONSULENZA" class="java.math.BigDecimal"/>
+	<field name="MOT_CIRC" class="java.lang.String"/>
+	<field name="CUTE" class="java.lang.String"/>
+	<field name="NUTR_IDR" class="java.lang.String"/>
+	<field name="DIURESI" class="java.lang.String"/>
+	<field name="ALVO" class="java.lang.String"/>
+	<field name="SN_INDENNE" class="java.math.BigDecimal"/>
+	<field name="SN_COSCIENZA" class="java.math.BigDecimal"/>
+	<field name="SN_PERDITA" class="java.math.BigDecimal"/>
+	<field name="SN_STATO" class="java.math.BigDecimal"/>
+	<field name="SN_CONVULSIONI" class="java.math.BigDecimal"/>
+	<field name="SN_ROMBERG" class="java.math.BigDecimal"/>
+	<field name="SN_RIGOR" class="java.math.BigDecimal"/>
+	<field name="SN_DEF_MOT" class="java.math.BigDecimal"/>
+	<field name="SN_DEF_SEN" class="java.math.BigDecimal"/>
+	<field name="SN_DEVIAZIONE" class="java.math.BigDecimal"/>
+	<field name="PLL_NORM_DX" class="java.math.BigDecimal"/>
+	<field name="PLL_NORM_SX" class="java.math.BigDecimal"/>
+	<field name="PLL_MIO_DX" class="java.math.BigDecimal"/>
+	<field name="PLL_MIO_SX" class="java.math.BigDecimal"/>
+	<field name="PLL_MID_DX" class="java.math.BigDecimal"/>
+	<field name="PLL_MID_SX" class="java.math.BigDecimal"/>
+	<field name="PLL_FOT_DX" class="java.math.BigDecimal"/>
+	<field name="PLL_FOT_SX" class="java.math.BigDecimal"/>
+	<field name="PLL_NISTAGMO" class="java.math.BigDecimal"/>
+	<field name="APPCC_NORMALE" class="java.math.BigDecimal"/>
+	<field name="APPCC_ARITMIA" class="java.math.BigDecimal"/>
+	<field name="APPCC_CIANOSI" class="java.math.BigDecimal"/>
+	<field name="APPCC_EDEMI" class="java.math.BigDecimal"/>
+	<field name="APPRESP_INDENNE" class="java.math.BigDecimal"/>
+	<field name="APPRESP_RUM" class="java.math.BigDecimal"/>
+	<field name="APPRESP_RUM_S" class="java.math.BigDecimal"/>
+	<field name="APPRESP_ENFISEMA" class="java.math.BigDecimal"/>
+	<field name="ADD_MURPHY" class="java.math.BigDecimal"/>
+	<field name="ADD_BLUEM" class="java.math.BigDecimal"/>
+	<field name="ADD_ROV" class="java.math.BigDecimal"/>
+	<field name="ADD_GIO_DX" class="java.math.BigDecimal"/>
+	<field name="ADD_GIO_SX" class="java.math.BigDecimal"/>
+	<field name="ADD_ASCITE" class="java.math.BigDecimal"/>
+	<field name="ALTRO" class="java.lang.String"/>
+	<field name="TERAPIA" class="java.lang.String"/>
+	<field name="ESITO_INTERV" class="java.lang.String"/>
+	<field name="DIFFERIBILE" class="java.math.BigDecimal"/>
+	<field name="DATA_MODIFICA" class="java.sql.Timestamp"/>
+	<field name="MOD_UTENTE" class="java.lang.String"/>
+	<field name="WS_UTENTE" class="java.lang.String"/>
+	<field name="PA" class="java.lang.String"/>
+	<field name="FC" class="java.lang.String"/>
+	<field name="FR" class="java.lang.String"/>
+	<field name="TC" class="java.lang.String"/>
+	<field name="HGT" class="java.lang.String"/>
+	<field name="CUTE_N" class="java.math.BigDecimal"/>
+	<field name="CUTE_P" class="java.math.BigDecimal"/>
+	<field name="CUTE_I" class="java.math.BigDecimal"/>
+	<field name="CUTE_C" class="java.math.BigDecimal"/>
+	<field name="CUTE_A" class="java.math.BigDecimal"/>
+	<field name="COGNOME" class="java.lang.String"/>
+	<field name="NOME" class="java.lang.String"/>
+	<field name="SESSO" class="java.lang.String"/>
+	<field name="COD_FISCALE" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="MMG" class="java.lang.String"/>
+	<field name="COT" class="java.lang.String"/>
+	<field name="PS" class="java.lang.String"/>
+	<field name="INV118" class="java.lang.String"/>
+	<field name="MEDICO" class="java.lang.String"/>
+	<field name="DESCR" class="java.lang.String"/>
+	<field name="INTERV" class="java.lang.String"/>
+	<field name="COD_IMMAGINE" class="java.lang.String"/>
+	<field name="IMMAGINE" class="java.sql.Blob"/>
+	<background splitType="Stretch"/>
+	<pageHeader height="60">
+		<element kind="staticText" uuid="a1530389-34c6-430c-a565-55ebdae22650" x="107" y="0" width="340" height="20" fontName="DejaVu Serif" fontSize="16.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Servizio Sanitario Nazionale - Regione Liguria]]></text>
+		</element>
+		<element kind="image" uuid="cd99f04b-58aa-4d6f-9978-f426740713e8" x="0" y="0" width="61" height="58">
+			<expression><![CDATA[$F{IMMAGINE}.getBinaryStream()]]></expression>
+		</element>
+		<element kind="staticText" uuid="563a5d66-6604-480f-a216-585de0e46e22" x="145" y="20" width="264" height="20" fontName="DejaVu Serif" fontSize="14.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Azienda A.S.L. N.5 - "Spezzino"]]></text>
+		</element>
+	</pageHeader>
+	<detail>
+		<band height="285">
+			<element kind="staticText" uuid="efd4228e-3178-489e-9cfa-de9524875ae7" x="365" y="0" width="100" height="20" fontName="DejaVu Sans" fontSize="12.0" bold="true">
+				<text><![CDATA[N° Ordine registro]]></text>
+			</element>
+			<element kind="textField" uuid="b3929365-5474-4953-b0e3-234dac2348e2" x="465" y="0" width="90" height="20" fontName="DejaVu Sans">
+				<expression><![CDATA[$F{COD_CONSULENZA}]]></expression>
+			</element>
+			<element kind="staticText" uuid="0018128b-c936-4515-a7d0-72101be930d8" x="0" y="0" width="100" height="20" fontName="DejaVu Sans" fontSize="12.0" bold="true" underline="true">
+				<text><![CDATA[]]></text>
+			</element>
+			<element kind="staticText" uuid="0b7b343f-423c-4e76-94b7-584274040020" x="0" y="20" width="331" height="15" fontName="DejaVu Sans">
+				<text><![CDATA[Regione Liguria - Provincia La Spezia - A.S.L. n. 5 Spezzino - Sede]]></text>
+			</element>
+			<element kind="textField" uuid="c4422e72-29f0-448f-a638-ec2f484e6626" x="331" y="20" width="224" height="15" fontName="DejaVu Sans">
+				<expression><![CDATA[$F{DESCR}]]></expression>
+			</element>
+			<element kind="staticText" uuid="39a6693d-d5f8-4138-b7ad-edbf7c026c36" x="0" y="35" width="41" height="20" fontName="DejaVu Sans">
+				<text><![CDATA[Medico]]></text>
+			</element>
+			<element kind="textField" uuid="6381bd59-d51e-40a5-8865-39ed868a183c" x="41" y="35" width="183" height="20" fontName="DejaVu Sans">
+				<expression><![CDATA[$F{MEDICO}]]></expression>
+			</element>
+			<element kind="staticText" uuid="33cd2878-9165-457e-8954-0f80024ce3b0" x="224" y="35" width="61" height="20" fontName="DejaVu Sans">
+				<text><![CDATA[Data]]></text>
+			</element>
+			<element kind="textField" uuid="f1e581a1-e7b3-4510-b95e-243f2263fb5d" x="285" y="35" width="92" height="20" fontName="DejaVu Sans">
+				<expression><![CDATA[$F{DATA_CONS}]]></expression>
+			</element>
+			<element kind="staticText" uuid="02380814-6ef1-4b09-8f9d-27478594d1db" x="377" y="35" width="78" height="20" fontName="DejaVu Sans">
+				<text><![CDATA[Ora d'intervento]]></text>
+			</element>
+			<element kind="textField" uuid="9c5b18ad-ab4e-4ba8-bf13-d0842ea4da80" x="455" y="35" width="100" height="20" fontName="DejaVu Sans">
+				<expression><![CDATA[$F{ORARIO_CONSULENZA}]]></expression>
+			</element>
+			<element kind="staticText" uuid="9ad4544f-624d-41ed-bbcd-d36b2cdf4081" x="0" y="55" width="100" height="20" fontName="DejaVu Sans">
+				<text><![CDATA[Tipo intervento:]]></text>
+			</element>
+			<element kind="textField" uuid="df1fffa3-11ff-4899-a112-f20f2b2df9db" x="100" y="55" width="455" height="20" fontName="DejaVu Sans">
+				<expression><![CDATA[$F{INTERV}]]></expression>
+			</element>
+			<element kind="staticText" uuid="f759db09-37dd-4a8b-b894-9289df153180" x="0" y="187" width="145" height="20" fontName="DejaVu Sans" fontSize="12.0" bold="true" underline="true">
+				<text><![CDATA[RELAZIONE MEDICA]]></text>
+			</element>
+			<element kind="staticText" uuid="4439598a-516b-425b-ac31-e3339fc7e0eb" x="198" y="199" width="157" height="20" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center">
+				<text><![CDATA[ANAMNESI]]></text>
+			</element>
+			<element kind="textField" uuid="8dd60f66-54d4-45df-86e7-52a140882cf4" positionType="Float" x="-1" y="219" width="555" height="63" fontSize="8.0" textAdjust="StretchHeight">
+				<expression><![CDATA[$F{MOT_CIRC}]]></expression>
+			</element>
+			<element kind="staticText" uuid="01b93890-4b16-4754-b23c-a96b88ca8654" x="0" y="86" width="132" height="20" bold="true">
+				<text><![CDATA[GENERALITA' ASSISTITO]]></text>
+			</element>
+			<element kind="staticText" uuid="e5d8cbe3-d807-42cf-8013-1d306690c52c" x="0" y="106" width="41" height="20" bold="true">
+				<text><![CDATA[SESSO]]></text>
+			</element>
+			<element kind="textField" uuid="e2ed587d-fe44-4290-80f3-219dc0129ccc" x="41" y="106" width="20" height="20">
+				<expression><![CDATA[$F{SESSO}]]></expression>
+			</element>
+			<element kind="staticText" uuid="910349ec-a03b-46f4-b1fd-e0ccae14e525" x="130" y="107" width="100" height="20" bold="true">
+				<text><![CDATA[COD_FISCALE]]></text>
+			</element>
+			<element kind="textField" uuid="50b386c0-b3b8-417c-8f27-a8c24fe88968" x="230" y="107" width="324" height="20">
+				<expression><![CDATA[$F{COD_FISCALE}]]></expression>
+			</element>
+			<element kind="staticText" uuid="0ff05ddd-09e8-4ba1-aeea-1af541445acb" x="1" y="127" width="100" height="20" bold="true">
+				<text><![CDATA[COGNOME E NOME]]></text>
+			</element>
+			<element kind="textField" uuid="0dcd1562-98b5-4732-ac7a-072b31b44ed7" x="101" y="127" width="129" height="20" hTextAlign="Center">
+				<expression><![CDATA[$F{COGNOME}]]></expression>
+			</element>
+			<element kind="textField" uuid="0dcd1562-98b5-4732-ac7a-072b31b44ed7" x="230" y="127" width="135" height="20" hTextAlign="Center">
+				<expression><![CDATA[$F{NOME}]]></expression>
+			</element>
+			<element kind="staticText" uuid="79c79a49-213e-49e9-84aa-881711d32ef0" x="1" y="147" width="70" height="20" bold="true">
+				<text><![CDATA[RESIDENZA: ]]></text>
+			</element>
+			<element kind="textField" uuid="217defb8-8b34-4d31-b870-baa142a1649c" x="71" y="147" width="197" height="20" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{IND_RES}]]></expression>
+			</element>
+			<element kind="textField" uuid="341a3f15-dec2-46be-8f85-ee8fa734fe0b" x="355" y="147" width="109" height="20" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{DESC_COMUNE_RESIDENZA}]]></expression>
+			</element>
+			<element kind="staticText" uuid="7872a72a-9ab8-4d63-b8f7-babac469d1e5" x="285" y="147" width="70" height="20" bold="true">
+				<text><![CDATA[COMUNE:]]></text>
+			</element>
+			<element kind="staticText" uuid="f9903eb8-da5e-4b00-a30c-51c9cacf186f" x="463" y="147" width="34" height="20" bold="true">
+				<text><![CDATA[PROV:]]></text>
+			</element>
+			<element kind="textField" uuid="1a2e0d75-fa57-444d-977c-dd2cbc666f82" x="497" y="147" width="54" height="20" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{SIGLA_PROVINCIA}]]></expression>
+			</element>
+			<element kind="staticText" uuid="e7fb6ac2-8f34-4b4a-9041-1c84d4e90064" x="1" y="167" width="70" height="20" bold="true">
+				<text><![CDATA[EMAIL: ]]></text>
+			</element>
+			<element kind="staticText" uuid="1e8ea8ff-f69b-4d81-8ff8-50f5d6e5b861" x="285" y="167" width="70" height="20" bold="true">
+				<text><![CDATA[TELEFONO: ]]></text>
+			</element>
+			<element kind="textField" uuid="a6295bb3-28bf-41b6-bf96-038281231ac6" x="71" y="167" width="197" height="20" blankWhenNull="true" removeLineWhenBlank="true" hTextAlign="Center">
+				<expression><![CDATA[$F{EMAIL}]]></expression>
+			</element>
+			<element kind="textField" uuid="bdf62c31-8ed1-41ca-ba42-3ef8db81887f" x="355" y="167" width="196" height="20" blankWhenNull="true" removeLineWhenBlank="true" hTextAlign="Center">
+				<expression><![CDATA[$F{TELEFONO}]]></expression>
+			</element>
+		</band>
+		<band height="39">
+			<element kind="staticText" uuid="8cdbbcb2-f235-43a1-9617-2b7b143f4f86" x="-1" y="0" width="131" height="20" fontName="DejaVu Sans" fontSize="12.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[ESAME OBIETTIVO]]></text>
+			</element>
+			<element kind="textField" uuid="2179a1fa-5ebb-4632-ab29-54fc601a25cb" positionType="Float" x="0" y="20" width="555" height="17" fontSize="8.0" textAdjust="StretchHeight" blankWhenNull="true" removeLineWhenBlank="true">
+				<expression><![CDATA[$F{ALTRO}]]></expression>
+			</element>
+		</band>
+		<band height="279">
+			<element kind="rectangle" uuid="867251ad-3e88-4d98-9e84-df0e44bdb89d" x="0" y="4" width="145" height="213"/>
+			<element kind="staticText" uuid="9598c947-4980-44c5-8ec1-cbb849b5967d" x="6" y="49" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Indenne]]></text>
+			</element>
+			<element kind="textField" uuid="1b33028b-7857-4aad-92f2-0f645dc7101d" x="127" y="49" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_INDENNEX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d64fb30c-0df5-42f3-b8c5-421db099e32a" x="6" y="65" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Coscienza Obnubilata]]></text>
+			</element>
+			<element kind="textField" uuid="81690682-9478-4f9f-94b9-8b6c7e6c0cd3" x="127" y="65" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_COSCIENZAX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="a459fae4-9d4c-43f3-9039-a09d0c41ba12" x="6" y="81" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Perdita di coscienza]]></text>
+			</element>
+			<element kind="textField" uuid="1819a178-f16b-4077-b431-4daa33b22c2e" x="127" y="81" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_PERDITAX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d76dae61-2a5b-4837-aa72-a85ca29ab71d" x="6" y="97" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Stato di agitazione]]></text>
+			</element>
+			<element kind="textField" uuid="30fd80ce-19e3-4745-b25b-a4c89d645aba" x="127" y="97" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_STATOX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="918b3e73-c777-4e85-81ed-ac0526f4a1c0" x="6" y="113" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Convulsioni]]></text>
+			</element>
+			<element kind="textField" uuid="8028f1c8-d10b-469e-827a-55075f5f3d6e" x="127" y="113" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_CONVULSIONIX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="80e70fa0-2f4e-482e-8510-ffc1b85953b4" x="6" y="130" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Romberg]]></text>
+			</element>
+			<element kind="textField" uuid="8f1c8ce4-b332-45b3-9182-a24275e0e75a" x="127" y="130" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_ROMBERGX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="24c1429e-d0fe-4267-bfd8-39cf3ac42a4f" x="6" y="147" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Rigor nucalis]]></text>
+			</element>
+			<element kind="textField" uuid="e9d89463-d893-4dfa-b28a-5e41e707a8ca" x="127" y="147" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_RIGORX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="e8340ee4-e7b2-4b4d-a617-9a6e86a46f60" x="6" y="164" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Deficit motorio]]></text>
+			</element>
+			<element kind="textField" uuid="103ee2c4-ac9b-4fa0-8215-d0adaf7182c8" x="127" y="164" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_DEF_MOTX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="ab08e840-82e1-496f-b7da-4c405779a9db" x="6" y="181" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Deficit sensitivo]]></text>
+			</element>
+			<element kind="textField" uuid="7baa04f9-9b9d-48d5-884a-30c05854c65e" x="127" y="181" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_DEF_SENX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="a5d725a5-6494-47b9-9b5e-2de6bdbb3b16" x="6" y="198" width="126" height="19" fontSize="9.0">
+				<text><![CDATA[Deviazione dello sguardo]]></text>
+			</element>
+			<element kind="textField" uuid="415ea951-923a-4ea0-84b5-deac4b5ca1fb" x="127" y="198" width="18" height="19" fontSize="9.0" blankWhenNull="true">
+				<expression><![CDATA[$F{SN_DEVIAZIONEX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="67391495-7820-4807-833b-72ad64f3751a" x="0" y="4" width="144" height="25" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[SISTEMA NERVOSO]]></text>
+			</element>
+			<element kind="rectangle" uuid="2f61b2c9-135d-4800-b7f2-44be70f314da" x="145" y="4" width="164" height="112"/>
+			<element kind="staticText" uuid="f93b9ec9-310c-49f9-90df-2aa65fc5847a" x="144" y="4" width="85" height="25" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[PUPILLE]]></text>
+			</element>
+			<element kind="staticText" uuid="e241ed99-958e-4fee-85f0-998f2d475cb1" x="229" y="4" width="38" height="25" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[Dx]]></text>
+			</element>
+			<element kind="staticText" uuid="e241ed99-958e-4fee-85f0-998f2d475cb1" x="267" y="4" width="41" height="25" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[Sx]]></text>
+			</element>
+			<element kind="staticText" uuid="4463a02f-b9df-4272-9226-c538b3ec5f76" x="153" y="30" width="74" height="19" fontSize="9.0">
+				<text><![CDATA[Normali]]></text>
+			</element>
+			<element kind="textField" uuid="3e16c26a-f01d-45f1-826f-c252f796829c" x="229" y="30" width="38" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_NORM_DXX}]]></expression>
+			</element>
+			<element kind="textField" uuid="3e16c26a-f01d-45f1-826f-c252f796829c" x="267" y="30" width="41" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_NORM_SXX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="39ddceba-744d-4ad8-a0de-024e341378ae" x="154" y="47" width="74" height="19" fontSize="9.0">
+				<text><![CDATA[Miosi]]></text>
+			</element>
+			<element kind="textField" uuid="7b01ffe7-4fe9-4a32-b48f-09a24071d447" x="230" y="47" width="38" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_MIO_DXX}]]></expression>
+			</element>
+			<element kind="textField" uuid="7b01ffe7-4fe9-4a32-b48f-09a24071d447" x="268" y="47" width="41" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_MIO_SXX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="1bdaaaac-1ee6-4b12-9c67-739120b976f3" x="154" y="64" width="74" height="19" fontSize="9.0">
+				<text><![CDATA[Midriasi]]></text>
+			</element>
+			<element kind="textField" uuid="c7c77e86-e923-438e-838e-3e820111e305" x="230" y="64" width="38" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_MID_DXX}]]></expression>
+			</element>
+			<element kind="textField" uuid="c7c77e86-e923-438e-838e-3e820111e305" x="268" y="64" width="41" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_MID_SXX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="d06c128b-1c1b-4a89-b17a-0e232c5441a4" x="154" y="81" width="74" height="19" fontSize="9.0">
+				<text><![CDATA[R. fotomotori]]></text>
+			</element>
+			<element kind="textField" uuid="32843b5d-d9d4-4692-8084-6754e5c1f5c4" x="230" y="81" width="38" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_FOT_DXX}]]></expression>
+			</element>
+			<element kind="textField" uuid="32843b5d-d9d4-4692-8084-6754e5c1f5c4" x="268" y="81" width="41" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_FOT_SXX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="e412250c-b73f-49f3-beaf-ede0e5e23357" x="154" y="98" width="74" height="19" fontSize="9.0">
+				<text><![CDATA[Nistagmo]]></text>
+			</element>
+			<element kind="textField" uuid="0e6ae9c1-9f5a-444d-90fe-21fb02b5b1e4" x="230" y="98" width="79" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{PLL_NISTAGMOX}]]></expression>
+			</element>
+			<element kind="rectangle" uuid="7018c4b1-b44c-48e5-8f86-5572a79c144e" x="309" y="4" width="246" height="96"/>
+			<element kind="rectangle" uuid="9798c141-2f62-42be-a19b-a235d46df63e" x="145" y="117" width="164" height="100"/>
+			<element kind="rectangle" uuid="c84144b0-2ec8-4f0f-8f6a-e374ce14f672" x="309" y="97" width="246" height="120"/>
+			<element kind="staticText" uuid="c6554ccd-3ef0-4f7d-a21b-f3f54ccccebc" x="308" y="4" width="246" height="25" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[APP. CARDIOCIRCOLATORIO]]></text>
+			</element>
+			<element kind="staticText" uuid="35ee42c0-d5fb-4dee-bb2f-2629596fb8ab" x="145" y="118" width="164" height="23" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[APP. RESPIRATORIO]]></text>
+			</element>
+			<element kind="staticText" uuid="7da2dda9-99ed-4180-afd9-2e393abcc9a2" x="309" y="98" width="246" height="22" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[ADDOME]]></text>
+			</element>
+			<element kind="staticText" uuid="adcc9c8c-d225-4aa0-9fc1-f9f06ca0b6a4" x="154" y="148" width="114" height="19" fontSize="9.0">
+				<text><![CDATA[Indenne]]></text>
+			</element>
+			<element kind="textField" uuid="6a590c16-5106-4697-b9a7-64cab4759bdd" x="268" y="148" width="41" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{APPRESP_INDENNEX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="53abf319-f6f1-4c96-8ef0-c9b4d5bb0935" x="154" y="165" width="114" height="19" fontSize="9.0">
+				<text><![CDATA[Rumori]]></text>
+			</element>
+			<element kind="textField" uuid="56dc714d-e0da-4659-ac23-ed4a7a36b270" x="268" y="165" width="41" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{APPRESP_RUMX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="cbb189ea-ca84-491f-82c1-5a6212fa8cfe" x="156" y="182" width="112" height="19" fontSize="9.0">
+				<text><![CDATA[Rumori secchi]]></text>
+			</element>
+			<element kind="textField" uuid="2d3ac238-6120-4121-9ac7-c53a0f0854e7" x="268" y="182" width="41" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{APPRESP_RUM_SX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="e83d3f26-2254-4325-a057-e57e0e2ed22e" x="156" y="199" width="112" height="19" fontSize="9.0">
+				<text><![CDATA[Enfisema sottocutaneo]]></text>
+			</element>
+			<element kind="textField" uuid="cf120351-3155-421e-a707-3fadc6ff6c72" x="268" y="199" width="41" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{APPRESP_ENFISEMAX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="1860dc09-ff89-432b-ae19-59607bb373c3" x="318" y="30" width="200" height="19" fontSize="9.0">
+				<text><![CDATA[Normale]]></text>
+			</element>
+			<element kind="textField" uuid="d3e728cc-d88a-4944-9513-34dc71e01806" x="518" y="30" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{APPCC_NORMALEX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="2f5d3c83-0271-4808-9923-10c1d0d68f3a" x="319" y="47" width="200" height="19" fontSize="9.0">
+				<text><![CDATA[Aritmia]]></text>
+			</element>
+			<element kind="textField" uuid="15d322d5-565f-436d-9a1f-252975e11d83" x="519" y="47" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{APPCC_ARITMIAX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="7240f2a8-c656-42c8-be99-3cd136573fb6" x="319" y="64" width="200" height="19" fontSize="9.0">
+				<text><![CDATA[Cianosi]]></text>
+			</element>
+			<element kind="textField" uuid="49177e60-ae60-4f36-94a3-af156ea3f066" x="519" y="64" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{APPCC_CIANOSIX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="ffb189df-8942-4577-9d4e-210a10e29fad" x="319" y="81" width="200" height="19" fontSize="9.0">
+				<text><![CDATA[Edemi]]></text>
+			</element>
+			<element kind="textField" uuid="265881c2-f13e-492b-ba37-e16f6a995097" x="519" y="81" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{APPCC_EDEMIX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="92cd10ee-a166-4d37-92ac-814800a4387a" x="319" y="118" width="200" height="19" fontSize="9.0">
+				<text><![CDATA[Murphy]]></text>
+			</element>
+			<element kind="textField" uuid="2fc4aeed-2e5b-4301-bff6-9510d8f74fb9" x="519" y="118" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{ADD_MURPHYX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="88ea1762-1afd-4ed4-9b03-d3fee534933e" x="319" y="135" width="200" height="19" fontSize="9.0">
+				<text><![CDATA[Blumberg]]></text>
+			</element>
+			<element kind="textField" uuid="f381f11b-8dca-431b-a0e0-1efae41ec5c3" x="519" y="152" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{ADD_BLUEMX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="87bb0e0d-1d36-474f-88c9-8e6197d418ca" x="319" y="152" width="200" height="19" fontSize="9.0">
+				<text><![CDATA[Rovsing]]></text>
+			</element>
+			<element kind="textField" uuid="a63d8ce8-b4c5-468b-9038-9281ecc622fc" x="519" y="136" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{ADD_ROVX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="829c935b-dae6-4cef-b540-688a49545e00" x="319" y="184" width="164" height="19" fontSize="9.0">
+				<text><![CDATA[Giordano]]></text>
+			</element>
+			<element kind="textField" uuid="b73b7c7a-61ac-485c-92a8-68528ca61208" x="483" y="184" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{ADD_GIO_DXX}]]></expression>
+			</element>
+			<element kind="textField" uuid="b73b7c7a-61ac-485c-92a8-68528ca61208" x="519" y="184" width="38" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{ADD_GIO_SXX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="2fb34f2f-90ee-46dc-9693-c70a181f5088" x="483" y="168" width="36" height="15" fontSize="12.0" bold="true" hTextAlign="Center">
+				<text><![CDATA[Dx]]></text>
+			</element>
+			<element kind="staticText" uuid="2fb34f2f-90ee-46dc-9693-c70a181f5088" x="519" y="168" width="36" height="15" fontSize="12.0" bold="true" hTextAlign="Center">
+				<text><![CDATA[Sx]]></text>
+			</element>
+			<element kind="staticText" uuid="e870df0c-6c43-4e3b-9e98-c64958dc8bdc" x="318" y="201" width="200" height="19" fontSize="9.0">
+				<text><![CDATA[Ascite]]></text>
+			</element>
+			<element kind="textField" uuid="d3aea8f9-b8c3-4031-9e86-b2300eaf98d6" x="518" y="201" width="36" height="19" fontSize="9.0" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{ADD_ASCITEX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="f4adfd5e-01ad-402b-91c4-72713cf8c4b0" x="0" y="220" width="100" height="20" fontName="DejaVu Sans" fontSize="12.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[TERAPIA]]></text>
+			</element>
+			<element kind="textField" uuid="2a098d6f-54de-4ad0-bc40-3864fd2d6036" positionType="Float" x="0" y="240" width="554" height="36" fontSize="8.0" textAdjust="StretchHeight" blankWhenNull="true" removeLineWhenBlank="true">
+				<expression><![CDATA[$F{TERAPIA}]]></expression>
+			</element>
+		</band>
+		<band height="121">
+			<element kind="staticText" uuid="c16b1543-030f-4a60-89c6-a944f245e170" x="31" y="58" width="523" height="20" fontName="DejaVu Sans" bold="true">
+				<text><![CDATA[L'INTERVENTO NON PRESENTAVA CARATTERE DI PRESTAZIONE NON DIFFERIBILE]]></text>
+			</element>
+			<element kind="line" uuid="865cb614-ad2b-41b2-bf80-0eb01e8cd3a1" x="31" y="112" width="170" height="1"/>
+			<element kind="line" uuid="865cb614-ad2b-41b2-bf80-0eb01e8cd3a1" x="327" y="112" width="170" height="1"/>
+			<element kind="staticText" uuid="b3c3b958-cd70-41af-889d-43ae8894c1fc" x="216" y="38" width="112" height="20" fontSize="9.0">
+				<text><![CDATA[Attivazione 118]]></text>
+			</element>
+			<element kind="staticText" uuid="df6fe1c2-bfc0-484e-9cf5-bae3f93f12ae" x="216" y="22" width="112" height="20" fontSize="9.0">
+				<text><![CDATA[Si invia a PS]]></text>
+			</element>
+			<element kind="textField" uuid="cc22b35c-dafa-4af8-b08b-1f711a7683e5" x="96" y="38" width="100" height="20" blankWhenNull="true" removeLineWhenBlank="true">
+				<expression><![CDATA[$F{COT}]]></expression>
+			</element>
+			<element kind="textField" uuid="00e08e5e-4d79-42bc-9d34-5844de6ac785" x="96" y="22" width="100" height="20" blankWhenNull="true" removeLineWhenBlank="true">
+				<expression><![CDATA[$F{MMG}]]></expression>
+			</element>
+			<element kind="textField" uuid="1fedfada-5bce-44aa-9598-607f03b50cfb" x="312" y="38" width="100" height="20" blankWhenNull="true" removeLineWhenBlank="true">
+				<expression><![CDATA[$F{INV118}]]></expression>
+			</element>
+			<element kind="textField" uuid="0ce95517-d402-4074-a297-fce3288be4e0" x="312" y="22" width="100" height="20" blankWhenNull="true" removeLineWhenBlank="true">
+				<expression><![CDATA[$F{PS}]]></expression>
+			</element>
+			<element kind="staticText" uuid="bed7294a-d369-4113-97f0-621ee2753f0c" x="2" y="1" width="145" height="20" fontName="DejaVu Sans" fontSize="12.0" bold="true" underline="true">
+				<text><![CDATA[ESITO INTERVENTO]]></text>
+			</element>
+			<element kind="textField" uuid="ddd6183a-fdb8-4e1d-8f66-4d5954e50036" x="2" y="58" width="31" height="20" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{DIFFERIBILEX}]]></expression>
+			</element>
+			<element kind="staticText" uuid="5fe0cd86-2ad3-4dbc-8739-a98bd4f46353" x="1" y="22" width="112" height="20" fontSize="9.0">
+				<text><![CDATA[Rinviato a MMG]]></text>
+			</element>
+			<element kind="staticText" uuid="5e2f657b-9dfd-4131-acaa-c5f3a6615d17" x="1" y="38" width="112" height="20" fontSize="9.0">
+				<text><![CDATA[Si invia a COT]]></text>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

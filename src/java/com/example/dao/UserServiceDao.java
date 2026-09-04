@@ -23,7 +23,33 @@ public class UserServiceDao {
                     + "FROM TESTFISIATRIAWEB.UTENTI U "
                     + "JOIN TESTFISIATRIAWEB.SERVIZI S ON U.COD_SERVIZIO = S.COD_SERVIZIO "
                     + "WHERE UPPER(U.COD_UTENTE) = UPPER(?) "
+                    + "AND SUBSTR(UPPER(TRIM(U.COD_SERVIZIO)), 1, 4) = 'APO_' "
+                    + "AND S.A_DATA IS NULL "
                     + "ORDER BY S.DESCRIZIONE, U.COD_SERVIZIO";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection conn = dataService.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> service = new HashMap<>();
+                    service.put("codServizio", safe(rs.getString("COD_SERVIZIO")));
+                    service.put("descrizione", safe(rs.getString("DESCRIZIONE")));
+                    results.add(service);
+                }
+            }
+        }
+        return results;
+    }
+
+    public List<Map<String, String>> getAllActiveServicesByUser(String username) throws SQLException {
+        String sql = "SELECT DISTINCT U.COD_SERVIZIO, S.DESCRIZIONE "
+                + "FROM TESTFISIATRIAWEB.UTENTI U "
+                + "JOIN TESTFISIATRIAWEB.SERVIZI S ON U.COD_SERVIZIO = S.COD_SERVIZIO "
+                + "WHERE UPPER(U.COD_UTENTE) = UPPER(?) "
+                + "AND S.A_DATA IS NULL "
+                + "ORDER BY S.DESCRIZIONE, U.COD_SERVIZIO";
 
         List<Map<String, String>> results = new ArrayList<>();
         try (Connection conn = dataService.getConnection();
@@ -182,6 +208,22 @@ public class UserServiceDao {
                 userData.put("codGruppo", safe(rs.getString("COD_GRUPPO")));
                 return userData;
             }
+        }
+    }
+
+    public void insertApoUserAccess(String codUtente, String codServizio) throws SQLException {
+        String sql = "INSERT INTO APO_UTENTI_ACCESSI (COD_UTENTE, COD_SERVIZIO) VALUES (?, ?)";
+        String sql_up = "UPDATE UTENTI SET ULTIMO_ACCESSO=SYSDATE WHERE UPPER(COD_UTENTE)=UPPER(?) AND COD_SERVIZIO=?";
+
+        try (Connection conn = dataService.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             PreparedStatement ps_up = conn.prepareStatement(sql_up)){
+            ps.setString(1, safe(codUtente));
+            ps.setString(2, safe(codServizio));
+            ps_up.setString(1, safe(codUtente));
+            ps_up.setString(2, safe(codServizio));
+            ps.executeUpdate();
+            ps_up.executeUpdate();
         }
     }
 

@@ -4,10 +4,10 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Ambulatorio MMG</title>
-        <link rel="icon" type="image/png" href="img/APO_logo.png">
+        <link rel="icon" type="image/svg+xml" href="img/APO_logo.png">
 
         <link rel="stylesheet" href="CSS/bootstrap-fallback.css">
-        <link rel="stylesheet" href="CSS/APO.css">
+        <link rel="stylesheet" href="CSS/APO.css?v=20260810-questionari-obbligatorio-1">
     </head>
     <body>
         <main class="gestfarm-page riepilogo-page app-shell">
@@ -88,6 +88,11 @@
                                     <label for="apo-filter-codice-fiscale" class="form-label">Codice fiscale</label>
                                     <input id="apo-filter-codice-fiscale" name="codiceFiscale" type="text" class="form-control" placeholder="Codice fiscale">
                                 </div>
+
+                                <div class="field-group riepilogo-filter-field">
+                                    <label for="apo-filter-operatore" class="form-label">Operatore</label>
+                                    <input id="apo-filter-operatore" name="operatore" type="text" class="form-control" placeholder="Nominativo operatore">
+                                </div>
                             </div>
 
                             <div class="riepilogo-filter-actions">
@@ -123,7 +128,11 @@
                             </div>
                         </div>
 
-                        <div class="table-wrap">
+                        <div id="apo-accessi-table-wrap" class="table-wrap apo-accessi-table-wrap">
+                            <div id="apo-accessi-loader" class="apo-spinner-loader apo-accessi-grid-loader" role="status" aria-live="polite" hidden>
+                                <span class="apo-spinner-loader-icon" aria-hidden="true"></span>
+                                <span class="apo-spinner-loader-text">RICERCA ACCESSI IN CORSO, SI PREGA DI ATTENDERE...</span>
+                            </div>
                             <table class="gestfarm-table riepilogo-movements-table apo-accessi-table">
                                 <colgroup>
                                     <col class="apo-col-consulenza">
@@ -173,7 +182,10 @@
                             <div>
                                 <h2>Paziente selezionato</h2>
                             </div>
-                            <button id="apo-selected-scheda-button" type="button" class="btn btn-outline-secondary apo-selected-scheda-button" disabled>Scheda paziente</button>
+                            <div class="apo-paziente-selected-actions">
+                                <button id="apo-selected-scheda-button" type="button" class="btn btn-outline-secondary apo-selected-scheda-button" disabled>Scheda paziente</button>
+                                <button id="apo-selected-questionari-button" type="button" class="apo-selected-questionari-button" aria-label="Apri questionari paziente" title="Questionari paziente" disabled>?</button>
+                            </div>
                         </div>
                         <div id="apo-paziente-selected-body" class="apo-paziente-selected-body"></div>
                     </article>
@@ -231,11 +243,8 @@
                             <button type="button" class="apo-paziente-menu-button" data-paziente-section="repository-referti">Repository referti</button>
                             <button type="button" class="apo-paziente-menu-button" data-paziente-section="piani-terapeutici">Piani terapeutici</button>
                             <button type="button" class="apo-paziente-menu-button" data-paziente-section="richiesta-prestazioni">Richiesta prestazioni</button>
+                            <button id="apo-paziente-televisita-button" type="button" class="apo-paziente-menu-button is-hidden" aria-hidden="true" disabled>Televisita</button>
                             <button type="button" class="apo-paziente-menu-button apo-paziente-menu-button-danger" data-paziente-section="elimina-consulenza">Elimina consulenza</button>
-                            <div class="apo-paziente-navigation-row" aria-label="Navigazione pazienti">
-                                <button type="button" class="apo-paziente-nav-button" data-paziente-navigation="previous">&larr; Precedente</button>
-                                <button type="button" class="apo-paziente-nav-button" data-paziente-navigation="next">Successivo &rarr;</button>
-                            </div>
                             <div class="apo-paziente-consenso-box">
                                 <button type="button" class="apo-paziente-menu-button" data-paziente-section="cruscotto-consenso">Cruscotto consenso</button>
                                 <div id="apo-paziente-consenso-html" class="apo-paziente-consenso-html">Consenso non disponibile.</div>
@@ -251,9 +260,54 @@
                                 <h2>Statistiche</h2>
                             </div>
                         </div>
-                        <div class="empty-state">Nessuna statistica disponibile.</div>
+                        <p class="apo-statistiche-intro">Scarica i report Excel disponibili per la tua area di lavoro.</p>
+                        <div id="apo-statistiche-message" class="alert d-none" role="alert"></div>
+                        <div id="apo-statistiche-reports" class="apo-statistiche-reports">
+                            <div class="empty-state">Caricamento report in corso...</div>
+                        </div>
                     </article>
                 </section>
+
+                <div id="apo-statistiche-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-statistiche-modal-title">
+                    <div class="apo-modal-panel apo-statistiche-modal-panel">
+                        <div class="apo-modal-heading">
+                            <h2 id="apo-statistiche-modal-title">Scarica report Excel</h2>
+                            <span id="apo-statistiche-modal-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                        </div>
+                        <p id="apo-statistiche-modal-description" class="apo-statistiche-modal-description"></p>
+                        <div id="apo-statistiche-modal-message" class="alert d-none" role="alert"></div>
+                        <form id="apo-statistiche-form" class="apo-statistiche-form">
+                            <div class="apo-statistiche-form-grid">
+                                <label class="apo-statistiche-form-field">
+                                    <span>Anno</span>
+                                    <select id="apo-statistiche-anno" name="anno"></select>
+                                </label>
+                                <label class="apo-statistiche-form-field">
+                                    <span class="apo-statistiche-field-heading">
+                                        <span>Mese</span>
+                                        <button id="apo-statistiche-months-toggle" type="button" class="apo-statistiche-choice-link">Seleziona tutti i mesi</button>
+                                    </span>
+                                    <div class="apo-statistiche-choice-panel">
+                                        <div id="apo-statistiche-mese" class="apo-statistiche-checkbox-grid" role="group" aria-label="Mesi"></div>
+                                    </div>
+                                </label>
+                                <label class="apo-statistiche-form-field apo-statistiche-form-field-wide">
+                                    <span class="apo-statistiche-field-heading">
+                                        <span>Struttura</span>
+                                        <button id="apo-statistiche-structures-toggle" type="button" class="apo-statistiche-choice-link">Seleziona tutte le strutture</button>
+                                    </span>
+                                    <div class="apo-statistiche-choice-panel">
+                                        <div id="apo-statistiche-struttura" class="apo-statistiche-checkbox-list" role="group" aria-label="Strutture"></div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="apo-modal-actions">
+                                <button id="apo-statistiche-cancel" type="button" class="btn btn-outline-secondary">Annulla</button>
+                                <button id="apo-statistiche-submit" type="submit" class="btn btn-success">Scarica Excel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
                 <div id="session-message" class="alert alert-danger d-none" role="alert"></div>
             </section>
@@ -279,6 +333,18 @@
                     <div class="apo-modal-actions">
                         <button id="apo-delete-confirm-cancel" type="button" class="btn btn-outline-secondary">Annulla</button>
                         <button id="apo-delete-confirm-ok" type="button" class="btn apo-delete-confirm-button">Conferma</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-questionario-rifiuto-medico-modal" class="apo-modal apo-questionario-rifiuto-medico-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-questionario-rifiuto-medico-title" aria-describedby="apo-questionario-rifiuto-medico-text">
+                <div class="apo-modal-panel">
+                    <h2 id="apo-questionario-rifiuto-medico-title">Conferma chiusura questionario</h2>
+                    <p id="apo-questionario-rifiuto-medico-text">Chiudendo il questionario, il medico dichiara di non somministrare il questionario al paziente</p>
+                    <div id="apo-questionario-rifiuto-medico-message" class="alert d-none" role="alert"></div>
+                    <div class="apo-modal-actions">
+                        <button id="apo-questionario-rifiuto-medico-cancel" type="button" class="btn btn-outline-secondary">Annulla</button>
+                        <button id="apo-questionario-rifiuto-medico-confirm" type="button" class="btn btn-success">Conferma</button>
                     </div>
                 </div>
             </div>
@@ -357,6 +423,7 @@
                             <div class="apo-new-accesso-type-toggle" role="group" aria-label="Tipo accesso">
                                 <button type="button" class="apo-new-accesso-type-button is-active" data-new-accesso-type="visita-medica" data-new-accesso-value="VMED_AM2" aria-pressed="true">Visita medica</button>
                                 <button type="button" class="apo-new-accesso-type-button" data-new-accesso-type="certificazioni" data-new-accesso-value="CERT_AM2" aria-pressed="false">Certificazioni</button>
+                                <button type="button" class="apo-new-accesso-type-button" data-new-accesso-type="televisita" data-new-accesso-value="TVIS_AM2" aria-pressed="false">Televisita</button>
                             </div>
                         </div>
                         <div class="field-group">
@@ -391,6 +458,576 @@
                     <div id="apo-scheda-paziente-body" class="apo-scheda-paziente-body" aria-live="polite"></div>
                     <div class="apo-modal-actions">
                         <button id="apo-scheda-paziente-ok" type="button" class="btn btn-success">Salva scheda</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-questionari-paziente-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-questionari-paziente-title">
+                <div class="apo-modal-panel apo-questionari-paziente-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-questionari-paziente-title">Questionari paziente</h2>
+                        <span id="apo-questionari-paziente-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                    </div>
+                    <div class="apo-questionari-paziente-list" aria-label="Elenco questionari compilati">
+                        <table class="apo-questionari-paziente-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Questionario</th>
+                                    <th scope="col">Visualizza</th>
+                                </tr>
+                            </thead>
+                            <tbody id="apo-questionari-paziente-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="apo-questionario-mammografia-modal" class="apo-modal apo-questionario-mammografia-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-questionario-mammografia-title">
+                <div class="apo-modal-panel apo-questionario-mammografia-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-questionario-mammografia-title">Questionario mammografia <span id="apo-questionario-mammografia-paziente"></span></h2>
+                        <div class="apo-modal-heading-actions">
+                            <button id="apo-questionario-mammografia-back" type="button" class="btn btn-outline-secondary apo-questionario-mammografia-back">Torna agli accessi</button>
+                            <span id="apo-questionario-mammografia-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                        </div>
+                    </div>
+                    <div class="apo-questionario-mammografia-host">
+<form class="mammo-form" id="questionarioMammografia" autocomplete="off">
+    <div class="mammo-meta">
+        <div class="mammo-field">
+            <label for="mammoData">Data</label>
+            <input class="mammo-input" type="date" id="mammoData" name="data" readonly tabindex="-1">
+        </div>
+
+        <div class="mammo-field">
+            <label for="mammoEta">Età</label>
+            <input class="mammo-input"
+                   type="number"
+                   id="mammoEta"
+                   name="eta" readonly>
+        </div>
+
+        <div class="mammo-field">
+            <label for="mammoOperatore">Operatore</label>
+            <input class="mammo-input"
+                   type="text"
+                   id="mammoOperatore"
+                   name="operatore" readonly
+                   placeholder="Nominativo operatore">
+        </div>
+    </div>
+
+    <div class="mammo-question mammo-rifiuto-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">&nbsp;</div>
+            <div class="mammo-question-text">Il paziente rifiuta la compilazione del questionario?</div>
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="rifiuta_compilazione" value="SI">
+                    <span>Sì</span>
+                </label>
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="rifiuta_compilazione" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">1)</div>
+            <div class="mammo-question-text">
+                Lei effettua con regolarità la mammografia per la prevenzione dei tumori al seno?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q1_regolarita" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q1_regolarita" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">2)</div>
+            <div class="mammo-question-text">
+                Se ha risposto No, può spiegare perché?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <textarea class="mammo-textarea"
+                      name="q2_motivazione"
+                      placeholder="Inserisci la motivazione"></textarea>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">3)</div>
+            <div class="mammo-question-text">
+                Per effettuare la mammografia utilizza il servizio di screening fornito dalla sua ASL?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q3_screening_asl" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q3_screening_asl" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">4)</div>
+            <div class="mammo-question-text">
+                Se ha risposto No, può spiegare perché?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <textarea class="mammo-textarea"
+                      name="q4_motivazione"
+                      placeholder="Inserisci la motivazione"></textarea>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">5)</div>
+            <div class="mammo-question-text">
+                Se non aderisce allo screening della ASL, quali altri canali utilizza per effettuare la mammografia?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <div class="mammo-list">
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="PRIVATAMENTE">
+                    <span>Esame eseguito privatamente</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="ASSICURAZIONE">
+                    <span>Esame eseguito attraverso polizze assicurative</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="OSPEDALE_ASL">
+                    <span>Esame prenotato in Ospedale o alla ASL</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="CENTRI_CONVENZIONATI">
+                    <span>Esame prenotato nei centri privati convenzionati con la ASL</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="checkbox" name="q5_canali" value="ALTRO">
+                    <span>Altro</span>
+                </label>
+            </div>
+
+            <div style="margin-top:10px">
+                <input class="mammo-input"
+                       type="text"
+                       name="q5_altro"
+                       placeholder="Specificare altro canale">
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">6)</div>
+            <div class="mammo-question-text">
+                Lei effettua la mammografia preventiva ogni due anni?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q6_biennale" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q6_biennale" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">7)</div>
+            <div class="mammo-question-text">
+                Se ha risposto No, con quale intervallo effettua la mammografia e in base a quale indicazione?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <div class="mammo-list">
+                <label class="mammo-list-option">
+                    <input type="radio" name="q7_intervallo" value="ANNUALE_REFERTO">
+                    <span>Ogni anno come indicato sul referto della mammografia</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q7_intervallo" value="ANNUALE_TRANQUILLITA">
+                    <span>Ogni anno per essere più tranquilla</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q7_intervallo" value="ANNUALE_INDICAZIONE">
+                    <span>Ogni anno su indicazione di</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q7_intervallo" value="ALTRO">
+                    <span>Altro</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">8)</div>
+            <div class="mammo-question-text">
+                Assieme alla mammografia effettua anche l'ecografia mammaria?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q8_ecografia" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q8_ecografia" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">9)</div>
+            <div class="mammo-question-text">
+                Se ha risposto Sì, può spiegare perché?
+            </div>
+        </div>
+
+        <div class="mammo-under">
+            <div class="mammo-list">
+                <label class="mammo-list-option">
+                    <input type="radio" name="q9_motivo_ecografia" value="REFERTO">
+                    <span>Come indicato sul referto della mammografia</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q9_motivo_ecografia" value="TRANQUILLITA">
+                    <span>Per stare più tranquilla</span>
+                </label>
+
+                <label class="mammo-list-option">
+                    <input type="radio" name="q9_motivo_ecografia" value="INDICAZIONE">
+                    <span>Su indicazione di</span>
+                </label>
+            </div>
+
+            <div style="margin-top:10px">
+                <input class="mammo-input"
+                       type="text"
+                       name="q9_indicazione"
+                       placeholder="Specificare">
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-question">
+        <div class="mammo-question-line">
+            <div class="mammo-number">10)</div>
+            <div class="mammo-question-text">
+                Avrebbe piacere di ricevere maggiori informazioni sugli esami preventivi per le neoplasie mammarie?
+            </div>
+
+            <div class="mammo-yes-no">
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q10_informazioni" value="SI">
+                    <span>Sì</span>
+                </label>
+
+                <label class="mammo-choice-inline">
+                    <input type="radio" name="q10_informazioni" value="NO">
+                    <span>No</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="mammo-actions">
+        <button type="submit" class="mammo-btn mammo-btn-success">
+            Salva questionario
+        </button>
+    </div>
+</form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-questionario-fascia65-modal" class="apo-modal apo-questionario-mammografia-modal apo-questionario-fascia65-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-questionario-fascia65-title">
+                <div class="apo-modal-panel apo-questionario-mammografia-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-questionario-fascia65-title">QUESTIONARIO FASCIA a partire dai 65 ANNI <span id="apo-questionario-fascia65-paziente"></span></h2>
+                        <div class="apo-modal-heading-actions">
+                            <button id="apo-questionario-fascia65-back" type="button" class="btn btn-outline-secondary apo-questionario-mammografia-back">Torna agli accessi</button>
+                            <span id="apo-questionario-fascia65-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                        </div>
+                    </div>
+                    <div class="apo-questionario-mammografia-host">
+                        <form class="mammo-form" id="questionarioFascia65" autocomplete="off">
+                            <div class="mammo-meta">
+                                <div class="mammo-field">
+                                    <label for="fascia65Data">Data</label>
+                                    <input class="mammo-input" type="date" id="fascia65Data" name="data" readonly tabindex="-1">
+                                </div>
+                                <div class="mammo-field">
+                                    <label for="fascia65Eta">Età</label>
+                                    <input class="mammo-input" type="number" id="fascia65Eta" name="eta" readonly>
+                                </div>
+                                <div class="mammo-field">
+                                    <label for="fascia65Operatore">Operatore</label>
+                                    <input class="mammo-input" type="text" id="fascia65Operatore" name="operatore" readonly placeholder="Nominativo operatore">
+                                </div>
+                            </div>
+
+                            <div class="mammo-question mammo-rifiuto-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Non è stato possibile somministrare il questionario per motivi clinici</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="checkbox" name="impossibile_somministrare_motivi_clinici" value="SI" aria-label="Seleziona motivi clinici"></label>
+                                    </div>
+                                </div>
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Il paziente nega l’adesione al progetto</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="checkbox" name="nega_adesione_progetto" value="SI" aria-label="Seleziona adesione al progetto"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">1)</div>
+                                    <div class="mammo-question-text">Dimentica mai di assumere i suoi farmaci?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q1_dimentica_farmaci" value="SI" required><span>SI</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q1_dimentica_farmaci" value="NO" required><span>NO</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">2)</div>
+                                    <div class="mammo-question-text">E' capitato negli ultimi 14 giorni?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q2_ultimi_quattordici_giorni" value="SI" required><span>SI</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q2_ultimi_quattordici_giorni" value="NO" required><span>NO</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">3)</div>
+                                    <div class="mammo-question-text">Ha mai smesso di assumere la terapia di sua iniziativa?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q3_sospende_iniziativa" value="SI" required><span>SI</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q3_sospende_iniziativa" value="NO" required><span>NO</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">4)</div>
+                                    <div class="mammo-question-text">Non ha preso i farmaci ieri?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q4_non_presi_ieri" value="SI" required><span>SI</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q4_non_presi_ieri" value="NO" required><span>NO</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">5)</div>
+                                    <div class="mammo-question-text">Quando si sente meglio smette di prendere la sua terapia?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q5_smette_quando_meglio" value="SI" required><span>SI</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q5_smette_quando_meglio" value="NO" required><span>NO</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">6)</div>
+                                    <div class="mammo-question-text">Fatica ad attenersi alla terapia prescritta?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q6_fatica_terapia" value="SI" required><span>SI</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q6_fatica_terapia" value="NO" required><span>NO</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">7)</div>
+                                    <div class="mammo-question-text">Le capita mai di dimenticarsi le medicine a casa (es. vacanza)?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q7_dimentica_medicine_casa" value="SI" required><span>SI</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q7_dimentica_medicine_casa" value="NO" required><span>NO</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">8)</div>
+                                    <div class="mammo-question-text">Si scorda mai di assumere parte della sua terapia?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q8_dimentica_parte_terapia" value="SI" required><span>SI</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q8_dimentica_parte_terapia" value="NO" required><span>NO</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-actions">
+                                <button id="apo-questionario-fascia65-continue" type="button" class="mammo-btn mammo-btn-secondary is-hidden" aria-hidden="true" disabled>Continua</button>
+                                <button type="submit" class="mammo-btn mammo-btn-success" disabled>Salva questionario</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-questionario-fascia625-modal" class="apo-modal apo-questionario-mammografia-modal apo-questionario-fascia625-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-questionario-fascia625-title">
+                <div class="apo-modal-panel apo-questionario-mammografia-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-questionario-fascia625-title">QUESTIONARIO FASCIA di età 6-25 ANNI <span id="apo-questionario-fascia625-paziente"></span></h2>
+                        <div class="apo-modal-heading-actions">
+                            <button id="apo-questionario-fascia625-back" type="button" class="btn btn-outline-secondary apo-questionario-mammografia-back">Torna agli accessi</button>
+                            <span id="apo-questionario-fascia625-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                        </div>
+                    </div>
+                    <div class="apo-questionario-mammografia-host">
+                        <form class="mammo-form" id="questionarioFascia625" autocomplete="off">
+                            <div class="mammo-meta">
+                                <div class="mammo-field"><label for="fascia625Data">Data</label><input class="mammo-input" type="date" id="fascia625Data" name="data" readonly tabindex="-1"></div>
+                                <div class="mammo-field"><label for="fascia625Eta">Età</label><input class="mammo-input" type="number" id="fascia625Eta" name="eta" readonly></div>
+                                <div class="mammo-field"><label for="fascia625Operatore">Operatore</label><input class="mammo-input" type="text" id="fascia625Operatore" name="operatore" readonly placeholder="Nominativo operatore"></div>
+                            </div>
+                            <div class="mammo-question mammo-rifiuto-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Non è stato possibile somministrare il questionario per motivi clinici</div>
+                                    <div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="checkbox" name="impossibile_somministrare_motivi_clinici" value="SI" aria-label="Seleziona motivi clinici"></label></div>
+                                </div>
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Il paziente nega l’adesione al progetto</div>
+                                    <div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="checkbox" name="nega_adesione_progetto" value="SI" aria-label="Seleziona adesione al progetto"></label></div>
+                                </div>
+                            </div>
+                            <div id="apo-questionario-fascia625-domande"></div>
+                            <div class="mammo-actions">
+                                <button id="apo-questionario-fascia625-continue" type="button" class="mammo-btn mammo-btn-secondary is-hidden" aria-hidden="true" disabled>Continua</button>
+                                <button type="submit" class="mammo-btn mammo-btn-success" disabled>Salva questionario</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apo-questionario-fascia2664-modal" class="apo-modal apo-questionario-mammografia-modal apo-questionario-fascia2664-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-questionario-fascia2664-title">
+                <div class="apo-modal-panel apo-questionario-mammografia-panel">
+                    <div class="apo-modal-heading">
+                        <h2 id="apo-questionario-fascia2664-title">QUESTIONARIO FASCIA di età 26-64 ANNI <span id="apo-questionario-fascia2664-paziente"></span></h2>
+                        <div class="apo-modal-heading-actions">
+                            <button id="apo-questionario-fascia2664-back" type="button" class="btn btn-outline-secondary apo-questionario-mammografia-back">Torna agli accessi</button>
+                            <span id="apo-questionario-fascia2664-close" class="apo-modal-close-button" role="button" tabindex="0" aria-label="Chiudi">X</span>
+                        </div>
+                    </div>
+                    <div class="apo-questionario-mammografia-host">
+                        <form class="mammo-form" id="questionarioFascia2664" autocomplete="off">
+                            <div class="mammo-meta">
+                                <div class="mammo-field"><label for="fascia2664Data">Data</label><input class="mammo-input" type="date" id="fascia2664Data" name="data" readonly tabindex="-1"></div>
+                                <div class="mammo-field"><label for="fascia2664Eta">Età</label><input class="mammo-input" type="number" id="fascia2664Eta" name="eta" readonly></div>
+                                <div class="mammo-field"><label for="fascia2664Operatore">Operatore</label><input class="mammo-input" type="text" id="fascia2664Operatore" name="operatore" readonly placeholder="Nominativo operatore"></div>
+                            </div>
+
+                            <div class="mammo-question mammo-rifiuto-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Non è stato possibile somministrare il questionario per motivi clinici</div>
+                                    <div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="checkbox" name="impossibile_somministrare_motivi_clinici" value="SI" aria-label="Seleziona motivi clinici"></label></div>
+                                </div>
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Il paziente nega l’adesione al progetto</div>
+                                    <div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="checkbox" name="nega_adesione_progetto" value="SI" aria-label="Seleziona adesione al progetto"></label></div>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">1)</div>
+                                    <div class="mammo-question-text">Fuma attualmente?</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="radio" name="q1_fuma" value="NO" required><span>NO</span></label>
+                                        <label class="mammo-choice-inline"><input type="radio" name="q1_fuma" value="SI" required><span>SÌ</span></label>
+                                    </div>
+                                </div>
+                                <div id="apo-questionario-fascia2664-tipo-fumo" class="mammo-under mammo-list is-hidden">
+                                    <div class="mammo-question-text">Se ha risposto SÌ, con quale tipologia di abitudine al fumo?</div>
+                                    <label class="mammo-list-option"><input type="radio" name="q1_tipologia_fumo" value="SIGARETTA_TRADIZIONALE"><span>Sigaretta tradizionale</span></label>
+                                    <label class="mammo-list-option"><input type="radio" name="q1_tipologia_fumo" value="SIGARETTA_ELETTRONICA"><span>Sigaretta elettronica</span></label>
+                                    <label class="mammo-list-option"><input type="radio" name="q1_tipologia_fumo" value="ALTRO"><span>Altro</span></label>
+                                </div>
+                            </div>
+
+                            <div class="mammo-question"><div class="mammo-question-line"><div class="mammo-number">2)</div><div class="mammo-question-text">Le sono mai stati riscontrati valori alti di PRESSIONE?</div><div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="radio" name="q2_pressione_alta" value="NO" required><span>NO</span></label><label class="mammo-choice-inline"><input type="radio" name="q2_pressione_alta" value="SI" required><span>SÌ</span></label></div></div></div>
+                            <div class="mammo-question"><div class="mammo-question-line"><div class="mammo-number">3)</div><div class="mammo-question-text">Le è mai stato detto da un medico che il suo peso è eccessivo?</div><div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="radio" name="q3_peso_eccessivo" value="NO" required><span>NO</span></label><label class="mammo-choice-inline"><input type="radio" name="q3_peso_eccessivo" value="SI" required><span>SÌ</span></label></div></div></div>
+                            <div class="mammo-question"><div class="mammo-question-line"><div class="mammo-number">4)</div><div class="mammo-question-text">Nei suoi esami del sangue è mai comparso un valore alto di GLICEMIA?</div><div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="radio" name="q4_glicemia_alta" value="NO" required><span>NO</span></label><label class="mammo-choice-inline"><input type="radio" name="q4_glicemia_alta" value="SI" required><span>SÌ</span></label></div></div></div>
+                            <div class="mammo-question"><div class="mammo-question-line"><div class="mammo-number">5)</div><div class="mammo-question-text">Nei suoi esami del sangue è mai comparso un valore alto di COLESTEROLO?</div><div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="radio" name="q5_colesterolo_alto" value="NO" required><span>NO</span></label><label class="mammo-choice-inline"><input type="radio" name="q5_colesterolo_alto" value="SI" required><span>SÌ</span></label></div></div></div>
+                            <div class="mammo-question"><div class="mammo-question-line"><div class="mammo-number">6)</div><div class="mammo-question-text">Svolge adeguata attività fisica?</div><div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="radio" name="q6_attivita_fisica" value="NO" required><span>NO</span></label><label class="mammo-choice-inline"><input type="radio" name="q6_attivita_fisica" value="SI" required><span>SÌ</span></label></div></div></div>
+                            <div class="mammo-question"><div class="mammo-question-line"><div class="mammo-number">7)</div><div class="mammo-question-text">Nella sua Famiglia ci sono stati casi di infarto cardiaco o ictus cerebrale?</div><div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="radio" name="q7_familiarita_eventi" value="NO" required><span>NO</span></label><label class="mammo-choice-inline"><input type="radio" name="q7_familiarita_eventi" value="SI" required><span>SÌ</span></label><label class="mammo-choice-inline"><input type="radio" name="q7_familiarita_eventi" value="NON SO" required><span>NON SO</span></label></div></div></div>
+
+                            <div class="mammo-actions">
+                                <button id="apo-questionario-fascia2664-continue" type="button" class="mammo-btn mammo-btn-secondary is-hidden" aria-hidden="true" disabled>Continua</button>
+                                <button type="submit" class="mammo-btn mammo-btn-success" disabled>Salva questionario</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -529,6 +1166,6 @@
             </div>
         </main>
 
-        <script src="js/APO.js?v=20260518-terapie-unita-db-3"></script>
+        <script src="js/APO.js?v=20260817-consenso-utente-1"></script>
     </body>
 </html>

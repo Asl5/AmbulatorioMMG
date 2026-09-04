@@ -2,6 +2,7 @@ package com.example.servlet;
 
 import com.example.dao.UserServiceDao;
 import com.example.dto.ApiResponse;
+import com.example.filter.CsrfProtectionFilter;
 import com.example.service.DataService;
 import com.example.service.LdapService;
 import com.example.util.JsonUtil;
@@ -67,6 +68,11 @@ public class AuthServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String action = normalizePath(req.getPathInfo());
+        if ("/services".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadServices(req, resp);
+            return;
+        }
         if ("/login".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             login(req, resp);
@@ -149,7 +155,8 @@ public class AuthServlet extends HttpServlet {
             LdapService.LdapConfig ldapConfig = getLdapConfig();
             HashMap<String, Object> userData = ldapService.authenticateAndFetchUserData(username, password, ldapConfig);
             Map<String, String> selectedService = userServiceDao.getServiceByUser(username, serviceCode);
-            if (selectedService == null) {
+            if (selectedService == null) 
+            {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 JsonUtil.write(resp, ApiResponse.ko("Servizio non valido per l'utente indicato."));
                 return;
@@ -157,10 +164,12 @@ public class AuthServlet extends HttpServlet {
             selectedService.putAll(userServiceDao.getUserDataByUsername(username, serviceCode));
 
             createAuthenticatedSession(req, username, userData, selectedService);
+            registerApoLoginAccess(username, userData, selectedService);
 
             HashMap<String, Object> data = new HashMap<>();
             data.put("redirectUrl", getLandingUrl(req));
             data.put("serviceData", selectedService);
+            data.put("csrfToken", getCsrfToken(req.getSession(false)));
             JsonUtil.write(resp, ApiResponse.ok(data));
         } catch (javax.naming.NamingException ex) {
             LOGGER.log(Level.WARNING, "Credenziali non valide per l'utente " + username, ex);
@@ -202,10 +211,12 @@ public class AuthServlet extends HttpServlet {
             selectedService.putAll(userServiceDao.getUserDataByUsername(username, serviceCode));
 
             createAuthenticatedSession(req, username, userData, selectedService);
+            registerApoLoginAccess(username, userData, selectedService);
 
             HashMap<String, Object> data = new HashMap<>();
             data.put("redirectUrl", getLandingUrl(req));
             data.put("serviceData", selectedService);
+            data.put("csrfToken", getCsrfToken(req.getSession(false)));
             JsonUtil.write(resp, ApiResponse.ok(data));
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Errore nel cambio servizio APO per l'utente " + username, ex);
@@ -230,6 +241,7 @@ public class AuthServlet extends HttpServlet {
         data.put("userData", toObjectMap(session.getAttribute("authUserData")));
         data.put("serviceData", toStringMap(session.getAttribute("authServiceData")));
         data.put("logoutUrl", getLoginUrl(req));
+        data.put("csrfToken", getCsrfToken(session));
         try {
             data.put("apoServices", userServiceDao.getApoServicesByUser(username));
             JsonUtil.write(resp, ApiResponse.ok(data));
@@ -265,6 +277,45 @@ public class AuthServlet extends HttpServlet {
         session.setAttribute("authUser", username);
         session.setAttribute("authUserData", userData == null ? new HashMap<String, Object>() : new HashMap<>(userData));
         session.setAttribute("authServiceData", serviceData == null ? new HashMap<String, String>() : new HashMap<>(serviceData));
+        CsrfProtectionFilter.getOrCreateToken(session);
+    }
+
+    private void registerApoLoginAccess(String username, Map<String, Object> userData, Map<String, String> serviceData) throws Exception {
+        String matricola = extractLdapMatricola(username, userData);
+        String codServizio = safeString(serviceData == null ? null : serviceData.get("codServizio"));
+        if (matricola.isEmpty() || codServizio.isEmpty()) {
+            return;
+        }
+
+        userServiceDao.insertApoUserAccess(matricola, codServizio);
+    }
+
+    private String extractLdapMatricola(String username, Map<String, Object> userData) {
+        HashMap<String, Object> source = userData == null ? new HashMap<String, Object>() : new HashMap<>(userData);
+        String[] candidateKeys = new String[]{"employeeID", "employeeId", "matricola", "employeeNumber"};
+        for (int index = 0; index < candidateKeys.length; index += 1) {
+            String directValue = safeString(source.get(candidateKeys[index]));
+            if (!directValue.isEmpty()) {
+                return directValue;
+            }
+        }
+
+        for (Map.Entry<String, Object> entry : source.entrySet()) {
+            if (entry.getKey() == null) {
+                continue;
+            }
+            String key = entry.getKey().trim();
+            for (int index = 0; index < candidateKeys.length; index += 1) {
+                if (candidateKeys[index].equalsIgnoreCase(key)) {
+                    String value = safeString(entry.getValue());
+                    if (!value.isEmpty()) {
+                        return value;
+                    }
+                }
+            }
+        }
+
+        return safeString(username);
     }
 
     private boolean isAuthenticated(HttpSession session) {
@@ -321,6 +372,10 @@ public class AuthServlet extends HttpServlet {
                 ldapBaseDn,
                 ldapSearchFilter,
                 ldapAttributes);
+    }
+
+    private String getCsrfToken(HttpSession session) {
+        return session == null ? "" : CsrfProtectionFilter.getOrCreateToken(session);
     }
 
     private void setNoCache(HttpServletResponse resp) {

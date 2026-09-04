@@ -85,6 +85,21 @@ public class PazienteServlet extends HttpServlet {
             loadPrestazioniInfermieristicheSottocategorie(req, resp);
             return;
         }
+        if ("/richiesta-prestazioni".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadRichiestaPrestazioni(req, resp);
+            return;
+        }
+        if ("/richiesta-prestazioni/categorie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadRichiestaPrestazioniCategorie(req, resp);
+            return;
+        }
+        if ("/richiesta-prestazioni/sottocategorie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadRichiestaPrestazioniSottocategorie(req, resp);
+            return;
+        }
         if ("/icd10/patologie-croniche".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             loadPatologieCronicheIcd10(req, resp);
@@ -162,9 +177,89 @@ public class PazienteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String action = normalizePath(req.getPathInfo());
+        if ("/medico-curante".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadMedicoCurante(req, resp);
+            return;
+        }
+        if ("/consenso-dse".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadConsensoDse(req, resp);
+            return;
+        }
+        if ("/anagrafe/search".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadAnagrafe(req, resp);
+            return;
+        }
+        if ("/codice-fiscale".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            calculateCodiceFiscale(req, resp);
+            return;
+        }
+        if ("/prestazioni-infermieristiche".equals(action) && isRequestMode(req, "load")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadPrestazioniInfermieristiche(req, resp);
+            return;
+        }
+        if ("/prestazioni-infermieristiche/categorie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadPrestazioniInfermieristicheCategorie(req, resp);
+            return;
+        }
+        if ("/prestazioni-infermieristiche/sottocategorie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadPrestazioniInfermieristicheSottocategorie(req, resp);
+            return;
+        }
+        if ("/richiesta-prestazioni".equals(action) && isRequestMode(req, "load")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadRichiestaPrestazioni(req, resp);
+            return;
+        }
+        if ("/richiesta-prestazioni/categorie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadRichiestaPrestazioniCategorie(req, resp);
+            return;
+        }
+        if ("/richiesta-prestazioni/sottocategorie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadRichiestaPrestazioniSottocategorie(req, resp);
+            return;
+        }
+        if ("/icd10/patologie-croniche".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadPatologieCronicheIcd10(req, resp);
+            return;
+        }
+        if ("/allergie".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadAllergie(req, resp);
+            return;
+        }
+        if ("/terapie/principi-attivi".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadTerapiePrincipiAttivi(req, resp);
+            return;
+        }
+        if ("/terapie/farmaci".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadTerapieFarmaci(req, resp);
+            return;
+        }
+        if ("/terapie/confezioni".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadTerapieConfezioni(req, resp);
+            return;
+        }
         if ("/anagrafe/new".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             createAnagrafe(req, resp);
+            return;
+        }
+        if ("/allegato-m".equals(action) && isRequestMode(req, "load")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadAllegatoM(req, resp);
             return;
         }
         if ("/allegato-m".equals(action)) {
@@ -172,9 +267,24 @@ public class PazienteServlet extends HttpServlet {
             saveAllegatoM(req, resp);
             return;
         }
+        if ("/scheda-paziente".equals(action) && isRequestMode(req, "load")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadSchedaPaziente(req, resp);
+            return;
+        }
         if ("/scheda-paziente".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             saveSchedaPaziente(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/diario".equals(action) && isRequestMode(req, "load")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadSchedaPazienteDiario(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/diario".equals(action) && isRequestMode(req, "delete")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            deleteSchedaPazienteDiario(req, resp);
             return;
         }
         if ("/scheda-paziente/diario".equals(action)) {
@@ -182,14 +292,44 @@ public class PazienteServlet extends HttpServlet {
             saveSchedaPazienteDiario(req, resp);
             return;
         }
+        if ("/scheda-paziente/patologie".equals(action) && isRequestMode(req, "load")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadSchedaPazientePatologie(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/patologie".equals(action) && isRequestMode(req, "delete")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            deleteSchedaPazientePatologia(req, resp);
+            return;
+        }
         if ("/scheda-paziente/patologie".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             saveSchedaPazientePatologia(req, resp);
             return;
         }
+        if ("/scheda-paziente/allergie".equals(action) && isRequestMode(req, "load")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadSchedaPazienteAllergie(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/allergie".equals(action) && isRequestMode(req, "delete")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            deleteSchedaPazienteAllergia(req, resp);
+            return;
+        }
         if ("/scheda-paziente/allergie".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             saveSchedaPazienteAllergia(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/terapie".equals(action) && isRequestMode(req, "load")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadSchedaPazienteTerapie(req, resp);
+            return;
+        }
+        if ("/scheda-paziente/terapie".equals(action) && isRequestMode(req, "delete")) {
+            resp.setContentType("application/json;charset=UTF-8");
+            deleteSchedaPazienteTerapia(req, resp);
             return;
         }
         if ("/scheda-paziente/terapie".equals(action)) {
@@ -200,6 +340,26 @@ public class PazienteServlet extends HttpServlet {
         if ("/prestazioni-infermieristiche".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             savePrestazioniInfermieristiche(req, resp);
+            return;
+        }
+        if ("/richiesta-prestazioni".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            saveRichiestaPrestazioni(req, resp);
+            return;
+        }
+        if ("/ricette-farmaci".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadRicetteFarmaci(req, resp);
+            return;
+        }
+        if ("/ricette-dematerializzate".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadRicetteDematerializzate(req, resp);
+            return;
+        }
+        if ("/piani-terapeutici".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadPianiTerapeutici(req, resp);
             return;
         }
 
@@ -485,6 +645,38 @@ public class PazienteServlet extends HttpServlet {
         }
     }
 
+    private void loadRichiestaPrestazioni(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        String codiceFiscale = trimToNull(req.getParameter("codiceFiscale"));
+        if (codiceFiscale == null) {
+            codiceFiscale = trimToNull(req.getParameter("codFiscale"));
+        }
+        if (codiceFiscale == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice fiscale paziente non valorizzato."));
+            return;
+        }
+
+        try {
+            List<Map<String, String>> richieste = pazienteDao.findRichiestaPrestazioni(codiceFiscale);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("richieste", richieste);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento delle richieste prestazioni.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento delle richieste prestazioni.")));
+        }
+    }
+
     private void loadPrestazioniInfermieristicheCategorie(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setNoCache(resp);
 
@@ -551,6 +743,72 @@ public class PazienteServlet extends HttpServlet {
             JsonUtil.write(resp, ApiResponse.ok(data));
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Errore nel caricamento delle sottocategorie prestazioni infermieristiche.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento delle sottocategorie.")));
+        }
+    }
+
+    private void loadRichiestaPrestazioniCategorie(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        HashMap<String, String> serviceData = toStringMap(session.getAttribute("authServiceData"));
+        String codServizio = trimToNull(serviceData.get("codServizio"));
+        if (codServizio == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Servizio loggato non disponibile."));
+            return;
+        }
+
+        try {
+            List<Map<String, String>> categorie = pazienteDao.loadPrestazioniRichiedibiliCategorie(codServizio);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("categorie", categorie);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento delle categorie richiesta prestazioni.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento delle categorie.")));
+        }
+    }
+
+    private void loadRichiestaPrestazioniSottocategorie(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        HashMap<String, String> serviceData = toStringMap(session.getAttribute("authServiceData"));
+        String codServizio = trimToNull(serviceData.get("codServizio"));
+        String categoria = trimToNull(req.getParameter("categoria"));
+        if (codServizio == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Servizio loggato non disponibile."));
+            return;
+        }
+        if (categoria == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Categoria non valorizzata."));
+            return;
+        }
+
+        try {
+            List<Map<String, String>> sottocategorie = pazienteDao.loadPrestazioniRichiedibiliSottocategorie(codServizio, categoria);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("sottocategorie", sottocategorie);
+            JsonUtil.write(resp, ApiResponse.ok(data));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel caricamento delle sottocategorie richiesta prestazioni.", ex);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento delle sottocategorie.")));
         }
@@ -1369,6 +1627,85 @@ public class PazienteServlet extends HttpServlet {
         }
     }
 
+    private void saveRichiestaPrestazioni(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
+            return;
+        }
+
+        HashMap<String, String> serviceData = toStringMap(session.getAttribute("authServiceData"));
+        String operatore = trimToNull(safeString(session.getAttribute("authUser")));
+        String codServizio = trimToNull(serviceData.get("codServizio"));
+        String codConsulenza = trimToNull(req.getParameter("codConsulenza"));
+        String codiceFiscale = trimToNull(req.getParameter("codiceFiscale"));
+        List<String> idCategorie = new ArrayList<>();
+        String[] rawIdCategorie = req.getParameterValues("idCategoria");
+
+        if (codConsulenza == null) {
+            codConsulenza = trimToNull(req.getParameter("idConsulenza"));
+        }
+        if (codiceFiscale == null) {
+            codiceFiscale = trimToNull(req.getParameter("codFiscale"));
+        }
+        if (rawIdCategorie == null || rawIdCategorie.length == 0) {
+            rawIdCategorie = req.getParameterValues("idCategoria[]");
+        }
+        if (rawIdCategorie != null) {
+            for (String rawIdCategoria : rawIdCategorie) {
+                String idCategoria = trimToNull(rawIdCategoria);
+                if (idCategoria != null && !idCategorie.contains(idCategoria)) {
+                    idCategorie.add(idCategoria);
+                }
+            }
+        }
+
+        if (operatore == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Utente loggato non disponibile."));
+            return;
+        }
+        if (codServizio == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Servizio loggato non disponibile."));
+            return;
+        }
+        if (codConsulenza == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice consulenza non valorizzato."));
+            return;
+        }
+        if (codiceFiscale == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Codice fiscale paziente non valorizzato."));
+            return;
+        }
+        if (idCategorie.isEmpty()) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Seleziona almeno una sottocategoria."));
+            return;
+        }
+
+        try {
+            int inserted = pazienteDao.insertRichiestaPrestazioni(
+                    idCategorie,
+                    operatore,
+                    codServizio,
+                    codConsulenza,
+                    codiceFiscale);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("inserted", Integer.valueOf(inserted));
+            JsonUtil.write(resp, ApiResponse.ok(data, "Richiesta prestazioni aggiunta correttamente."));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Errore nel salvataggio della richiesta prestazioni.", ex);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel salvataggio della richiesta prestazioni.")));
+        }
+    }
+
     private void loadRicetteFarmaci(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         setNoCache(resp);
 
@@ -1466,6 +1803,8 @@ public class PazienteServlet extends HttpServlet {
             return;
         }
 
+        HashMap<String, String> serviceData = toStringMap(session.getAttribute("authServiceData"));
+        String sessionServiceCode = trimToNull(serviceData.get("codServizio"));
         String codConsulenza = trimToNull(req.getParameter("codConsulenza"));
         String codServizio = trimToNull(req.getParameter("codServizio"));
         if (codConsulenza == null) {
@@ -1477,6 +1816,11 @@ public class PazienteServlet extends HttpServlet {
         if (codConsulenza == null || codServizio == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             JsonUtil.write(resp, ApiResponse.ko("Codice consulenza o codice servizio non valorizzato."));
+            return;
+        }
+        if (sessionServiceCode == null || !sessionServiceCode.equalsIgnoreCase(codServizio)) {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            JsonUtil.write(resp, ApiResponse.ko("Servizio non autorizzato per l'Allegato M richiesto."));
             return;
         }
 
@@ -1503,9 +1847,11 @@ public class PazienteServlet extends HttpServlet {
         }
 
         HashMap<String, String> allegato = readRequestParameters(req);
+        HashMap<String, String> serviceData = toStringMap(session.getAttribute("authServiceData"));
         String codPaz = trimToNull(allegato.get("codPaz"));
         String codConsulenza = trimToNull(allegato.get("codConsulenza"));
         String codServizio = trimToNull(allegato.get("codServizio"));
+        String sessionServiceCode = trimToNull(serviceData.get("codServizio"));
         String username = trimToNull(safeString(session.getAttribute("authUser")));
 
         if (codPaz == null || codConsulenza == null || codServizio == null) {
@@ -1516,6 +1862,11 @@ public class PazienteServlet extends HttpServlet {
         if (username == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             JsonUtil.write(resp, ApiResponse.ko("Utente loggato non disponibile."));
+            return;
+        }
+        if (sessionServiceCode == null || !sessionServiceCode.equalsIgnoreCase(codServizio)) {
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            JsonUtil.write(resp, ApiResponse.ko("Servizio non autorizzato per il salvataggio dell'Allegato M."));
             return;
         }
 
@@ -1595,6 +1946,11 @@ public class PazienteServlet extends HttpServlet {
             }
         }
         return null;
+    }
+
+    private boolean isRequestMode(HttpServletRequest req, String expectedMode) {
+        String requestMode = trimToNull(req.getParameter("_requestMode"));
+        return requestMode != null && requestMode.equalsIgnoreCase(trimToNull(expectedMode));
     }
 
     private String getAllegatoMSavedBy(Map<String, String> allegato) {

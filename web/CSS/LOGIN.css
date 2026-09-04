@@ -232,6 +232,72 @@ body {
     box-shadow: none;
 }
 
+.login-password-field {
+    position: relative;
+}
+
+.login-password-field .form-control {
+    padding-right: 56px;
+}
+
+.login-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #5375a8;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.login-password-toggle:hover,
+.login-password-toggle:focus-visible {
+    background: rgba(83, 117, 168, 0.12);
+    color: #163b6f;
+    outline: none;
+}
+
+.login-password-toggle-icon {
+    position: relative;
+    display: inline-block;
+    width: 22px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-radius: 14px / 10px;
+}
+
+.login-password-toggle-icon::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    transform: translate(-50%, -50%);
+}
+
+.login-password-toggle.is-visible .login-password-toggle-icon::after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 9px;
+    width: 2px;
+    height: 18px;
+    background: currentColor;
+    border-radius: 999px;
+    transform: rotate(-45deg);
+    transform-origin: center;
+}
+
 .login-form .form-select {
     padding-right: 42px;
     background-position: right 16px center;

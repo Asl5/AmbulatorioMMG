@@ -76,7 +76,7 @@ public class AccessiDao {
 
     public List<Map<String, String>> searchAccessi(String serviceCode, String filterDate, String dateOperator,
             String consulenza, String cognome, String nome, String sede, String codiceFiscale,
-            String medico) throws SQLException {
+            String operatore) throws SQLException {
         StringBuilder sql = new StringBuilder();
         List<Object> parameters = new ArrayList<>();
 
@@ -142,9 +142,9 @@ public class AccessiDao {
             parameters.add(likeValue(codiceFiscale));
         }
 
-        if (hasText(medico)) {
-            sql.append(" AND UPPER(TRIM(CAST(MEDICO AS VARCHAR2(255)))) LIKE ?");
-            parameters.add(likeValue(medico));
+        if (hasText(operatore)) {
+            sql.append(" AND UPPER(TRIM(COALESCE(NULLIF(TRIM(CAST(MEDICO AS VARCHAR2(255))), ''), TRIM(CAST(MOD_UTENTE AS VARCHAR2(255)))))) LIKE ?");
+            parameters.add(likeValue(operatore));
         }
 
         sql.append(" ORDER BY DATA_CONSULENZE DESC NULLS LAST, COGNOME ASC NULLS LAST, NOME ASC NULLS LAST");
@@ -252,13 +252,15 @@ public class AccessiDao {
         return created;
     }
 
-    public int deleteAccesso(String codConsulenza) throws SQLException {
+    public int deleteAccesso(String codConsulenza, String serviceCode) throws SQLException {
         String sql = "UPDATE CONSULENZE_GM SET CANCELLATO = 'S' "
-                + "WHERE TRIM(CAST(COD_CONSULENZE AS VARCHAR2(100))) = ?";
+                + "WHERE TRIM(CAST(COD_CONSULENZE AS VARCHAR2(100))) = ? "
+                + "AND UPPER(TRIM(CAST(COD_SERVIZIO AS VARCHAR2(100)))) = UPPER(?)";
 
         try (Connection connection = dataService.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, safe(codConsulenza));
+            statement.setString(2, safe(serviceCode));
             return statement.executeUpdate();
         }
     }
@@ -1070,7 +1072,8 @@ public class AccessiDao {
     }
 
     private int loadNextCodConsulenze(Connection connection) throws SQLException {
-        String sql = "SELECT NVL(MAX(COD_CONSULENZE), 0) + 1 AS NEXT_COD FROM CONSULENZE_GM";
+//        String sql = "SELECT NVL(MAX(COD_CONSULENZE), 0) + 1 AS NEXT_COD FROM CONSULENZE_GM";
+        String sql = "SELECT PROGR_CONS_GM.NEXTVAL NEXT_COD FROM DUAL";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery()) {

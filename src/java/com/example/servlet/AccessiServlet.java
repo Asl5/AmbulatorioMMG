@@ -49,6 +49,11 @@ public class AccessiServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String action = normalizePath(req.getPathInfo());
+        if ("".equals(action) || "/".equals(action) || "/search".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadAccessi(req, resp);
+            return;
+        }
         if ("/new".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             createAccesso(req, resp);
@@ -90,7 +95,7 @@ public class AccessiServlet extends HttpServlet {
                     trimToNull(req.getParameter("nome")),
                     trimToNull(req.getParameter("sede")),
                     trimToNull(req.getParameter("codiceFiscale")),
-                    trimToNull(req.getParameter("medico")));
+                    trimToNull(req.getParameter("operatore")));
 
             HashMap<String, Object> data = new HashMap<>();
             data.put("accessi", accessi);
@@ -196,6 +201,14 @@ public class AccessiServlet extends HttpServlet {
             return;
         }
 
+        HashMap<String, String> serviceData = toStringMap(session.getAttribute("authServiceData"));
+        String serviceCode = trimToNull(serviceData.get("codServizio"));
+        if (serviceCode == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonUtil.write(resp, ApiResponse.ko("Servizio loggato non disponibile."));
+            return;
+        }
+
         String codConsulenza = trimToNull(req.getParameter("codConsulenza"));
         if (codConsulenza == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -204,7 +217,7 @@ public class AccessiServlet extends HttpServlet {
         }
 
         try {
-            int updatedRows = accessiDao.deleteAccesso(codConsulenza);
+            int updatedRows = accessiDao.deleteAccesso(codConsulenza, serviceCode);
             if (updatedRows <= 0) {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 JsonUtil.write(resp, ApiResponse.ko("Consulenza non trovata."));
