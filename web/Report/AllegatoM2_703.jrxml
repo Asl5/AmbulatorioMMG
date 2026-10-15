@@ -192,7 +192,7 @@ and cod_immagine = 'ASL_B']]></query>
 			<element kind="staticText" uuid="4439598a-516b-425b-ac31-e3339fc7e0eb" x="198" y="199" width="157" height="20" fontName="DejaVu Sans" fontSize="12.0" bold="true" hTextAlign="Center">
 				<text><![CDATA[ANAMNESI]]></text>
 			</element>
-			<element kind="textField" uuid="8dd60f66-54d4-45df-86e7-52a140882cf4" positionType="Float" x="-1" y="219" width="555" height="63" fontSize="8.0" textAdjust="StretchHeight">
+			<element kind="textField" uuid="8dd60f66-54d4-45df-86e7-52a140882cf4" positionType="Float" x="-1" y="219" width="555" height="63" fontSize="8.0" textAdjust="StretchHeight" linkType="None" linkTarget="Self" removeLineWhenBlank="true">
 				<expression><![CDATA[$F{MOT_CIRC}]]></expression>
 			</element>
 			<element kind="staticText" uuid="01b93890-4b16-4754-b23c-a96b88ca8654" x="0" y="86" width="132" height="20" bold="true">

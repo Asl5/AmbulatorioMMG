@@ -64,8 +64,6 @@ public class QuestionariServlet extends HttpServlet {
                 loadFascia65Disponibilita(req, resp);
             } else if ("load".equalsIgnoreCase(requestMode)) {
                 loadFascia65(req, resp);
-            } else if ("rifiuto-medico".equalsIgnoreCase(requestMode)) {
-                saveFasciaRifiutoMedico(req, resp, "FASCIA65", "fascia dai 65 anni");
             } else {
                 saveFascia65(req, resp);
             }
@@ -76,8 +74,6 @@ public class QuestionariServlet extends HttpServlet {
                 loadFascia625Disponibilita(req, resp);
             } else if ("load".equalsIgnoreCase(requestMode)) {
                 loadFascia625(req, resp);
-            } else if ("rifiuto-medico".equalsIgnoreCase(requestMode)) {
-                saveFasciaRifiutoMedico(req, resp, "FASCIA625", "fascia 6-25 anni");
             } else {
                 saveFascia625(req, resp);
             }
@@ -88,8 +84,6 @@ public class QuestionariServlet extends HttpServlet {
                 loadFascia2664Disponibilita(req, resp);
             } else if ("load".equalsIgnoreCase(requestMode)) {
                 loadFascia2664(req, resp);
-            } else if ("rifiuto-medico".equalsIgnoreCase(requestMode)) {
-                saveFasciaRifiutoMedico(req, resp, "FASCIA2664", "fascia 26-64 anni");
             } else {
                 saveFascia2664(req, resp);
             }
@@ -600,66 +594,6 @@ public class QuestionariServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel salvataggio del questionario fascia 26-64 anni.")));
         }
-    }
-
-    private void saveFasciaRifiutoMedico(HttpServletRequest req, HttpServletResponse resp,
-            String tipo, String descrizioneFascia) throws IOException {
-        setNoCache(resp);
-        HttpSession session = req.getSession(false);
-        if (!isAuthenticated(session)) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            JsonUtil.write(resp, ApiResponse.ko("Sessione non attiva."));
-            return;
-        }
-
-        String codPaz = trimToNull(req.getParameter("codPaz"));
-        String codConsulenza = trimToNull(req.getParameter("codConsulenza"));
-        String utenteInsert = resolveLoggedUser(session);
-        if (codPaz == null || codConsulenza == null || utenteInsert == null) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            JsonUtil.write(resp, ApiResponse.ko(codPaz == null
-                    ? "Codice paziente non valorizzato."
-                    : codConsulenza == null ? "Codice consulenza non valorizzato."
-                    : "Utente loggato non disponibile."));
-            return;
-        }
-
-        try {
-            if (!isFasciaCompilabile(codPaz, tipo)) {
-                resp.setStatus(HttpServletResponse.SC_CONFLICT);
-                JsonUtil.write(resp, ApiResponse.ko("Esiste gia' un questionario "
-                        + descrizioneFascia + " valido per i prossimi 365 giorni."));
-                return;
-            }
-            long idQuestionario = questionariDao.insertFasciaRifiutoMedico(codPaz, codConsulenza, utenteInsert, tipo);
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("idQuestionario", Long.valueOf(idQuestionario));
-            data.put("codPaz", codPaz);
-            data.put("codConsulenza", codConsulenza);
-            data.put("utenteInsert", utenteInsert);
-            data.put("tipo", tipo);
-            data.put("rifiuta", "SI_MEDICO");
-            JsonUtil.write(resp, ApiResponse.ok(data, "Rinuncia del medico registrata correttamente."));
-        } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Errore nel salvataggio della rinuncia del medico per il questionario "
-                    + descrizioneFascia + ".", ex);
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex,
-                    "Errore nel salvataggio della rinuncia del medico al questionario.")));
-        }
-    }
-
-    private boolean isFasciaCompilabile(String codPaz, String tipo) throws Exception {
-        if ("FASCIA65".equals(tipo)) {
-            return questionariDao.isFascia65Compilabile(codPaz);
-        }
-        if ("FASCIA625".equals(tipo)) {
-            return questionariDao.isFascia625Compilabile(codPaz);
-        }
-        if ("FASCIA2664".equals(tipo)) {
-            return questionariDao.isFascia2664Compilabile(codPaz);
-        }
-        throw new IllegalArgumentException("Tipo di questionario non valido.");
     }
 
     private String resolveLoggedUser(HttpSession session) {

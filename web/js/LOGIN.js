@@ -29,6 +29,7 @@ function getLoginLandingUrl() {
 }
 
 const loginServicesUrl = buildLoginUrl("api/auth/services");
+const loginClientIpUrl = buildLoginUrl("api/auth/client-ip");
 const loginSubmitUrl = buildLoginUrl("api/auth/login");
 const defaultLandingUrl = getLoginLandingUrl();
 
@@ -58,6 +59,28 @@ function clearLoginError() {
 
     errorBox.textContent = "";
     errorBox.classList.add("d-none");
+}
+
+async function logLoginClientIp() {
+    try {
+        const response = await fetch(loginClientIpUrl, {
+            headers: {
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+        if (!response.ok) {
+            throw new Error("Indirizzo IP non disponibile");
+        }
+
+        const payload = await response.json();
+        const clientIp = normalizeLoginValue(payload && payload.data ? payload.data.clientIp : "");
+        if (clientIp) {
+            console.info("Indirizzo IP della postazione:", clientIp);
+        }
+    } catch (error) {
+        console.warn("Impossibile rilevare l'indirizzo IP della postazione.");
+    }
 }
 
 function resetLoginServiceSelect(placeholder, keepEnabled) {
@@ -108,13 +131,15 @@ function setLoginBusy(form, isBusy) {
     }
 }
 
-function renderLoginServices(services, username) {
+function renderLoginServices(services, username, preferredServiceCode) {
     const select = document.getElementById("login-service");
     const normalizedUsername = normalizeLoginValue(username);
+    const preferredValue = normalizeLoginValue(preferredServiceCode);
     const currentValue = lastLoadedLoginUsername === normalizedUsername
             ? normalizeLoginValue(select.value)
             : "";
     let hasCurrentValue = false;
+    let hasPreferredValue = false;
 
     select.innerHTML = "";
 
@@ -138,6 +163,9 @@ function renderLoginServices(services, username) {
         if (code === currentValue) {
             hasCurrentValue = true;
         }
+        if (code === preferredValue) {
+            hasPreferredValue = true;
+        }
         select.appendChild(option);
     });
 
@@ -149,7 +177,9 @@ function renderLoginServices(services, username) {
     }
 
     select.disabled = false;
-    select.value = hasCurrentValue ? currentValue : "";
+    select.value = hasCurrentValue
+            ? currentValue
+            : (hasPreferredValue ? preferredValue : "");
 }
 
 function toggleLoginPasswordVisibility() {
@@ -209,7 +239,8 @@ async function loadLoginServicesForUser(username) {
         }
 
         clearLoginError();
-        renderLoginServices(payload && payload.data ? payload.data.services : [], normalizedUsername);
+        const data = payload && payload.data ? payload.data : {};
+        renderLoginServices(data.services, normalizedUsername, data.preferredServiceCode);
     } catch (error) {
         if (error && error.name === "AbortError") {
             return;
@@ -293,6 +324,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const passwordToggle = document.getElementById("login-password-toggle");
 
     resetLoginServiceSelect("", false);
+    void logLoginClientIp();
 
     if (userInput) {
         userInput.addEventListener("input", scheduleLoginServicesLoad);

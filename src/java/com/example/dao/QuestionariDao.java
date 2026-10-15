@@ -182,44 +182,6 @@ public class QuestionariDao {
         }
     }
 
-    public long insertFasciaRifiutoMedico(String codPaz, String codConsulenza, String utenteInsert, String tipo) throws SQLException {
-        if (!TIPO_FASCIA65.equals(tipo) && !TIPO_FASCIA625.equals(tipo) && !TIPO_FASCIA2664.equals(tipo)) {
-            throw new SQLException("Tipo di questionario fascia non valido.");
-        }
-        String sql = "INSERT INTO APO_QUESTIONARI "
-                + "(COD_PAZ, COD_CONSULENZA, DATA, UTENTE_INSERT, TIPO, RIFIUTA, QUESTIONARIO) "
-                + "VALUES (?, ?, SYSDATE, ?, ?, ?, ?)";
-        String questionario = "{\"version\":1,\"fields\":{\"rifiuta_medico\":\"SI_MEDICO\"}}";
-        byte[] payload = questionario.getBytes(StandardCharsets.UTF_8);
-
-        try (Connection connection = dataService.getConnection()) {
-            boolean autoCommit = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            try {
-                try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                    statement.setString(1, codPaz);
-                    statement.setString(2, codConsulenza);
-                    statement.setString(3, utenteInsert);
-                    statement.setString(4, tipo);
-                    statement.setString(5, RIFIUTA_MEDICO);
-                    statement.setBlob(6, new ByteArrayInputStream(payload));
-                    statement.executeUpdate();
-                }
-                long idQuestionario = getCurrentQuestionarioId(connection);
-                connection.commit();
-                return idQuestionario;
-            } catch (Exception ex) {
-                rollback(connection);
-                if (ex instanceof SQLException) {
-                    throw (SQLException) ex;
-                }
-                throw new SQLException("Errore nella registrazione della rinuncia del medico.", ex);
-            } finally {
-                connection.setAutoCommit(autoCommit);
-            }
-        }
-    }
-
     private long getCurrentQuestionarioId(Connection connection) throws SQLException {
         String sql = "SELECT APO_QUESTIONARI_SEQ.CURRVAL AS IDQUESTIONARIO FROM DUAL";
         try (Statement statement = connection.createStatement();
@@ -290,6 +252,9 @@ public class QuestionariDao {
     private List<QuestionarioDettaglio> buildFascia65Dettagli(JsonObject fields) {
         List<QuestionarioDettaglio> dettagli = new ArrayList<>();
         dettagli.add(new QuestionarioDettaglio(
+                "Il medico nega adesione al progetto",
+                getFieldValue(fields, "rifiuta_medico")));
+        dettagli.add(new QuestionarioDettaglio(
                 "Non e' stato possibile somministrare il questionario per motivi clinici",
                 getFieldValue(fields, "impossibile_somministrare_motivi_clinici")));
         dettagli.add(new QuestionarioDettaglio(
@@ -325,6 +290,9 @@ public class QuestionariDao {
     private List<QuestionarioDettaglio> buildFascia625Dettagli(JsonObject fields) {
         List<QuestionarioDettaglio> dettagli = new ArrayList<>();
         dettagli.add(new QuestionarioDettaglio(
+                "Il medico nega adesione al progetto",
+                getFieldValue(fields, "rifiuta_medico")));
+        dettagli.add(new QuestionarioDettaglio(
                 "Non e' stato possibile somministrare il questionario per motivi clinici",
                 getFieldValue(fields, "impossibile_somministrare_motivi_clinici")));
         dettagli.add(new QuestionarioDettaglio(
@@ -356,6 +324,9 @@ public class QuestionariDao {
     private List<QuestionarioDettaglio> buildFascia2664Dettagli(JsonObject fields) {
         List<QuestionarioDettaglio> dettagli = new ArrayList<>();
         dettagli.add(new QuestionarioDettaglio(
+                "Il medico nega adesione al progetto",
+                getFieldValue(fields, "rifiuta_medico")));
+        dettagli.add(new QuestionarioDettaglio(
                 "Non e' stato possibile somministrare il questionario per motivi clinici",
                 getFieldValue(fields, "impossibile_somministrare_motivi_clinici")));
         dettagli.add(new QuestionarioDettaglio(
@@ -385,8 +356,12 @@ public class QuestionariDao {
     }
 
     private String getRifiutaFascia(JsonObject fields) {
+        boolean rifiutaMedico = "SI".equalsIgnoreCase(getFieldValue(fields, "rifiuta_medico"));
         boolean motiviClinici = "SI".equalsIgnoreCase(getFieldValue(fields, "impossibile_somministrare_motivi_clinici"));
         boolean negaAdesione = "SI".equalsIgnoreCase(getFieldValue(fields, "nega_adesione_progetto"));
+        if (rifiutaMedico) {
+            return RIFIUTA_MEDICO;
+        }
         if (motiviClinici) {
             return "SI_CLINICI";
         }
@@ -648,7 +623,6 @@ public class QuestionariDao {
         String sql = "SELECT q.ID, q.DATA, q.UTENTE_INSERT, q.TIPO, q.RIFIUTA "
                 + "FROM APO_QUESTIONARI q "
                 + "WHERE q.COD_PAZ = ? AND q.TIPO IN ('MAMMO', 'FASCIA65', 'FASCIA625', 'FASCIA2664') "
-                + "AND NVL(UPPER(TRIM(q.RIFIUTA)), 'NO') <> 'SI_MEDICO' "
                 + "ORDER BY DATA DESC";
         List<Map<String, Object>> questionari = new ArrayList<>();
         try (Connection connection = dataService.getConnection();

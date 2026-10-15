@@ -7,7 +7,7 @@
         <link rel="icon" type="image/svg+xml" href="img/APO_logo.png">
 
         <link rel="stylesheet" href="CSS/bootstrap-fallback.css">
-        <link rel="stylesheet" href="CSS/APO.css?v=20260810-questionari-obbligatorio-1">
+        <link rel="stylesheet" href="CSS/APO.css?v=20261015-user-enablement-1">
     </head>
     <body>
         <main class="gestfarm-page riepilogo-page app-shell">
@@ -314,6 +314,80 @@
 
             <div id="apo-page-toast" class="apo-page-toast apo-page-toast-hidden" role="status" aria-live="polite"></div>
 
+            <div id="apo-user-enablement-modal" class="apo-modal apo-user-enablement-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-user-enablement-title">
+                <div class="apo-modal-panel apo-user-enablement-panel">
+                    <div class="apo-modal-heading">
+                        <div>
+                            <h2 id="apo-user-enablement-title">Abilitazione utenti</h2>
+                            <p>Inserisci i dati dell'utente e scegli i servizi APO da abilitare.</p>
+                        </div>
+                        <button id="apo-user-enablement-close" type="button" class="apo-modal-close-button" aria-label="Chiudi">X</button>
+                    </div>
+                    <form id="apo-user-enablement-form" class="apo-user-enablement-form" autocomplete="off">
+                        <div class="apo-user-enablement-grid">
+                            <div class="field-group">
+                                <label for="apo-user-enablement-matricola" class="form-label">Matricola <span class="apo-required-marker">*</span></label>
+                                <input id="apo-user-enablement-matricola" name="matricola" type="text" class="form-control" maxlength="20" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="apo-user-enablement-codice-fiscale" class="form-label">Codice fiscale <span class="apo-required-marker">*</span></label>
+                                <input id="apo-user-enablement-codice-fiscale" name="codiceFiscale" type="text" class="form-control" minlength="16" maxlength="16" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="apo-user-enablement-cognome" class="form-label">Cognome <span class="apo-required-marker">*</span></label>
+                                <input id="apo-user-enablement-cognome" name="cognome" type="text" class="form-control" maxlength="50" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="apo-user-enablement-nome" class="form-label">Nome <span class="apo-required-marker">*</span></label>
+                                <input id="apo-user-enablement-nome" name="nome" type="text" class="form-control" maxlength="50" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="apo-user-enablement-gruppo" class="form-label">COD_GRUPPO <span class="apo-required-marker">*</span></label>
+                                <select id="apo-user-enablement-gruppo" name="codGruppo" class="form-select form-control" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="MED">MED</option>
+                                    <option value="INF">INF</option>
+                                    <option value="AMM">AMM</option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label for="apo-user-enablement-qualifica" class="form-label">COD_QUALIFICA <span class="apo-required-marker">*</span></label>
+                                <select id="apo-user-enablement-qualifica" name="codQualifica" class="form-select form-control" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="MED">MED</option>
+                                    <option value="INF">INF</option>
+                                    <option value="AMM">AMM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <fieldset class="apo-user-enablement-services-fieldset">
+                            <legend>Servizi APO <span class="apo-required-marker">*</span></legend>
+                            <div id="apo-user-enablement-services" class="apo-user-enablement-services" role="group" aria-label="Servizi APO">
+                                <p class="apo-user-enablement-placeholder">Caricamento servizi...</p>
+                            </div>
+                        </fieldset>
+
+                        <div id="apo-user-enablement-medical-fields" class="apo-user-enablement-medical-fields is-hidden" aria-hidden="true">
+                            <div class="field-group">
+                                <label for="apo-user-enablement-pincode" class="form-label">PINCODE</label>
+                                <input id="apo-user-enablement-pincode" name="pincode" type="text" class="form-control" maxlength="32">
+                            </div>
+                            <div class="field-group">
+                                <label for="apo-user-enablement-cod-spec" class="form-label">COD_SPEC</label>
+                                <input id="apo-user-enablement-cod-spec" name="codSpec" type="text" class="form-control" maxlength="10">
+                            </div>
+                        </div>
+
+                        <div id="apo-user-enablement-message" class="alert d-none" role="status" aria-live="polite"></div>
+                        <div class="apo-modal-actions apo-user-enablement-actions">
+                            <button id="apo-user-enablement-clear" type="button" class="btn btn-outline-secondary">Pulisci</button>
+                            <button id="apo-user-enablement-submit" type="submit" class="btn btn-success">Abilita</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div id="apo-storico-confirm-modal" class="apo-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-storico-confirm-title" aria-describedby="apo-storico-confirm-text">
                 <div class="apo-modal-panel">
                     <h2 id="apo-storico-confirm-title">Conferma cambio consulenza</h2>
@@ -333,18 +407,6 @@
                     <div class="apo-modal-actions">
                         <button id="apo-delete-confirm-cancel" type="button" class="btn btn-outline-secondary">Annulla</button>
                         <button id="apo-delete-confirm-ok" type="button" class="btn apo-delete-confirm-button">Conferma</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="apo-questionario-rifiuto-medico-modal" class="apo-modal apo-questionario-rifiuto-medico-modal is-hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="apo-questionario-rifiuto-medico-title" aria-describedby="apo-questionario-rifiuto-medico-text">
-                <div class="apo-modal-panel">
-                    <h2 id="apo-questionario-rifiuto-medico-title">Conferma chiusura questionario</h2>
-                    <p id="apo-questionario-rifiuto-medico-text">Chiudendo il questionario, il medico dichiara di non somministrare il questionario al paziente</p>
-                    <div id="apo-questionario-rifiuto-medico-message" class="alert d-none" role="alert"></div>
-                    <div class="apo-modal-actions">
-                        <button id="apo-questionario-rifiuto-medico-cancel" type="button" class="btn btn-outline-secondary">Annulla</button>
-                        <button id="apo-questionario-rifiuto-medico-confirm" type="button" class="btn btn-success">Conferma</button>
                     </div>
                 </div>
             </div>
@@ -820,6 +882,13 @@
                             <div class="mammo-question mammo-rifiuto-question">
                                 <div class="mammo-question-line">
                                     <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Il medico nega adesione al progetto</div>
+                                    <div class="mammo-yes-no">
+                                        <label class="mammo-choice-inline"><input type="checkbox" name="rifiuta_medico" value="SI" aria-label="Seleziona negazione adesione del medico"></label>
+                                    </div>
+                                </div>
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
                                     <div class="mammo-question-text">Non è stato possibile somministrare il questionario per motivi clinici</div>
                                     <div class="mammo-yes-no">
                                         <label class="mammo-choice-inline"><input type="checkbox" name="impossibile_somministrare_motivi_clinici" value="SI" aria-label="Seleziona motivi clinici"></label>
@@ -950,6 +1019,11 @@
                             <div class="mammo-question mammo-rifiuto-question">
                                 <div class="mammo-question-line">
                                     <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Il medico nega adesione al progetto</div>
+                                    <div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="checkbox" name="rifiuta_medico" value="SI" aria-label="Seleziona negazione adesione del medico"></label></div>
+                                </div>
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
                                     <div class="mammo-question-text">Non è stato possibile somministrare il questionario per motivi clinici</div>
                                     <div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="checkbox" name="impossibile_somministrare_motivi_clinici" value="SI" aria-label="Seleziona motivi clinici"></label></div>
                                 </div>
@@ -987,6 +1061,11 @@
                             </div>
 
                             <div class="mammo-question mammo-rifiuto-question">
+                                <div class="mammo-question-line">
+                                    <div class="mammo-number">&nbsp;</div>
+                                    <div class="mammo-question-text">Il medico nega adesione al progetto</div>
+                                    <div class="mammo-yes-no"><label class="mammo-choice-inline"><input type="checkbox" name="rifiuta_medico" value="SI" aria-label="Seleziona negazione adesione del medico"></label></div>
+                                </div>
                                 <div class="mammo-question-line">
                                     <div class="mammo-number">&nbsp;</div>
                                     <div class="mammo-question-text">Non è stato possibile somministrare il questionario per motivi clinici</div>
@@ -1166,6 +1245,6 @@
             </div>
         </main>
 
-        <script src="js/APO.js?v=20260817-consenso-utente-1"></script>
+        <script src="js/APO.js?v=20261015-user-enablement-1"></script>
     </body>
 </html>
