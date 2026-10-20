@@ -6,6 +6,7 @@ import com.example.dto.ApiResponse;
 import com.example.service.DataService;
 import com.example.util.JsonUtil;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +22,11 @@ public class PazienteServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(PazienteServlet.class.getName());
+    private static final String CONSENSO_DSE_INVOKE_URL = "http://consenso-dse/Invoke";
+    private static final String CONSENSO_DSE_SYSTEM = "TOPAMB";
     private PazienteDao pazienteDao;
     private AccessiDao accessiDao;
+    private String consensoDsePassword;
 
     @Override
     public void init() {
@@ -31,6 +35,7 @@ public class PazienteServlet extends HttpServlet {
         String dbUrl = trimToNull(getServletContext().getInitParameter("dbUrl"));
         String dbUser = trimToNull(getServletContext().getInitParameter("dbUser"));
         String dbPassword = trimToNull(getServletContext().getInitParameter("dbPassword"));
+        consensoDsePassword = trimToNull(getServletContext().getInitParameter("consensoDsePassword"));
 
         DataService dataService = new DataService(jndiName, dbDriver, dbUrl, dbUser, dbPassword);
         pazienteDao = new PazienteDao(dataService);
@@ -48,6 +53,10 @@ public class PazienteServlet extends HttpServlet {
         if ("/consenso-dse".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             loadConsensoDse(req, resp);
+            return;
+        }
+        if ("/consenso-dse/open".equals(action)) {
+            openConsensoDse(req, resp);
             return;
         }
         if ("/anagrafe/search".equals(action)) {
@@ -449,6 +458,35 @@ public class PazienteServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             JsonUtil.write(resp, ApiResponse.ko(buildErrorMessage(ex, "Errore nel caricamento del consenso DSE.")));
         }
+    }
+
+    private void openConsensoDse(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(false);
+        if (!isAuthenticated(session)) {
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        String codiceFiscale = trimToNull(req.getParameter("COD_FISCALE"));
+        String codUtente = trimToNull(safeString(session.getAttribute("authUser")));
+        if (codiceFiscale == null || codUtente == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        if (consensoDsePassword == null) {
+            LOGGER.severe("Configurazione del Cruscotto Consenso DSE non disponibile.");
+            resp.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            return;
+        }
+
+        String redirectUrl = CONSENSO_DSE_INVOKE_URL
+                + "?SISTEMA=" + encodeUrlParameter(CONSENSO_DSE_SYSTEM)
+                + "&PASSWORD=" + encodeUrlParameter(consensoDsePassword)
+                + "&UTENTE=" + encodeUrlParameter(codUtente)
+                + "&COD_FISCALE=" + encodeUrlParameter(codiceFiscale);
+        resp.sendRedirect(redirectUrl);
     }
 
     private void loadAnagrafe(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -974,6 +1012,7 @@ public class PazienteServlet extends HttpServlet {
         if (codPaz == null) {
             codPaz = trimToNull(req.getParameter("codPaziente"));
         }
+        String codiceFiscale = trimToNull(req.getParameter("codiceFiscale"));
         if (codPaz == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             JsonUtil.write(resp, ApiResponse.ko("Codice paziente non valorizzato."));
@@ -982,9 +1021,22 @@ public class PazienteServlet extends HttpServlet {
 
         try {
             Map<String, Object> scheda = pazienteDao.findLatestSchedaPaziente(codPaz);
+            List<Map<String, String>> esenzioniPatologie = new ArrayList<>();
+            String esenzioniPatologieError = "";
+            if (codiceFiscale != null) {
+                try {
+                    esenzioniPatologie = pazienteDao.findEsenzioniPerPatologie(codiceFiscale);
+                } catch (Exception ex) {
+                    esenzioniPatologieError = "Errore nel caricamento delle esenzioni per patologie.";
+                    LOGGER.log(Level.WARNING, esenzioniPatologieError, ex);
+                }
+            }
+
             HashMap<String, Object> data = new HashMap<>();
             data.put("exists", Boolean.valueOf(scheda != null));
             data.put("scheda", scheda == null ? new HashMap<String, Object>() : scheda);
+            data.put("esenzioniPatologie", esenzioniPatologie);
+            data.put("esenzioniPatologieError", esenzioniPatologieError);
             JsonUtil.write(resp, ApiResponse.ok(data));
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Errore nel caricamento della scheda paziente.", ex);
@@ -1919,6 +1971,10 @@ public class PazienteServlet extends HttpServlet {
         }
 
         return trimmed;
+    }
+
+    private String encodeUrlParameter(String value) throws IOException {
+        return URLEncoder.encode(safeString(value), "UTF-8");
     }
 
     private String firstNonNull(String... values) {

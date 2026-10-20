@@ -96,7 +96,7 @@ const apoRicettaDematerializzataUrl = "https://pvtopric.asl5sp.int/Ricette2026/"
 const apoRicettaFarmaciUrl = "https://pvtopric.asl5sp.int/Top_Ricetta/RicettaFarmaci";
 const apoCertificatoMalattiaUrl = "https://sistemats1.sanita.finanze.it/portale/area-riservata-operatore";
 const apoRepositoryRefertiUrl = "http://10.105.106.230:8080/whale/autoLogin";
-const apoConsensoDseInvokeUrl = "http://consenso-dse/Invoke";
+const apoConsensoDseOpenUrl = buildApoUrl("api/paziente/consenso-dse/open");
 
 const apoState = {
     sessionData: null,
@@ -3084,7 +3084,6 @@ function buildApoRepositoryRefertiUrl() {
     }
 
     const url = new URL(apoRepositoryRefertiUrl);
-    //url.searchParams.set("utente", username);
 	url.searchParams.set("utente", 'TOPAMB');
     url.searchParams.set("postazione", username);
     url.searchParams.set("pagina", "VISDOC");
@@ -3105,9 +3104,8 @@ function buildApoConsensoDseWindowUrl() {
         return {url: "", message: "Utente loggato non disponibile."};
     }
 
-    const url = new URL(apoConsensoDseInvokeUrl);
+    const url = new URL(apoConsensoDseOpenUrl, window.location.origin);
     url.searchParams.set("SISTEMA", "TOPAMB");
-    url.searchParams.set("PASSWORD", "nhb0vfa9SC");
     url.searchParams.set("UTENTE", codUtente);
     url.searchParams.set("COD_FISCALE", codiceFiscale);
 
@@ -3212,8 +3210,8 @@ function logApoAction(action, parameters, codConsulenza) {
                     window.location.href = apoLoginUrl;
                 }
             })
-            .catch(function (error) {
-                console.warn("Impossibile registrare l'azione APO.", error);
+            .catch(function () {
+                // Il logging applicativo non deve interrompere l'operazione utente.
             });
 }
 
@@ -5065,7 +5063,24 @@ function normalizeApoSchedaPazienteDiario(items) {
     }
     return items.map(function (item, index) {
         return normalizeApoSchedaPazienteDiarioItem(item, index);
+    }).sort(function (left, right) {
+        const leftDate = getApoSchedaPazienteDiarioSortValue(left.dataDiario);
+        const rightDate = getApoSchedaPazienteDiarioSortValue(right.dataDiario);
+        const dateComparison = compareApoValues(leftDate, rightDate, "desc");
+        if (dateComparison !== 0) {
+            return dateComparison;
+        }
+        return compareApoValues(left.id, right.id, "desc");
     });
+}
+
+function getApoSchedaPazienteDiarioSortValue(value) {
+    const normalizedValue = normalizeApoDisplayValue(value);
+    const match = normalizedValue.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?/);
+    if (!match) {
+        return "";
+    }
+    return match[3] + match[2] + match[1] + (match[4] || "00") + (match[5] || "00");
 }
 
 function normalizeApoSchedaPazienteHistoryPatologia(item, index) {
@@ -10440,6 +10455,63 @@ function getApoSchedaPazientePatologieFromSource(source) {
     return [];
 }
 
+function getApoSchedaPazienteEsenzioniFromSource(source) {
+    if (!source || !Array.isArray(source.esenzioniPatologie)) {
+        return [];
+    }
+
+    return source.esenzioniPatologie.map(function (item) {
+        if (typeof item === "string") {
+            return normalizeApoDisplayValue(item);
+        }
+        return normalizeApoDisplayValue(item && (item.descrizione || item.desEsenzione || item.DES_ESENZIONE));
+    }).filter(function (descrizione) {
+        return !!descrizione;
+    });
+}
+
+function createApoSchedaPazienteEsenzioniGrid(source) {
+    const item = document.createElement("div");
+    item.className = "apo-scheda-paziente-item apo-scheda-paziente-item-wide";
+
+    const label = document.createElement("span");
+    label.className = "apo-scheda-paziente-label";
+    label.textContent = "Esenzioni per patologie";
+
+    const list = document.createElement("ul");
+    list.className = "apo-scheda-paziente-selected-list apo-scheda-paziente-esenzioni-list";
+
+    let descriptions = getApoSchedaPazienteEsenzioniFromSource(source);
+    let emptyText = "Nessuna esenzione per patologia presente.";
+    if (source && source.esenzioniPatologieLoading === true) {
+        descriptions = [];
+        emptyText = "Caricamento esenzioni per patologie...";
+    } else if (source && normalizeApoDisplayValue(source.esenzioniPatologieError)) {
+        descriptions = [];
+        emptyText = normalizeApoDisplayValue(source.esenzioniPatologieError);
+    }
+
+    if (!descriptions.length) {
+        const emptyItem = document.createElement("li");
+        emptyItem.className = "apo-scheda-paziente-selected-empty";
+        emptyItem.textContent = emptyText;
+        list.appendChild(emptyItem);
+    } else {
+        descriptions.forEach(function (descrizione) {
+            const listItem = document.createElement("li");
+            const text = document.createElement("span");
+            text.className = "apo-scheda-paziente-selected-text";
+            text.textContent = descrizione;
+            listItem.appendChild(text);
+            list.appendChild(listItem);
+        });
+    }
+
+    item.appendChild(label);
+    item.appendChild(list);
+    return item;
+}
+
 function isApoSchedaPazientePatologiaSelected(itemData) {
     return apoState.schedaPazientePatologieSelected.some(function (selected) {
         return selected.id === itemData.id;
@@ -11426,6 +11498,7 @@ function renderApoSchedaPaziente(patient) {
         getApoSchedaPazienteField(source, ["altezza", "altezzaCm", "altezzaMt"]),
         getApoSchedaPazienteField(source, ["massIndex", "bodyMassIndex", "bmi", "indiceMassaCorporea", "imc"])
     ));
+    fattoriRischio.grid.appendChild(createApoSchedaPazienteEsenzioniGrid(source));
     fattoriRischio.grid.appendChild(createApoSchedaPazientePatologieGrid(getApoSchedaPazientePatologieFromSource(source)));
     fattoriRischio.grid.appendChild(createApoSchedaPazienteAllergieGrid(getApoSchedaPazienteAllergieFromSource(source)));
     fattoriRischio.grid.appendChild(createApoSchedaPazienteTerapieGrid(getApoSchedaPazienteTerapieFromSource(source), source));
@@ -11548,7 +11621,7 @@ function mergeApoSchedaPazienteExistingData(patient, scheda) {
     return merged;
 }
 
-async function loadApoSchedaPazienteExisting(codPaz) {
+async function loadApoSchedaPazienteExisting(codPaz, codiceFiscale) {
     const normalizedCodPaz = normalizeApoDisplayValue(codPaz);
     if (!normalizedCodPaz) {
         return null;
@@ -11556,6 +11629,10 @@ async function loadApoSchedaPazienteExisting(codPaz) {
 
     const params = new URLSearchParams();
     params.set("codPaz", normalizedCodPaz);
+    const normalizedCodiceFiscale = normalizeApoDisplayValue(codiceFiscale);
+    if (normalizedCodiceFiscale) {
+        params.set("codiceFiscale", normalizedCodiceFiscale);
+    }
     const response = await postApoFormRequest(apoSchedaPazienteUrl, params, "load");
 
     if (response.status === 401) {
@@ -11574,25 +11651,29 @@ async function loadApoSchedaPazienteExisting(codPaz) {
         throw new Error(payload && payload.message ? payload.message : "Errore nel caricamento della scheda paziente.");
     }
 
-    if (!payload.data || payload.data.exists !== true) {
-        return null;
-    }
-    return payload.data.scheda || null;
+    const data = payload.data || {};
+    const scheda = data.exists === true && data.scheda && typeof data.scheda === "object"
+        ? Object.assign({}, data.scheda)
+        : {};
+    scheda.esenzioniPatologie = Array.isArray(data.esenzioniPatologie) ? data.esenzioniPatologie : [];
+    scheda.esenzioniPatologieLoading = false;
+    scheda.esenzioniPatologieError = normalizeApoDisplayValue(data.esenzioniPatologieError);
+    return scheda;
 }
 
 async function hydrateApoSchedaPazienteModal(patient, requestId) {
     const codPaz = getApoSchedaPazienteCodPaz(patient);
+    const codiceFiscale = getApoSchedaPazienteField(patient, ["codFiscale", "codiceFiscale", "cf"]);
     if (!codPaz) {
         return;
     }
 
     try {
-        const scheda = await loadApoSchedaPazienteExisting(codPaz);
+        const scheda = await loadApoSchedaPazienteExisting(codPaz, codiceFiscale);
         const modal = document.getElementById("apo-scheda-paziente-modal");
         if (apoState.schedaPazienteExistingRequestId !== requestId
                 || !modal
-                || modal.classList.contains("is-hidden")
-                || !scheda) {
+                || modal.classList.contains("is-hidden")) {
             return;
         }
 
@@ -11600,6 +11681,15 @@ async function hydrateApoSchedaPazienteModal(patient, requestId) {
         setApoSchedaPazienteSaving(false);
     } catch (error) {
         if (apoState.schedaPazienteExistingRequestId === requestId) {
+            const modal = document.getElementById("apo-scheda-paziente-modal");
+            if (modal && !modal.classList.contains("is-hidden")) {
+                renderApoSchedaPaziente(Object.assign({}, patient, {
+                    esenzioniPatologie: [],
+                    esenzioniPatologieLoading: false,
+                    esenzioniPatologieError: "Errore nel caricamento delle esenzioni per patologie."
+                }));
+                setApoSchedaPazienteSaving(false);
+            }
             setApoSearchMessage(error && error.message ? error.message : "Errore nel caricamento della scheda paziente.", "danger");
         }
     }
@@ -11616,7 +11706,11 @@ function openApoSchedaPazienteModal(patient) {
     const requestId = apoState.schedaPazienteExistingRequestId + 1;
     apoState.schedaPazienteExistingRequestId = requestId;
     apoState.schedaPazienteLastFocus = document.activeElement;
-    renderApoSchedaPaziente(patient);
+    const canLoadScheda = !!getApoSchedaPazienteCodPaz(patient);
+    renderApoSchedaPaziente(Object.assign({}, patient || {}, {
+        esenzioniPatologie: [],
+        esenzioniPatologieLoading: canLoadScheda
+    }));
     setApoSchedaPazienteSaving(false);
     if (backButton) {
         backButton.classList.toggle("is-hidden", !apoState.schedaPazientePendingAccessoPayload);
@@ -12226,11 +12320,8 @@ function openApoQuestionarioMammografiaModal(patient, options) {
     }
 }
 
-function logApoEsitoAperturaQuestionario(questionario, motivo) {
-    const messaggio = motivo
-        ? "[APO - Questionari] Non aperto " + questionario + ": " + motivo
-        : "[APO - Questionari] Aperto " + questionario + ".";
-    console.log(messaggio);
+function logApoEsitoAperturaQuestionario() {
+    // Nessun dato clinico o diagnostico viene esposto nella console del browser.
 }
 
 async function openApoQuestionarioMammografiaDiretto() {

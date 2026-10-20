@@ -29,7 +29,6 @@ function getLoginLandingUrl() {
 }
 
 const loginServicesUrl = buildLoginUrl("api/auth/services");
-const loginClientIpUrl = buildLoginUrl("api/auth/client-ip");
 const loginSubmitUrl = buildLoginUrl("api/auth/login");
 const defaultLandingUrl = getLoginLandingUrl();
 
@@ -59,28 +58,6 @@ function clearLoginError() {
 
     errorBox.textContent = "";
     errorBox.classList.add("d-none");
-}
-
-async function logLoginClientIp() {
-    try {
-        const response = await fetch(loginClientIpUrl, {
-            headers: {
-                "Accept": "application/json",
-                "X-Requested-With": "XMLHttpRequest"
-            }
-        });
-        if (!response.ok) {
-            throw new Error("Indirizzo IP non disponibile");
-        }
-
-        const payload = await response.json();
-        const clientIp = normalizeLoginValue(payload && payload.data ? payload.data.clientIp : "");
-        if (clientIp) {
-            console.info("Indirizzo IP della postazione:", clientIp);
-        }
-    } catch (error) {
-        console.warn("Impossibile rilevare l'indirizzo IP della postazione.");
-    }
 }
 
 function resetLoginServiceSelect(placeholder, keepEnabled) {
@@ -324,7 +301,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const passwordToggle = document.getElementById("login-password-toggle");
 
     resetLoginServiceSelect("", false);
-    void logLoginClientIp();
 
     if (userInput) {
         userInput.addEventListener("input", scheduleLoginServicesLoad);

@@ -23,6 +23,10 @@
         <param-name>dbPassword</param-name>
         <param-value>caponord</param-value>
     </context-param>
+    <context-param>
+        <param-name>consensoDsePassword</param-name>
+        <param-value>nhb0vfa9SC</param-value>
+    </context-param>
 
     <servlet>
         <servlet-name>AuthServlet</servlet-name>
@@ -105,6 +109,16 @@
         <url-pattern>/StampaReport</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ErrorPageServlet</servlet-name>
+        <servlet-class>com.example.servlet.ErrorPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ErrorPageServlet</servlet-name>
+        <url-pattern>/error</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>SecurityHeadersFilter</filter-name>
         <filter-class>com.example.filter.SecurityHeadersFilter</filter-class>
@@ -123,6 +137,8 @@
     <filter-mapping>
         <filter-name>SecurityHeadersFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
     <filter-mapping>
@@ -144,11 +160,171 @@
         <welcome-file>LOGIN.html</welcome-file>
     </welcome-file-list>
 
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>402</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>406</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>407</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>408</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>409</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>410</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>411</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>412</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>413</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>414</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>415</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>416</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>417</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>421</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>422</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>423</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>424</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>425</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>426</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>428</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>429</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>431</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>451</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>501</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>502</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>504</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>505</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>506</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>507</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>508</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>510</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>511</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error</location>
+    </error-page>
+
     <session-config>
         <session-timeout>60</session-timeout>
         <cookie-config>
             <http-only>true</http-only>
-            <same-site>Lax</same-site>
         </cookie-config>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>

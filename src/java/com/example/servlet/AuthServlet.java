@@ -63,11 +63,6 @@ public class AuthServlet extends HttpServlet {
             loadServices(req, resp);
             return;
         }
-        if ("/client-ip".equals(action)) {
-            resp.setContentType("application/json;charset=UTF-8");
-            loadClientIp(req, resp);
-            return;
-        }
         if ("/apo-services".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             loadApoServices(req, resp);
@@ -149,14 +144,6 @@ public class AuthServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             JsonUtil.write(resp, ApiResponse.ko("Errore nel caricamento dei servizi."));
         }
-    }
-
-    private void loadClientIp(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        setNoCache(resp);
-
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("clientIp", getClientIp(req));
-        JsonUtil.write(resp, ApiResponse.ok(data));
     }
 
     private void loadApoServices(HttpServletRequest req, HttpServletResponse resp) throws IOException {

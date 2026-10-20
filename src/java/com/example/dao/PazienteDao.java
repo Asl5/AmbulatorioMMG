@@ -593,15 +593,38 @@ public class PazienteDao {
         return scheda;
     }
 
+    public List<Map<String, String>> findEsenzioniPerPatologie(String codiceFiscale) throws SQLException {
+        String sql = "SELECT COD_ESENZIONE, "
+                + "REGEXP_REPLACE(DES_ESENZIONE, ' {2,}', ' ') AS DES_ESENZIONE "
+                + "FROM ricette.V_ANAGRAFE_ESENZIONI_LOCALE A "
+                + "WHERE COD_ESENZIONE NOT LIKE 'E%' AND COD_FISCALE = ?";
+
+        List<Map<String, String>> results = new ArrayList<>();
+        try (Connection connection = dataService.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, safe(codiceFiscale));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    HashMap<String, String> item = new HashMap<>();
+                    item.put("descrizione", safe(rs.getString("DES_ESENZIONE")));
+                    results.add(item);
+                }
+            }
+        }
+
+        return results;
+    }
+
     public List<Map<String, String>> findSchedaPazienteDiario(String codPaz) throws SQLException {
-        String sql = "SELECT DISTINCT D.ID, TO_CHAR(D.DATA_DIARIO, 'DD/MM/YYYY HH24:MI') AS DATA_DIARIO, "
+        String sql = "SELECT DISTINCT D.ID, D.DATA_DIARIO AS DATA_DIARIO_SORT, "
+                + "TO_CHAR(D.DATA_DIARIO, 'DD/MM/YYYY HH24:MI') AS DATA_DIARIO, "
                 + "D.DESCRIZIONE AS DESCRIZIONE, "
                 + "TRIM(CAST(U.COGNOME AS VARCHAR2(255))) AS UTENTE_INS_COGNOME, "
                 + "TRIM(CAST(U.NOME AS VARCHAR2(255))) AS UTENTE_INS_NOME "
                 + "FROM APO_SCHEDE_PAZIENTE_DIARIO D "
                 + "LEFT JOIN UTENTI U ON D.UTENTE_INS = U.COD_UTENTE "
                 + "WHERE TRIM(CAST(D.COD_PAZ AS VARCHAR2(100))) = ? "
-                + "ORDER BY DATA_DIARIO DESC";
+                + "ORDER BY DATA_DIARIO_SORT DESC, D.ID DESC";
 
         List<Map<String, String>> results = new ArrayList<>();
         try (Connection connection = dataService.getConnection();

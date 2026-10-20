@@ -2901,6 +2901,10 @@ body::before {
     overflow-wrap: anywhere;
 }
 
+.apo-scheda-paziente-esenzioni-list li {
+    grid-template-columns: minmax(0, 1fr);
+}
+
 .apo-scheda-paziente-selected-text {
     display: grid;
     gap: 2px;

@@ -572,23 +572,6 @@
 document.getElementById('questionarioMammografia')
     .addEventListener('submit', function (event) {
         event.preventDefault();
-
-        const formData = new FormData(this);
-        const dati = {};
-
-        formData.forEach(function (value, key) {
-            if (Object.prototype.hasOwnProperty.call(dati, key)) {
-                if (!Array.isArray(dati[key])) {
-                    dati[key] = [dati[key]];
-                }
-
-                dati[key].push(value);
-            } else {
-                dati[key] = value;
-            }
-        });
-
-        console.log('Dati questionario mammografia:', dati);
     });
 </script>
 
