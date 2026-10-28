@@ -30,11 +30,14 @@ function getLoginLandingUrl() {
 
 const loginServicesUrl = buildLoginUrl("api/auth/services");
 const loginSubmitUrl = buildLoginUrl("api/auth/login");
+const loginCsrfUrl = buildLoginUrl("api/auth/csrf");
 const defaultLandingUrl = getLoginLandingUrl();
 
 let loginServicesDebounceId = null;
 let loginServicesAbortController = null;
 let lastLoadedLoginUsername = "";
+let loginCsrfToken = "";
+let loginCsrfTokenPromise = null;
 
 function normalizeLoginValue(value) {
     return String(value || "").trim();
@@ -58,6 +61,79 @@ function clearLoginError() {
 
     errorBox.textContent = "";
     errorBox.classList.add("d-none");
+}
+
+function storeLoginCsrfToken(token) {
+    loginCsrfToken = normalizeLoginValue(token);
+    const csrfInput = document.getElementById("login-csrf-token");
+    if (csrfInput) {
+        csrfInput.value = loginCsrfToken;
+    }
+    return loginCsrfToken;
+}
+
+function loadLoginCsrfToken(forceRefresh) {
+    if (forceRefresh === true) {
+        loginCsrfTokenPromise = null;
+        storeLoginCsrfToken("");
+    }
+
+    if (loginCsrfToken) {
+        return Promise.resolve(loginCsrfToken);
+    }
+    if (loginCsrfTokenPromise) {
+        return loginCsrfTokenPromise;
+    }
+
+    loginCsrfTokenPromise = fetch(loginCsrfUrl, {
+        method: "GET",
+        headers: {
+            "Accept": "application/json"
+        },
+        credentials: "same-origin",
+        cache: "no-store"
+    }).then(function (response) {
+        if (!response.ok) {
+            throw new Error("Token CSRF non disponibile");
+        }
+        return response.json();
+    }).then(function (payload) {
+        const token = normalizeLoginValue(payload && payload.data && payload.data.csrfToken);
+        if (!token) {
+            throw new Error("Token CSRF non valido");
+        }
+        return storeLoginCsrfToken(token);
+    }).catch(function (error) {
+        loginCsrfTokenPromise = null;
+        throw error;
+    });
+
+    return loginCsrfTokenPromise;
+}
+
+async function postLoginRequest(url, payload, signal, allowCsrfRefresh) {
+    const csrfToken = await loadLoginCsrfToken(false);
+    payload.set("_csrf", csrfToken);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRF-Token": csrfToken
+        },
+        credentials: "same-origin",
+        body: payload.toString(),
+        signal: signal
+    });
+
+    if (response.status === 403 && allowCsrfRefresh !== false) {
+        await loadLoginCsrfToken(true);
+        return postLoginRequest(url, payload, signal, false);
+    }
+
+    return response;
 }
 
 function resetLoginServiceSelect(placeholder, keepEnabled) {
@@ -195,16 +271,8 @@ async function loadLoginServicesForUser(username) {
     try {
         const params = new URLSearchParams();
         params.set("username", normalizedUsername);
-        const response = await fetch(loginServicesUrl, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                "X-Requested-With": "XMLHttpRequest"
-            },
-            body: params.toString(),
-            signal: currentController.signal
-        });
+        const response = await postLoginRequest(
+                loginServicesUrl, params, currentController.signal, true);
 
         if (!response.ok) {
             throw new Error("Servizi non disponibili");
@@ -269,15 +337,7 @@ async function submitLogin(form) {
     setLoginBusy(form, true);
 
     try {
-        const response = await fetch(loginSubmitUrl, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                "X-Requested-With": "XMLHttpRequest"
-            },
-            body: payload.toString()
-        });
+        const response = await postLoginRequest(loginSubmitUrl, payload, undefined, true);
 
         const result = await response.json();
         if (response.ok && result && result.esito === "ok") {
@@ -301,6 +361,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const passwordToggle = document.getElementById("login-password-toggle");
 
     resetLoginServiceSelect("", false);
+    void loadLoginCsrfToken(false).catch(function () {
+        showLoginError("Impossibile inizializzare la sessione di accesso. Ricarica la pagina.");
+    });
 
     if (userInput) {
         userInput.addEventListener("input", scheduleLoginServicesLoad);

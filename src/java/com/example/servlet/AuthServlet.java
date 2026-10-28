@@ -58,6 +58,11 @@ public class AuthServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String action = normalizePath(req.getPathInfo());
+        if ("/csrf".equals(action)) {
+            resp.setContentType("application/json;charset=UTF-8");
+            loadCsrfToken(req, resp);
+            return;
+        }
         if ("/services".equals(action)) {
             resp.setContentType("application/json;charset=UTF-8");
             loadServices(req, resp);
@@ -118,6 +123,15 @@ public class AuthServlet extends HttpServlet {
         }
 
         resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Azione POST non valida");
+    }
+
+    private void loadCsrfToken(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        setNoCache(resp);
+
+        HttpSession session = req.getSession(true);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("csrfToken", CsrfProtectionFilter.getOrCreateToken(session));
+        JsonUtil.write(resp, ApiResponse.ok(data));
     }
 
     private void loadServices(HttpServletRequest req, HttpServletResponse resp) throws IOException {

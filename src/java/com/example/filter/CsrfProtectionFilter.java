@@ -40,7 +40,15 @@ public class CsrfProtectionFilter implements Filter {
         }
 
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("authUser") == null) {
+        boolean preAuthenticationRequest = isPreAuthenticationRequest(req);
+        if (session == null) {
+            resp.sendError(preAuthenticationRequest
+                    ? HttpServletResponse.SC_FORBIDDEN
+                    : HttpServletResponse.SC_UNAUTHORIZED,
+                    "Sessione non attiva.");
+            return;
+        }
+        if (!preAuthenticationRequest && session.getAttribute("authUser") == null) {
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Sessione non attiva.");
             return;
         }
@@ -90,11 +98,12 @@ public class CsrfProtectionFilter implements Filter {
         }
 
         String path = getRequestPath(req);
-        if ("/api/auth/login".equals(path) || "/api/auth/services".equals(path)) {
-            return false;
-        }
-
         return path.startsWith("/api/") || "/StampaReport".equals(path);
+    }
+
+    private boolean isPreAuthenticationRequest(HttpServletRequest req) {
+        String path = getRequestPath(req);
+        return "/api/auth/login".equals(path) || "/api/auth/services".equals(path);
     }
 
     private boolean isReportRequest(HttpServletRequest req) {

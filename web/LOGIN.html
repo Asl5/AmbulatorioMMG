@@ -19,6 +19,7 @@
                 </header>
 
                 <form class="login-form" method="post" action="api/auth/login" autocomplete="on">
+                    <input type="hidden" id="login-csrf-token" name="_csrf" value="" autocomplete="off" />
                     <div id="login-error" class="alert alert-danger d-none" role="alert"></div>
                     <div class="mb-3">
                         <label for="login-user" class="form-label">Utente</label>
