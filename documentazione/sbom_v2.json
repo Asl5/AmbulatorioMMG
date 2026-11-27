@@ -1,0 +1,1746 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:d233c4e9-7a6b-41e7-b76d-8c3d692f8e1e",
+  "version": 2,
+  "metadata": {
+    "timestamp": "2026-11-27T09:28:33Z",
+    "tools": [
+      {
+        "name": "AmbMMG local JAR inventory (Python zipfile/hashlib)",
+        "version": "2.0"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "bom-ref": "pkg:generic/it.asl5.ca/AmbMMG@1.0.0",
+      "group": "it.asl5.ca",
+      "name": "AmbMMG",
+      "version": "1.0.0",
+      "purl": "pkg:generic/it.asl5.ca/AmbMMG@1.0.0",
+      "description": "Applicazione web Java AmbMMG; progetto NetBeans/Ant, distribuzione WAR.",
+      "properties": [
+        {
+          "name": "AmbMMG:application-version:source",
+          "value": ".gitea/workflows/build.yml (existing SBOM application version)"
+        },
+        {
+          "name": "AmbMMG:build:java-source-target",
+          "value": "1.8"
+        },
+        {
+          "name": "AmbMMG:build:web-descriptor-version",
+          "value": "3.0"
+        },
+        {
+          "name": "AmbMMG:build:artifact",
+          "value": "AmbMMG.war"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "AmbMMG:inventory:source",
+        "value": "Current local working tree, including uncommitted changes; not an existing dist/build WAR."
+      },
+      {
+        "name": "AmbMMG:inventory:directories",
+        "value": "lib; web/WEB-INF/lib; web/WEB-INF/report-jaspersoft7"
+      },
+      {
+        "name": "AmbMMG:inventory:previous-document",
+        "value": "documentazione/sbom.json (unchanged; its application identity is AlboPretorioNew)"
+      },
+      {
+        "name": "AmbMMG:inventory:packaged-jar-count",
+        "value": "29"
+      },
+      {
+        "name": "AmbMMG:inventory:embedded-maven-component-count",
+        "value": "3"
+      },
+      {
+        "name": "AmbMMG:inventory:unknown-version-files",
+        "value": "lib/java-json.jar"
+      },
+      {
+        "name": "AmbMMG:inventory:scope",
+        "value": "All JARs packaged by the project, including legacy duplicate versions and the isolated JasperReports 7 runtime. Embedded dependencies are included where Maven metadata exists."
+      },
+      {
+        "name": "AmbMMG:inventory:provided-runtime",
+        "value": "Java runtime, servlet container and it.asl5.datasource.EncryptedDataSourceFactory are supplied externally and are not inventoried from this repository."
+      },
+      {
+        "name": "AmbMMG:inventory:dependency-graph",
+        "value": "Application-to-JAR edges describe packaged dependencies. Only confirmed embedded metadata adds transitive edges; a complete Maven transitive graph was not resolved."
+      },
+      {
+        "name": "AmbMMG:inventory:license-evidence",
+        "value": "License declarations copied only from embedded POMs or unambiguous manifest URLs; absent licenses were not inferred."
+      },
+      {
+        "name": "AmbMMG:inventory:frontend",
+        "value": "HTML references local application JavaScript and CSS; no separately versioned third-party browser package was identified."
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:lib/gson-2.3.1.jar",
+      "name": "gson",
+      "scope": "required",
+      "purl": "pkg:generic/gson@2.3.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "13f44a2f6ead058da80a91ee650c073871942468e684a9bf6a0d0319138924ce"
+        }
+      ],
+      "version": "2.3.1",
+      "publisher": "Google Gson Project",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "lib/gson-2.3.1.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "gson-2.3.1.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/gson-2.3.1.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/MANIFEST.MF:Bundle-Version"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "2.3.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "com.google.gson"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:lib/java-json.jar",
+      "name": "java-json",
+      "scope": "required",
+      "purl": "pkg:generic/java-json",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "25e4dd996ce4a22b8e146fc8804671b27216cc0acfe8f9229373d8b0a438321e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "lib/java-json.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "java-json.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/java-json.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "unavailable"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:identity:version-status",
+          "value": "unknown; no version declared by archive metadata or filename"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:lib/ojdbc8.jar",
+      "name": "ojdbc8",
+      "scope": "required",
+      "purl": "pkg:generic/ojdbc8@19.22.0.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5cbb8836d7dc7dc7fb6eec3cc0f96a9189b9b3779eee977d6b2018484b008692"
+        }
+      ],
+      "version": "19.22.0.0.0",
+      "publisher": "Oracle Corporation",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "lib/ojdbc8.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "ojdbc8.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/ojdbc8.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/MANIFEST.MF:Implementation-Version"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "19.22.0.0.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/commons-beanutils-1.8.2.jar",
+      "name": "commons-beanutils",
+      "scope": "required",
+      "purl": "pkg:maven/commons-beanutils/commons-beanutils@1.8.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "49d92a14e6787c676e64989fc8316cc3481b76a4a275ce8a50f460b01fbd15f6"
+        }
+      ],
+      "group": "commons-beanutils",
+      "version": "1.8.2",
+      "publisher": "The Apache Software Foundation",
+      "licenses": [
+        {
+          "license": {
+            "name": "http://www.apache.org/licenses/LICENSE-2.0.txt",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/commons-beanutils-1.8.2.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "commons-beanutils-1.8.2.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/commons-beanutils-1.8.2.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/commons-beanutils/commons-beanutils/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "1.8.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "1.8.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "org.apache.commons.beanutils"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/commons-collections-3.2.1.jar",
+      "name": "commons-collections",
+      "scope": "required",
+      "purl": "pkg:maven/commons-collections/commons-collections@3.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "87363a4c94eaabeefd8b930cb059f66b64c9f7d632862f23de3012da7660047b"
+        }
+      ],
+      "group": "commons-collections",
+      "version": "3.2.1",
+      "publisher": "The Apache Software Foundation",
+      "licenses": [
+        {
+          "license": {
+            "name": "http://www.apache.org/licenses/LICENSE-2.0.txt",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/commons-collections-3.2.1.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "commons-collections-3.2.1.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/commons-collections-3.2.1.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/commons-collections/commons-collections/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "3.2.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "3.2.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "org.apache.commons.collections"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/commons-digester-2.1.jar",
+      "name": "commons-digester",
+      "scope": "required",
+      "purl": "pkg:maven/commons-digester/commons-digester@2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e0b2b980a84fc6533c5ce291f1917b32c507f62bcad64198fff44368c2196a3d"
+        }
+      ],
+      "group": "commons-digester",
+      "version": "2.1",
+      "publisher": "The Apache Software Foundation",
+      "licenses": [
+        {
+          "license": {
+            "name": "http://www.apache.org/licenses/LICENSE-2.0.txt",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/commons-digester-2.1.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "commons-digester-2.1.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/commons-digester-2.1.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/commons-digester/commons-digester/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "2.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "2.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "org.apache.commons.digester"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/commons-logging-1.1.jar",
+      "name": "commons-logging",
+      "scope": "required",
+      "purl": "pkg:generic/commons-logging@1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "169076ae827218cc568aa152f3d6a91bab0f94c1811cc1501022b30ef4d9d140"
+        }
+      ],
+      "version": "1.1",
+      "publisher": "Apache Software Foundation",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/commons-logging-1.1.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "commons-logging-1.1.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/commons-logging-1.1.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/MANIFEST.MF:Implementation-Version"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "1.1"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/groovy-all-2.0.1.jar",
+      "name": "groovy-all",
+      "scope": "required",
+      "purl": "pkg:generic/groovy-all@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "941fc1a48c13b5d0a1d8fc5903102be05fa22ad5e8edbad9d1f854d781b58294"
+        }
+      ],
+      "version": "2.0.1",
+      "publisher": "The Codehaus",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/groovy-all-2.0.1.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "groovy-all-2.0.1.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/groovy-all-2.0.1.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/MANIFEST.MF:Implementation-Version"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "2.0.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "2.0.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "groovy-all"
+        }
+      ],
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/groovy-all-2.0.1.jar:embedded:commons-cli:commons-cli",
+          "group": "commons-cli",
+          "name": "commons-cli",
+          "version": "1.2",
+          "scope": "required",
+          "purl": "pkg:maven/commons-cli/commons-cli@1.2",
+          "properties": [
+            {
+              "name": "AmbMMG:packaging:embedding-jar",
+              "value": "web/WEB-INF/lib/groovy-all-2.0.1.jar"
+            },
+            {
+              "name": "AmbMMG:identity:metadata-source",
+              "value": "META-INF/maven/commons-cli/commons-cli/pom.properties"
+            },
+            {
+              "name": "AmbMMG:identity:verification",
+              "value": "embedded Maven metadata; byte-level upstream equivalence not verified"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/iText-2.1.7.js2.jar",
+      "name": "iText",
+      "scope": "required",
+      "purl": "pkg:generic/iText@2.1.7.js2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7fb4571ed99fc0d5c582c3ba3a69892040cd210bc05a1407061503a3d3a37396"
+        }
+      ],
+      "version": "2.1.7.js2",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/iText-2.1.7.js2.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "iText-2.1.7.js2.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/iText-2.1.7.js2.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "file.name"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/jasperreports-5.6.0.jar",
+      "name": "jasperreports",
+      "scope": "required",
+      "purl": "pkg:generic/jasperreports@5.6.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2e8cd661f9ebdad5ff1a5916c41b078f67d6600472f5e46055861ed8a45a3fb2"
+        }
+      ],
+      "version": "5.6.0",
+      "publisher": "Jaspersoft Corporation",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/jasperreports-5.6.0.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jasperreports-5.6.0.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/jasperreports-5.6.0.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/MANIFEST.MF:Implementation-Version"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "5.6.0"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "5.6.0"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "net.sf.jasperreports.engine"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/jasperreports-6.20.0.jar",
+      "name": "jasperreports",
+      "scope": "required",
+      "purl": "pkg:maven/net.sf.jasperreports/jasperreports@6.20.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5c1281ffde9d90f3a1da0d57b9fe452451d2926f64c04f9bf271f90f7a020c07"
+        }
+      ],
+      "group": "net.sf.jasperreports",
+      "version": "6.20.0",
+      "publisher": "TIBCO Software Inc.",
+      "licenses": [
+        {
+          "license": {
+            "name": "GNU Lesser General Public License",
+            "url": "http://jasperreports.sourceforge.net/license.html"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/jasperreports-6.20.0.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jasperreports-6.20.0.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/jasperreports-6.20.0.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/net.sf.jasperreports/jasperreports/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "6.20.0"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "net.sf.jasperreports.engine"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/jasperreports-fonts-5.6.0.jar",
+      "name": "jasperreports-fonts",
+      "scope": "required",
+      "purl": "pkg:generic/jasperreports-fonts@5.6.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f031e5e671a356fc102158e5e61c2951e7b543c482c7a01fd4c33259ad13743b"
+        }
+      ],
+      "version": "5.6.0",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/jasperreports-fonts-5.6.0.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jasperreports-fonts-5.6.0.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/jasperreports-fonts-5.6.0.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "file.name"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/jcommon-1.0.15.jar",
+      "name": "jcommon",
+      "scope": "required",
+      "purl": "pkg:generic/jcommon@1.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "acf524cbcd1ba61db2593b16b75a35fc1c7c58fd4d2d36e16ebb585d0f2cc509"
+        }
+      ],
+      "version": "1.0.15",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/jcommon-1.0.15.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jcommon-1.0.15.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/jcommon-1.0.15.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "file.name"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/jdt-compiler-3.1.1.jar",
+      "name": "jdt-compiler",
+      "scope": "required",
+      "purl": "pkg:generic/jdt-compiler@3.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a4e9a52b4adf8eb396993af092db3506dfe255ee71f850af47a5616f0ccce6d0"
+        }
+      ],
+      "version": "3.1.1",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/jdt-compiler-3.1.1.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jdt-compiler-3.1.1.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/jdt-compiler-3.1.1.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "file.name"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/lib/jfreechart-1.0.12.jar",
+      "name": "jfreechart",
+      "scope": "required",
+      "purl": "pkg:generic/jfreechart@1.0.12",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b90e35874f89cf910c20214dce84c4906a09b908e4761ac32e248fe1b36102c3"
+        }
+      ],
+      "version": "1.0.12",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/lib/jfreechart-1.0.12.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jfreechart-1.0.12.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/lib/jfreechart-1.0.12.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "file.name"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "application"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/com.github.librepdf.openpdf_1.3.32.jar",
+      "name": "openpdf",
+      "scope": "required",
+      "purl": "pkg:maven/com.github.librepdf/openpdf@1.3.32",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6eb2241ac9bc2636b599ceb8d4f353bcb22d1828db45ff83b09577428f6ac4f0"
+        }
+      ],
+      "group": "com.github.librepdf",
+      "version": "1.3.32",
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/com.github.librepdf.openpdf_1.3.32.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "com.github.librepdf.openpdf_1.3.32.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/com.github.librepdf.openpdf_1.3.32.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/com.github.librepdf/openpdf/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "1.3.32"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "com.github.librepdf.openpdf"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html, https://www.mozilla.org/en-US/MPL/2.0/"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/commons-beanutils-1.9.4.jar",
+      "name": "commons-beanutils",
+      "scope": "required",
+      "purl": "pkg:maven/commons-beanutils/commons-beanutils@1.9.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7d938c81789028045c08c065e94be75fc280527620d5bd62b519d5838532368a"
+        }
+      ],
+      "group": "commons-beanutils",
+      "version": "1.9.4",
+      "publisher": "The Apache Software Foundation",
+      "licenses": [
+        {
+          "license": {
+            "name": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/commons-beanutils-1.9.4.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "commons-beanutils-1.9.4.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/commons-beanutils-1.9.4.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/commons-beanutils/commons-beanutils/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "1.9.4"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "1.9.4"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "org.apache.commons.commons-beanutils"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jackson-annotations-2.18.2.jar",
+      "name": "jackson-annotations",
+      "scope": "required",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.18.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "581bd61000ef7648943f781ca05689e56d03f6052748365a8e2b3a9b5d3fa32f"
+        }
+      ],
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.18.2",
+      "publisher": "FasterXML",
+      "licenses": [
+        {
+          "license": {
+            "name": "The Apache Software License, Version 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/jackson-annotations-2.18.2.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jackson-annotations-2.18.2.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/jackson-annotations-2.18.2.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/com.fasterxml.jackson.core/jackson-annotations/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "2.18.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "2.18.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "com.fasterxml.jackson.core.jackson-annotations"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jackson-core-2.18.2.jar",
+      "name": "jackson-core",
+      "scope": "required",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.18.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d8054ae7c0d1c2d2f55d28e46026ebe5892881f3fab5f439233184381c3b4a1f"
+        }
+      ],
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.18.2",
+      "publisher": "FasterXML",
+      "licenses": [
+        {
+          "license": {
+            "name": "The Apache Software License, Version 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/jackson-core-2.18.2.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jackson-core-2.18.2.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/jackson-core-2.18.2.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/com.fasterxml.jackson.core/jackson-core/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "2.18.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "2.18.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "com.fasterxml.jackson.core.jackson-core"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jackson-databind-2.18.2.jar",
+      "name": "jackson-databind",
+      "scope": "required",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.18.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4b364e6850dc89172fcf1d4dd26b8ff5488eda44ff4657e22dd265203dd5ab3c"
+        }
+      ],
+      "group": "com.fasterxml.jackson.core",
+      "version": "2.18.2",
+      "publisher": "FasterXML",
+      "licenses": [
+        {
+          "license": {
+            "name": "The Apache Software License, Version 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/jackson-databind-2.18.2.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jackson-databind-2.18.2.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/jackson-databind-2.18.2.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/com.fasterxml.jackson.core/jackson-databind/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "2.18.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "2.18.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "com.fasterxml.jackson.core.jackson-databind"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jackson-dataformat-xml-2.18.2.jar",
+      "name": "jackson-dataformat-xml",
+      "scope": "required",
+      "purl": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-xml@2.18.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3a5c26f070b9974617f4b103b9561d4f5e3f4f8cc60162d4e0cd3e172c776af5"
+        }
+      ],
+      "group": "com.fasterxml.jackson.dataformat",
+      "version": "2.18.2",
+      "publisher": "FasterXML",
+      "licenses": [
+        {
+          "license": {
+            "name": "http://www.apache.org/licenses/LICENSE-2.0.txt",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/jackson-dataformat-xml-2.18.2.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jackson-dataformat-xml-2.18.2.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/jackson-dataformat-xml-2.18.2.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/com.fasterxml.jackson.dataformat/jackson-dataformat-xml/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "2.18.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "2.18.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "com.fasterxml.jackson.dataformat.jackson-dataformat-xml"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jasperreports-7.0.3.jar",
+      "name": "jasperreports",
+      "scope": "required",
+      "purl": "pkg:maven/net.sf.jasperreports/jasperreports@7.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1aab0a784251407c5b738cd74e7ade278272cb74e59e5594d52e6ed2e40ae735"
+        }
+      ],
+      "group": "net.sf.jasperreports",
+      "version": "7.0.3",
+      "publisher": "Cloud Software Group, Inc.",
+      "licenses": [
+        {
+          "license": {
+            "name": "GNU Lesser General Public License",
+            "url": "http://jasperreports.sourceforge.net/license.html"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/jasperreports-7.0.3.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jasperreports-7.0.3.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/jasperreports-7.0.3.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/net.sf.jasperreports/jasperreports/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "7.0.3"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "net.sf.jasperreports.core"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jasperreports-fonts-7.0.3.jar",
+      "name": "jasperreports-fonts",
+      "scope": "required",
+      "purl": "pkg:maven/net.sf.jasperreports/jasperreports-fonts@7.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6371891dc246a4d4d03aad45d51721d7c3f02a014459840d3c62f54528e3a79c"
+        }
+      ],
+      "group": "net.sf.jasperreports",
+      "version": "7.0.3",
+      "publisher": "Cloud Software Group, Inc.",
+      "licenses": [
+        {
+          "license": {
+            "name": "GNU Lesser General Public License",
+            "url": "http://jasperreports.sourceforge.net/license.html"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/jasperreports-fonts-7.0.3.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jasperreports-fonts-7.0.3.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/jasperreports-fonts-7.0.3.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/net.sf.jasperreports/jasperreports-fonts/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "7.0.3"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "net.sf.jasperreports.fonts"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jasperreports-pdf-7.0.3.jar",
+      "name": "jasperreports-pdf",
+      "scope": "required",
+      "purl": "pkg:maven/net.sf.jasperreports/jasperreports-pdf@7.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a6c3abe359b852eca590032849c231023b4a133e525af9db2d81c9af467f1c2c"
+        }
+      ],
+      "group": "net.sf.jasperreports",
+      "version": "7.0.3",
+      "publisher": "Cloud Software Group, Inc.",
+      "licenses": [
+        {
+          "license": {
+            "name": "GNU Lesser General Public License",
+            "url": "http://jasperreports.sourceforge.net/license.html"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/jasperreports-pdf-7.0.3.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "jasperreports-pdf-7.0.3.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/jasperreports-pdf-7.0.3.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/net.sf.jasperreports/jasperreports-pdf/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "7.0.3"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "net.sf.jasperreports.pdf"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/org.apache.commons.commons-collections4_4.4.0.jar",
+      "name": "commons-collections4",
+      "scope": "required",
+      "purl": "pkg:maven/org.apache.commons/commons-collections4@4.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1df8b9430b5c8ed143d7815e403e33ef5371b2400aadbe9bda0883762e0846d1"
+        }
+      ],
+      "group": "org.apache.commons",
+      "version": "4.4",
+      "publisher": "The Apache Software Foundation",
+      "licenses": [
+        {
+          "license": {
+            "name": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/org.apache.commons.commons-collections4_4.4.0.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "org.apache.commons.commons-collections4_4.4.0.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/org.apache.commons.commons-collections4_4.4.0.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/org.apache.commons/commons-collections4/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "4.4"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "4.4.0"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "org.apache.commons.commons-collections4"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/org.apache.commons.commons-io_2.16.1.jar",
+      "name": "commons-io",
+      "scope": "required",
+      "purl": "pkg:maven/commons-io/commons-io@2.16.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f41f7baacd716896447ace9758621f62c1c6b0a91d89acee488da26fc477c84f"
+        }
+      ],
+      "group": "commons-io",
+      "version": "2.16.1",
+      "publisher": "The Apache Software Foundation",
+      "licenses": [
+        {
+          "license": {
+            "name": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/org.apache.commons.commons-io_2.16.1.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "org.apache.commons.commons-io_2.16.1.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/org.apache.commons.commons-io_2.16.1.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/commons-io/commons-io/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "2.16.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "2.16.1"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "org.apache.commons.commons-io"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/stax2-api-4.2.2.jar",
+      "name": "stax2-api",
+      "scope": "required",
+      "purl": "pkg:maven/org.codehaus.woodstox/stax2-api@4.2.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a61c48d553efad78bc01fffc4ac528bebbae64cbaec170b2a5e39cf61eb51abe"
+        }
+      ],
+      "group": "org.codehaus.woodstox",
+      "version": "4.2.2",
+      "publisher": "fasterxml.com",
+      "licenses": [
+        {
+          "license": {
+            "name": "The BSD 2-Clause License",
+            "url": "http://www.opensource.org/licenses/bsd-license.php"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/stax2-api-4.2.2.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "stax2-api-4.2.2.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/stax2-api-4.2.2.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/org.codehaus.woodstox/stax2-api/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "4.2.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "4.2.2"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "stax2-api"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "http://www.opensource.org/licenses/bsd-license.php"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar",
+      "name": "woodstox-core",
+      "scope": "required",
+      "purl": "pkg:maven/com.fasterxml.woodstox/woodstox-core@7.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eeb3853282c24964a93a6eb4c1bbcb60c8d09fd8e0ffc75ab64ad21045a1fa78"
+        }
+      ],
+      "group": "com.fasterxml.woodstox",
+      "version": "7.0.0",
+      "publisher": "FasterXML",
+      "licenses": [
+        {
+          "license": {
+            "name": "The Apache License, Version 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "woodstox-core-7.0.0.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/maven/com.fasterxml.woodstox/woodstox-core/pom.properties"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Implementation-Version",
+          "value": "7.0.0"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "7.0.0"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "com.fasterxml.woodstox.woodstox-core"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ],
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar:embedded:net.java.dev.msv:xsdlib",
+          "group": "net.java.dev.msv",
+          "name": "xsdlib",
+          "version": "2022.7",
+          "scope": "required",
+          "purl": "pkg:maven/net.java.dev.msv/xsdlib@2022.7",
+          "properties": [
+            {
+              "name": "AmbMMG:packaging:embedding-jar",
+              "value": "web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar"
+            },
+            {
+              "name": "AmbMMG:identity:metadata-source",
+              "value": "META-INF/maven/net.java.dev.msv/xsdlib/pom.properties"
+            },
+            {
+              "name": "AmbMMG:identity:verification",
+              "value": "embedded Maven metadata; byte-level upstream equivalence not verified"
+            }
+          ]
+        },
+        {
+          "type": "library",
+          "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar:embedded:com.sun.xml.bind.jaxb:isorelax",
+          "group": "com.sun.xml.bind.jaxb",
+          "name": "isorelax",
+          "version": "20090621",
+          "scope": "required",
+          "purl": "pkg:maven/com.sun.xml.bind.jaxb/isorelax@20090621",
+          "properties": [
+            {
+              "name": "AmbMMG:packaging:embedding-jar",
+              "value": "web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar"
+            },
+            {
+              "name": "AmbMMG:identity:metadata-source",
+              "value": "META-INF/maven/com.sun.xml.bind.jaxb/isorelax/pom.properties"
+            },
+            {
+              "name": "AmbMMG:identity:verification",
+              "value": "embedded Maven metadata; byte-level upstream equivalence not verified"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/xmpcore-6.1.11.jar",
+      "name": "xmpcore",
+      "scope": "required",
+      "purl": "pkg:generic/xmpcore@6.1.11",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8f7033c579b99fa0d9d6ddcb9448875b5e4b577c350002278ce46997d678b737"
+        }
+      ],
+      "version": "6.1.11",
+      "publisher": "Adobe Systems Incorporated",
+      "licenses": [
+        {
+          "license": {
+            "name": "https://opensource.org/licenses/BSD-3-Clause",
+            "url": "https://opensource.org/licenses/BSD-3-Clause"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "local.path",
+          "value": "web/WEB-INF/report-jaspersoft7/xmpcore-6.1.11.jar"
+        },
+        {
+          "name": "file.name",
+          "value": "xmpcore-6.1.11.jar"
+        },
+        {
+          "name": "AmbMMG:packaging:war-path",
+          "value": "WEB-INF/report-jaspersoft7/xmpcore-6.1.11.jar"
+        },
+        {
+          "name": "AmbMMG:identity:version-source",
+          "value": "META-INF/MANIFEST.MF:Bundle-Version"
+        },
+        {
+          "name": "AmbMMG:classloader",
+          "value": "isolated-jasperreports-7"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-Version",
+          "value": "6.1.11"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-SymbolicName",
+          "value": "com.adobe.xmp.xmpcore"
+        },
+        {
+          "name": "AmbMMG:manifest:Bundle-License",
+          "value": "https://opensource.org/licenses/BSD-3-Clause"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:generic/it.asl5.ca/AmbMMG@1.0.0",
+      "dependsOn": [
+        "urn:AmbMMG:jar:lib/gson-2.3.1.jar",
+        "urn:AmbMMG:jar:lib/java-json.jar",
+        "urn:AmbMMG:jar:lib/ojdbc8.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/commons-beanutils-1.8.2.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/commons-collections-3.2.1.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/commons-digester-2.1.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/commons-logging-1.1.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/groovy-all-2.0.1.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/iText-2.1.7.js2.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/jasperreports-5.6.0.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/jasperreports-6.20.0.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/jasperreports-fonts-5.6.0.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/jcommon-1.0.15.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/jdt-compiler-3.1.1.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/lib/jfreechart-1.0.12.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/com.github.librepdf.openpdf_1.3.32.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/commons-beanutils-1.9.4.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jackson-annotations-2.18.2.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jackson-core-2.18.2.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jackson-databind-2.18.2.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jackson-dataformat-xml-2.18.2.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jasperreports-7.0.3.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jasperreports-fonts-7.0.3.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/jasperreports-pdf-7.0.3.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/org.apache.commons.commons-collections4_4.4.0.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/org.apache.commons.commons-io_2.16.1.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/stax2-api-4.2.2.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/xmpcore-6.1.11.jar"
+      ]
+    },
+    {
+      "ref": "urn:AmbMMG:jar:web/WEB-INF/lib/groovy-all-2.0.1.jar",
+      "dependsOn": [
+        "urn:AmbMMG:jar:web/WEB-INF/lib/groovy-all-2.0.1.jar:embedded:commons-cli:commons-cli"
+      ]
+    },
+    {
+      "ref": "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar",
+      "dependsOn": [
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar:embedded:net.java.dev.msv:xsdlib",
+        "urn:AmbMMG:jar:web/WEB-INF/report-jaspersoft7/woodstox-core-7.0.0.jar:embedded:com.sun.xml.bind.jaxb:isorelax"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "incomplete",
+      "assemblies": [
+        "pkg:generic/it.asl5.ca/AmbMMG@1.0.0"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,466 @@
+name: Build, OWASP, SBOM and Deploy APO
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verifica ambiente di build
+        shell: powershell
+        run: |
+          git --version
+
+          $ant = "C:\Program Files\NetBeans-21\netbeans\extide\ant\bin\ant.bat"
+          $copyLibs = "C:\Program Files\NetBeans-21\netbeans\java\ant\extra\org-netbeans-modules-java-j2seproject-copylibstask.jar"
+
+          if (-not (Test-Path -LiteralPath $ant)) {
+            throw "Ant di NetBeans non trovato: $ant"
+          }
+
+          if (-not (Test-Path -LiteralPath $copyLibs)) {
+            throw "Libreria CopyLibs di NetBeans non trovata: $copyLibs"
+          }
+
+          $jdkHomes = @()
+          if (-not [string]::IsNullOrWhiteSpace($env:JAVA_HOME)) {
+            $jdkHomes += $env:JAVA_HOME
+          }
+          if (Test-Path -LiteralPath "C:\Program Files\Java") {
+            $jdkHomes += Get-ChildItem "C:\Program Files\Java" -Directory -Filter "jdk*" |
+              Select-Object -ExpandProperty FullName
+          }
+          if (Test-Path -LiteralPath "C:\Program Files\Eclipse Adoptium") {
+            $jdkHomes += Get-ChildItem "C:\Program Files\Eclipse Adoptium" -Directory -Filter "jdk*" |
+              Select-Object -ExpandProperty FullName
+          }
+
+          $jdkHome = $jdkHomes |
+            Where-Object { Test-Path -LiteralPath (Join-Path $_ "bin\javac.exe") } |
+            Sort-Object { if ((Split-Path $_ -Leaf) -match "(?:1\.)?8") { 0 } else { 1 } } |
+            Select-Object -First 1
+
+          if ([string]::IsNullOrWhiteSpace($jdkHome)) {
+            throw "JDK non trovato. APO richiede un JDK con javac, non una sola JRE."
+          }
+
+          $tomcatHomes = @($env:CATALINA_HOME, $env:TOMCAT_HOME)
+          $tomcatRoot = "C:\Program Files\Apache Software Foundation"
+          if (Test-Path -LiteralPath $tomcatRoot) {
+            $tomcatHomes += Get-ChildItem $tomcatRoot -Directory |
+              Select-Object -ExpandProperty FullName
+          }
+
+          $tomcatHome = $tomcatHomes |
+            Where-Object {
+              -not [string]::IsNullOrWhiteSpace($_) -and
+              (Test-Path -LiteralPath (Join-Path $_ "lib\servlet-api.jar"))
+            } |
+            Sort-Object -Descending |
+            Select-Object -First 1
+
+          if ([string]::IsNullOrWhiteSpace($tomcatHome)) {
+            throw "Installazione Tomcat non trovata: servlet-api.jar e' necessaria per compilare."
+          }
+
+          $env:JAVA_HOME = $jdkHome
+          $env:Path = "$jdkHome\bin;$env:Path"
+
+          java -version
+          javac -version
+          & $ant -version
+          Write-Host "JDK selezionato: $jdkHome"
+          Write-Host "Tomcat selezionato: $tomcatHome"
+
+      - name: Build Ant e creazione WAR
+        shell: powershell
+        run: |
+          $ant = "C:\Program Files\NetBeans-21\netbeans\extide\ant\bin\ant.bat"
+          $copyLibs = "C:\Program Files\NetBeans-21\netbeans\java\ant\extra\org-netbeans-modules-java-j2seproject-copylibstask.jar"
+
+          $jdkHomes = @()
+          if (-not [string]::IsNullOrWhiteSpace($env:JAVA_HOME)) {
+            $jdkHomes += $env:JAVA_HOME
+          }
+          foreach ($jdkRoot in @("C:\Program Files\Java", "C:\Program Files\Eclipse Adoptium")) {
+            if (Test-Path -LiteralPath $jdkRoot) {
+              $jdkHomes += Get-ChildItem $jdkRoot -Directory -Filter "jdk*" |
+                Select-Object -ExpandProperty FullName
+            }
+          }
+          $jdkHome = $jdkHomes |
+            Where-Object { Test-Path -LiteralPath (Join-Path $_ "bin\javac.exe") } |
+            Sort-Object { if ((Split-Path $_ -Leaf) -match "(?:1\.)?8") { 0 } else { 1 } } |
+            Select-Object -First 1
+
+          $tomcatHomes = @($env:CATALINA_HOME, $env:TOMCAT_HOME)
+          $tomcatRoot = "C:\Program Files\Apache Software Foundation"
+          if (Test-Path -LiteralPath $tomcatRoot) {
+            $tomcatHomes += Get-ChildItem $tomcatRoot -Directory |
+              Select-Object -ExpandProperty FullName
+          }
+          $tomcatHome = $tomcatHomes |
+            Where-Object {
+              -not [string]::IsNullOrWhiteSpace($_) -and
+              (Test-Path -LiteralPath (Join-Path $_ "lib\servlet-api.jar"))
+            } |
+            Sort-Object -Descending |
+            Select-Object -First 1
+
+          if ([string]::IsNullOrWhiteSpace($jdkHome) -or [string]::IsNullOrWhiteSpace($tomcatHome)) {
+            throw "Impossibile determinare JDK o Tomcat per la build."
+          }
+
+          $env:JAVA_HOME = $jdkHome
+          $env:Path = "$jdkHome\bin;$env:Path"
+
+          & $ant `
+            -q `
+            "-Dj2ee.server.home=$tomcatHome" `
+            "-Dlibs.CopyLibs.classpath=$copyLibs" `
+            clean dist
+
+          if ($LASTEXITCODE -ne 0) {
+            throw "Build Ant fallita con codice $LASTEXITCODE."
+          }
+
+          $warFile = "dist\APO.war"
+          if (-not (Test-Path -LiteralPath $warFile)) {
+            throw "WAR non trovato: $warFile"
+          }
+
+          $warEntries = & "$jdkHome\bin\jar.exe" tf $warFile
+          foreach ($requiredEntry in @(
+            "WEB-INF/classes/com/example/servlet/AuthServlet.class",
+            "WEB-INF/lib/gson-2.3.1.jar",
+            "WEB-INF/lib/java-json.jar",
+            "WEB-INF/lib/ojdbc8.jar"
+          )) {
+            if ($warEntries -notcontains $requiredEntry) {
+              throw "Contenuto obbligatorio non trovato nel WAR: $requiredEntry"
+            }
+          }
+
+          Get-Item $warFile | Select-Object FullName, Length, LastWriteTime
+          Get-FileHash $warFile -Algorithm SHA256
+
+      - name: Genera SBOM CycloneDX
+        shell: powershell
+        run: |
+          $projectRoot = (Get-Location).Path
+          $jarFiles = @()
+
+          foreach ($libraryFolder in @(
+            "lib",
+            "web\WEB-INF\lib",
+            "web\WEB-INF\report-jaspersoft7"
+          )) {
+            if (Test-Path -LiteralPath $libraryFolder) {
+              $jarFiles += Get-ChildItem $libraryFolder -File -Filter "*.jar"
+            }
+          }
+
+          $components = @()
+          foreach ($jarFile in ($jarFiles | Sort-Object FullName -Unique)) {
+            $baseName = [System.IO.Path]::GetFileNameWithoutExtension($jarFile.Name)
+            $name = $baseName
+            $version = "unknown"
+            $versionMatch = [regex]::Match($baseName, "^(?<name>.+)-(?<version>\d[0-9A-Za-z._+-]*)$")
+
+            if ($versionMatch.Success) {
+              $name = $versionMatch.Groups["name"].Value
+              $version = $versionMatch.Groups["version"].Value
+            }
+
+            $relativePath = $jarFile.FullName.Substring($projectRoot.Length + 1).Replace("\", "/")
+            $bomRef = if ($version -eq "unknown") {
+              "pkg:generic/$name"
+            } else {
+              "pkg:generic/$name@$version"
+            }
+
+            $components += [ordered]@{
+              type = "library"
+              name = $name
+              version = $version
+              scope = "required"
+              hashes = @(
+                [ordered]@{
+                  alg = "SHA-256"
+                  content = (Get-FileHash $jarFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+                }
+              )
+              purl = $bomRef
+              "bom-ref" = $bomRef
+              properties = @(
+                [ordered]@{ name = "local.path"; value = $relativePath },
+                [ordered]@{ name = "file.name"; value = $jarFile.Name }
+              )
+            }
+          }
+
+          $applicationRef = "pkg:generic/it.asl5.ca/APO@1.0.0"
+          $sbom = [ordered]@{
+            bomFormat = "CycloneDX"
+            specVersion = "1.4"
+            serialNumber = "urn:uuid:$([guid]::NewGuid())"
+            version = 1
+            metadata = [ordered]@{
+              timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+              tools = @(
+                [ordered]@{
+                  vendor = "ASL5"
+                  name = "APO Gitea Actions SBOM generator"
+                  version = "1.0"
+                }
+              )
+              component = [ordered]@{
+                group = "it.asl5.ca"
+                name = "APO"
+                version = "1.0.0"
+                type = "application"
+                purl = $applicationRef
+                "bom-ref" = $applicationRef
+              }
+            }
+            components = $components
+            dependencies = @(
+              [ordered]@{
+                ref = $applicationRef
+                dependsOn = @($components | ForEach-Object { $_["bom-ref"] })
+              }
+            )
+          }
+
+          $sbomPath = "dist\sbom.json"
+          $sbom | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $sbomPath -Encoding UTF8
+          $null = Get-Content -Raw $sbomPath | ConvertFrom-Json
+
+          if (-not (Test-Path -LiteralPath $sbomPath)) {
+            throw "SBOM non generata: $sbomPath"
+          }
+
+          Write-Host "SBOM generata con $($components.Count) componenti."
+
+      - name: OWASP Dependency Check
+        if: gitea.event_name == 'push'
+        shell: powershell
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: |
+          $maven = "C:\Program Files\Apache\maven\bin\mvn.cmd"
+          if (-not (Test-Path -LiteralPath $maven)) {
+            throw "Maven non trovato: necessario per eseguire OWASP Dependency-Check."
+          }
+
+          $dependencyCheckPom = @'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+              <groupId>it.asl5.ca</groupId>
+              <artifactId>apo-dependency-check</artifactId>
+              <version>1.0.0</version>
+              <packaging>pom</packaging>
+              <build>
+                  <plugins>
+                      <plugin>
+                          <groupId>org.owasp</groupId>
+                          <artifactId>dependency-check-maven</artifactId>
+                          <version>12.1.8</version>
+                          <configuration>
+                              <dataDirectory>D:/GiteaCache/dependency-check</dataDirectory>
+                              <outputDirectory>${project.basedir}/dist/dependency-check-report</outputDirectory>
+                              <formats>
+                                  <format>HTML</format>
+                                  <format>JSON</format>
+                              </formats>
+                              <failBuildOnCVSS>11</failBuildOnCVSS>
+                              <scanSet>
+                                  <fileSet>
+                                      <directory>${project.basedir}/lib</directory>
+                                      <includes><include>**/*.jar</include></includes>
+                                  </fileSet>
+                                  <fileSet>
+                                      <directory>${project.basedir}/web/WEB-INF/lib</directory>
+                                      <includes><include>**/*.jar</include></includes>
+                                  </fileSet>
+                                  <fileSet>
+                                      <directory>${project.basedir}/web/WEB-INF/report-jaspersoft7</directory>
+                                      <includes><include>**/*.jar</include></includes>
+                                  </fileSet>
+                                  <fileSet>
+                                      <directory>${project.basedir}/dist</directory>
+                                      <includes><include>APO.war</include></includes>
+                                  </fileSet>
+                              </scanSet>
+                          </configuration>
+                      </plugin>
+                  </plugins>
+              </build>
+          </project>
+          '@
+
+          $ciPom = "dependency-check-ci.xml"
+          $dependencyCheckPom | Set-Content -LiteralPath $ciPom -Encoding UTF8
+          New-Item -ItemType Directory -Force -Path "D:\GiteaCache\dependency-check" | Out-Null
+
+          $mavenArguments = @(
+            "--batch-mode",
+            "--no-transfer-progress",
+            "-f", $ciPom,
+            "org.owasp:dependency-check-maven:12.1.8:check"
+          )
+          if (-not [string]::IsNullOrWhiteSpace($env:NVD_API_KEY)) {
+            $mavenArguments += "-DnvdApiKey=$env:NVD_API_KEY"
+          }
+
+          & $maven @mavenArguments
+          $dependencyCheckExitCode = $LASTEXITCODE
+
+          Remove-Item -LiteralPath $ciPom -Force -ErrorAction SilentlyContinue
+
+          if ($dependencyCheckExitCode -ne 0) {
+            throw "OWASP Dependency-Check terminato con codice $dependencyCheckExitCode."
+          }
+        continue-on-error: true
+
+      - name: Verifica e salva artefatti
+        shell: powershell
+        run: |
+          foreach ($requiredArtifact in @("dist\APO.war", "dist\sbom.json")) {
+            if (-not (Test-Path -LiteralPath $requiredArtifact)) {
+              throw "Artefatto obbligatorio non trovato: $requiredArtifact"
+            }
+          }
+
+          Get-ChildItem dist -Recurse | Select-Object FullName, Length, LastWriteTime
+
+          $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+          $branch = $env:GITHUB_REF_NAME
+          if ([string]::IsNullOrWhiteSpace($branch)) {
+            $branch = $env:GITEA_REF_NAME
+          }
+          if ([string]::IsNullOrWhiteSpace($branch)) {
+            $branch = "unknown"
+          }
+          $branch = $branch -replace "[^A-Za-z0-9._-]", "_"
+
+          $destination = "D:\GiteaArtifacts\APO\$branch\$timestamp"
+          New-Item -ItemType Directory -Force -Path $destination | Out-Null
+
+          Copy-Item "dist\APO.war" $destination -Force
+          Copy-Item "dist\sbom.json" $destination -Force
+
+          if (Test-Path -LiteralPath "dist\dependency-check-report") {
+            Copy-Item `
+              "dist\dependency-check-report" `
+              "$destination\dependency-check-report" `
+              -Recurse `
+              -Force
+          }
+
+          Write-Host "Artefatti APO salvati in: $destination"
+
+      - name: Deploy APO tramite Tomcat Manager
+        if: gitea.event_name == 'push' && (gitea.ref == 'refs/heads/main' || gitea.ref == 'refs/heads/master')
+        shell: powershell
+        env:
+          TOMCAT_USER: ${{ secrets.TOMCAT_USER }}
+          TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
+          TOMCAT_BASE_URL: ${{ secrets.TOMCAT_BASE_URL }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:TOMCAT_USER)) {
+            throw "Secret TOMCAT_USER non configurato."
+          }
+          if ([string]::IsNullOrWhiteSpace($env:TOMCAT_PASSWORD)) {
+            throw "Secret TOMCAT_PASSWORD non configurato."
+          }
+
+          $tomcatBaseUrl = $env:TOMCAT_BASE_URL
+          if ([string]::IsNullOrWhiteSpace($tomcatBaseUrl)) {
+            $tomcatBaseUrl = "http://pvesbasl5:8083"
+          }
+          $tomcatBaseUrl = $tomcatBaseUrl.TrimEnd("/")
+
+          $managerUrl = "$tomcatBaseUrl/manager/text"
+          $appPath = "/APO"
+          $warFile = (Resolve-Path -LiteralPath "dist\APO.war").Path
+          $healthUrl = "$tomcatBaseUrl$appPath/LOGIN.html"
+
+          Write-Host "Deploy di APO..."
+          Write-Host "Server: $tomcatBaseUrl"
+          Write-Host "Context path: $appPath"
+
+          $deployResult = (& curl.exe `
+            --silent `
+            --show-error `
+            --fail-with-body `
+            --connect-timeout 15 `
+            --max-time 180 `
+            --request PUT `
+            --upload-file $warFile `
+            --user "$($env:TOMCAT_USER):$($env:TOMCAT_PASSWORD)" `
+            "$managerUrl/deploy?path=$appPath&update=true" | Out-String).Trim()
+          $curlExitCode = $LASTEXITCODE
+
+          Write-Host "Risposta Tomcat Manager:"
+          Write-Host $deployResult
+
+          if ($curlExitCode -ne 0) {
+            throw "curl ha restituito il codice $curlExitCode durante il deploy."
+          }
+          if ($deployResult -match "(?m)^FAIL") {
+            throw "Deploy Tomcat fallito: $deployResult"
+          }
+          if ($deployResult -notmatch "(?m)^OK") {
+            throw "Risposta inattesa dal Tomcat Manager: $deployResult"
+          }
+
+          Write-Host "Attendo l'avvio di APO..."
+          $healthOk = $false
+
+          for ($attempt = 1; $attempt -le 12; $attempt += 1) {
+            try {
+              $healthResponse = Invoke-WebRequest `
+                -Uri $healthUrl `
+                -Method Get `
+                -UseBasicParsing `
+                -TimeoutSec 10 `
+                -ErrorAction Stop
+
+              if ($healthResponse.StatusCode -eq 200) {
+                $healthOk = $true
+                Write-Host "Verifica applicativa riuscita al tentativo $attempt."
+                break
+              }
+
+              Write-Host "Tentativo ${attempt}: HTTP $($healthResponse.StatusCode)."
+            }
+            catch {
+              Write-Host "Tentativo ${attempt}: APO non ancora pronta."
+              Write-Host $_.Exception.Message
+            }
+
+            Start-Sleep -Seconds 5
+          }
+
+          if (-not $healthOk) {
+            throw "Verifica applicativa fallita dopo 60 secondi: $healthUrl"
+          }
+
+          Write-Host "Build e deploy di APO completati correttamente."
