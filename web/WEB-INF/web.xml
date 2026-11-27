@@ -21,8 +21,9 @@
     </context-param>
     <context-param>
         <param-name>dbPassword</param-name>
-        <param-value></param-value>
+        <param-value>caponord</param-value>
     </context-param>
+
 
     <servlet>
         <servlet-name>AuthServlet</servlet-name>
